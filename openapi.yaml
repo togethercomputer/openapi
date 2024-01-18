@@ -22,6 +22,11 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateCompletionRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
               
 components:
   # Authentication
