@@ -3,4 +3,4 @@ An OpenAPI API specifications file describes an API in its entirety and  are typ
 
 ## Swagger UI
 
-got to https://editor.swagger.io/ and under File, click Import file to import the openai.yaml file here
+go to https://editor.swagger.io/ and under `File`, click `Import file` to import the `openai.yaml` file here
