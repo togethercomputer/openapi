@@ -1,17 +1,34 @@
-openapi: 3.1.0
+openapi: 3.0.0
 info:
-  version: 0.1.0
-  title: Text Generation API
-  description: >
-    The following page describes Together REST APIs. These API allows you to
-    query information about available models and perform machine learning inference
-    tasks on a variety of models. We currently offer two endpoints: /inference and
-    /models/info.
-
+  title: Together API
+  description: The Together REST API. Please see https://docs.together.ai/docs/quickstart for more details.
+  version: "2.0.0"
+  termsOfService: https://www.together.ai/terms-of-service
+  contact:
+    name: Together Support
+    url: https://www.together.ai/contact
 servers:
-  - url: https://api.together.xyz/
-  - url: https://api.together.xyz/api/
-
+  - url: https://api.together.xyz/v1
+paths:
+  /completions:
+    post:
+      operationId: createCompletion
+      tags:
+        - Completions
+      summary: Creates a completion for the provided prompt and parameters.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCompletionRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateCompletionResponse"
 components:
   # Authentication
   securitySchemes:
@@ -19,9 +36,8 @@ components:
       type: http
       scheme: bearer
       bearerFormat: API key
-
   schemas:
-    InferenceRequest:
+    CreateCompletionRequest:
       type: object
       properties:
         prompt:
@@ -33,65 +49,7 @@ components:
           required: true
           description: >
             The name of the model to be used in the inference requests.
-        temperature:
-          type: number
-          description: >
-            The `temperature` determines the degree of randomness in the
-            response. A value of 1 will always yield the same output. A
-            temperature less than 1 favors more correctness, and is appropriate
-            for question and answer or summarization. A value greater than 1
-            introduces more randomness in the output.
-        top_p:
-          type: number
-          description: >
-            The `top_p` (nucleus) parameter is used to dynamically adjust the
-            number of choices for each predicted token based on the cumulative
-            probabilities. It specifies a probability threshold, below which
-            all less likely tokens are filtered out. This technique helps to
-            maintain diversity and generate more fluent and natural-sounding
-            text.
-        top_k:
-          type: integer
-          description: >
-            The `top_k` parameter is used to limit the number of choices for
-            the next predicted word or token. It specifies the maximum number
-            of tokens to consider at each step, based on their probability of
-            occurrence. This technique helps to speed up the generation process
-            and can improve the quality of the generated text by focusing on
-            the most likely options.
-        max_tokens:
-          type: integer
-          description: >
-            The `max_tokens` parameter limits the maximum number of tokens
-            allowed in the text field of the response.
-        repetition_penalty:
-          type: number
-          description: >
-            Encourages new and diverse text by reducing the likelihood of
-            repeated sequences.
-        stop:
-          type: string
-          description: 'The `stop` parameter sets a string sequence that will truncate (stop) inference text output. For example, "\\n\\n"'
-        request_type:
-          type: string
-        logprobs:
-          type: integer
-          description: >
-            The `logprobs` parameter is an integer that specifies how many top
-            token logarithmic probabilities are included in the response for
-            each token generation step.
-        research:
-          type: boolean
-          description: >
-            When the research parameter is set to true, you can use certain
-            non-commercial models for research purposes. It is your
-            responsibility to ensure your usage of the model and its output
-            compliesy with the terms of the license agreement.
-        stream_tokens:
-          type: boolean
-        safety_model:
-          type: string
-    InferenceResult:
+    CreateCompletionResponse:
       type: object
       properties:
         prompt:
@@ -132,96 +90,3 @@ components:
           type: number
         result_type:
           type: string
-
-# Global security operations
-security:
-  - bearerAuth: []
-
-paths:
-  /inference:
-    post:
-      tags: ['Endpoints']
-      summary: Text Generation API
-      description: >
-        The /inference endpoint allows you to make inference requests with a
-        specified model.
-      parameters:
-        - name: User-Agent
-          in: header
-          description: >
-            The User-Agent is an identifies provided by the client software
-            (such as a browser or application, operating system, and versions)
-            making the request. This information helps servers understand and
-            potentially optimize content delivery for specific client types.
-            Please communicate with us 🙂.
-          required: false
-          schema:
-            type: string
-      requestBody:
-        description: >
-          The request body is a JSON object. It provides the necessary
-          information for the server to process the client's request.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/InferenceRequest'
-            example: >
-              {
-                "model": "Together-gpt-JT-6B-v1",
-                "prompt": "The capital of France is ",
-                "temperature": 0.8,
-                "max_tokens": 1
-              }
-
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InferenceResult'
-              example: >
-                {
-                  "status": "finished",
-                  "prompt": [
-                    "The capital of France is "
-                  ],
-                  "model": "Together-gpt-JT-6B-v1",
-                  "model_owner": "",
-                  "tags": {},
-                  "num_returns": 1,
-                  "args": {
-                    "prompt": "The capital of France is ",
-                    "model": "Together-gpt-JT-6B-v1",
-                    "temperature": 0.8,
-                    "max_tokens": 1
-                  },
-                  "subjobs": [],
-                  "output": {
-                    "choices": [
-                      {
-                        "finish_reason": "length",
-                        "index": 0,
-                        "text": " Paris"
-                      }
-                    ],
-                    "raw_compute_time": 0.015741249546408653,
-                    "result_type": "language-model-inference"
-                  }
-                }
-        '400':
-          description: >
-            Missing request arguments; model, prompt, audio_base64, or
-            image_base64.
-        '401':
-          description: >
-            Missing API key. Login to https://api.together.xyz/ and navigate to
-            Settings > API Key
-        '403':
-          description: >
-            In order to use research (e.g. non-commercial) models, you must
-            have a `research = true` parameter.
-        '500':
-          description: >
-            Request error. See text description of the error in the response.
