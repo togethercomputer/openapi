@@ -6,11 +6,13 @@ servers:
   - url: https://api.together.xyz
 components:
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
+    sec0:
+      type: apiKey
+      in: header
+      name: Authorization
+      x-bearer-format: bearer
 security:
-  - bearerAuth: []
+  - sec0: []
 paths:
   /inference:
     post:
