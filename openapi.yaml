@@ -9,6 +9,8 @@ info:
     url: https://www.together.ai/contact
 servers:
   - url: https://api.together.xyz/v1
+security:
+  - ApiKeyAuth: []
 paths:
   /completions:
     post:
@@ -25,16 +27,13 @@ paths:
       responses:
         "200":
           description: OK
-          content:
-            application/json:
               
 components:
-  # Authentication
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: API key
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
   schemas:
     CreateCompletionRequest:
       type: object
@@ -44,6 +43,7 @@ components:
             ID of the model to use.
           anyOf:
             - type: string
+              enum: ["togethercomputer/llama-2-13b-chat"]
           x-oaiTypeLabel: string
         prompt:
           description: &completions_prompt_description |
@@ -52,4 +52,4 @@ components:
           oneOf:
             - type: string
               default: ""
-              example: "This is a test."
+              example: "Once upon"
