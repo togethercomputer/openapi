@@ -22,13 +22,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateCompletionRequest"
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CreateCompletionResponse"
+              
 components:
   # Authentication
   securitySchemes:
@@ -40,53 +34,17 @@ components:
     CreateCompletionRequest:
       type: object
       properties:
-        prompt:
-          type: array
-          required: true
-          description:
         model:
-          type: string
-          required: true
-          description: >
-            The name of the model to be used in the inference requests.
-    CreateCompletionResponse:
-      type: object
-      properties:
+          description: &model_description |
+            ID of the model to use.
+          anyOf:
+            - type: string
+          x-oaiTypeLabel: string
         prompt:
-          type: string
-        model:
-          type: string
-        model_owner:
-          type: string
-        tags:
-          type: object
-        num_returns:
-          type: number
-        output:
-          $ref: '#/components/schemas/LanguageModelInferenceChoices'
-        status:
-          type: string
-        subjobs:
-          type: array
-          items:
-            type: string
-    LanguageModelInferenceChoice:
-      type: object
-      properties:
-        finish_reason:
-          type: string
-        index:
-          type: number
-        text:
-          type: string
-    LanguageModelInferenceChoices:
-      type: object
-      properties:
-        choices:
-          type: array
-          items:
-            $ref: '#/components/schemas/LanguageModelInferenceChoice'
-        raw_compute_time:
-          type: number
-        result_type:
-          type: string
+          description: &completions_prompt_description |
+            The prompt to generate a completion for, encoded as a string.
+          nullable: true
+          oneOf:
+            - type: string
+              default: ""
+              example: "This is a test."
