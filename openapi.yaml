@@ -42,7 +42,10 @@ components:
             ID of the model to use.
           anyOf:
             - type: string
-              enum: ["togethercomputer/llama-2-13b-chat"]
+              enum: [
+                "mistralai/Mixtral-8x7B-Instruct-v0.1",
+                "togethercomputer/llama-2-13b-chat"
+              ]
           x-oaiTypeLabel: string
         prompt:
           description: &completions_prompt_description |
@@ -51,4 +54,28 @@ components:
           oneOf:
             - type: string
               default: ""
-              example: "Once upon"
+              example: "<s>[INST] What is the capital of France? [/INST]"
+        max_tokens:
+          description: &completions_max_tokens_description |
+            The maximum number of new tokens that can be generated in the completion
+          type: integer
+          example: 16
+        stop:
+          description: &completions_stop_description |
+           sequences where the API will stop generating further tokens. 
+          nullable: true
+          type: array
+          items:
+            type: string
+          example: '["[/INST]","</s>"]'
+        temperature:
+          description: &completions_temperature_description |
+            What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more diverse, while 0 will make it deterministic.
+          type: number
+          minimum: 0
+          maximum: 2
+          default: 1
+          example: 0.8
+          nullable: true
+
+
