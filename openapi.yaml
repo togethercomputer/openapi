@@ -30,7 +30,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CompletionResponse"
+                $ref: "#/components/schemas/ChatCompletionResponse"
         '400':
           description: 'BadRequest'
           content:
@@ -136,7 +136,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CompletionResponse"
+                $ref: "#/components/schemas/EmbeddingsResponse"
         '400':
           description: 'BadRequest'
           content:
@@ -152,14 +152,12 @@ paths:
         '404':
           description: 'NotFound'
           content:
-            content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorData"
         '429':
           description: 'RateLimit'
           content:
-            content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorData"
