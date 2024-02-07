@@ -1,0 +1,500 @@
+openapi: 3.0.0
+info:
+  title: Together API
+  description: The Together REST API. Please see https://docs.together.ai/reference for more details.
+  version: "2.0.0"
+  termsOfService: https://www.together.ai/terms-of-service
+  contact:
+    name: Together Support
+    url: https://www.together.ai/contact
+  license:
+    name: MIT
+    url: https://github.com/togethercomputer/openapi/blob/main/LICENSE
+servers:
+  - url: https://api.together.xyz/v1
+security:
+  - bearerAuth: []
+paths:
+  /chat/completions:
+    post:
+      summary: Creates a model response for the given chat conversation.
+      operationId: chat-completions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatCompletionRequest"
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatCompletionResponse"
+        '400':
+          description: 'BadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '404':
+          description: 'NotFound'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '429':
+          description: 'RateLimit'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '503':
+          description: 'Overloaded'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '504':
+          description: 'Timeout'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+      deprecated: false
+  /completions:
+    post:
+      summary: Creates a completion for the provided prompt and parameters
+      operationId: completions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompletionRequest"
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompletionResponse"
+        '400':
+          description: 'BadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '404':
+          description: 'NotFound'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '429':
+          description: 'RateLimit'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '503':
+          description: 'Overloaded'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '504':
+          description: 'Timeout'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+      deprecated: false
+  /embeddings:
+    post:
+      summary: Creates an embedding vector representing the input text
+      operationId: embeddings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmbeddingsRequest"
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmbeddingsResponse"
+        '400':
+          description: 'BadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '404':
+          description: 'NotFound'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '429':
+          description: 'RateLimit'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '503':
+          description: 'Overloaded'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        '504':
+          description: 'Timeout'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+      deprecated: false
+
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    ErrorData:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+              nullable: false
+            type:
+              type: string
+              nullable: false
+            param:
+              type: string
+              nullable: true
+              default: null
+            code:
+              type: string
+              nullable: true
+              default: null
+          required:
+            - type
+            - message
+            - param
+            - code
+
+    FinishReason:
+      type: string
+      enum:
+        - stop
+        - eos
+        - length
+        - tool_calls
+
+    LogprobsPart:
+      type: object
+      properties:
+        tokens:
+          type: array
+          items:
+            type: string
+          description: List of token strings
+        token_logprobs:
+          type: array
+          items:
+            type: number
+            format: float
+          description: List of token log probabilities
+
+    PromptPart:
+      type: array
+      items:
+        type: object
+        properties:
+          text:
+            type: string
+            example: <s>[INST] What is the capital of France? [/INST]
+          logprobs:
+            $ref: "#/components/schemas/LogprobsPart"
+
+    UsageData:
+      type: object
+      properties:
+        prompt_tokens:
+          type: integer
+        completion_tokens:
+          type: integer
+        total_tokens:
+          type: integer
+
+    CompletionChoicesData:
+      type: array
+      items:
+        type: object
+        properties:
+          text:
+            type: string
+            example: The capital of France is Paris. It's located in the north-central part of the country and is one of the most populous and visited cities in the world, known for its iconic landmarks like the Eiffel Tower, Louvre Museum, Notre-Dame Cathedral, and more. Paris is also the capital of the Île-de-France region and is a major global center for art, fashion, gastronomy, and culture.
+          finish_reason:
+            $ref: "#/components/schemas/FinishReason"
+          logprobs:
+            $ref: "#/components/schemas/LogprobsPart"
+
+    CompletionRequest:
+      type: object
+      required:
+        - model
+        - prompt
+      properties:
+        prompt:
+          type: string
+          description: A string providing context for the model to complete.
+          example: "<s>[INST] What is the capital of France? [/INST]"
+        model:
+          type: string
+          description: The name of the model to query.
+          example: mistralai/Mixtral-8x7B-Instruct-v0.1
+        max_tokens:
+          type: integer
+          description: The maximum number of tokens to generate.
+        stop:
+          type: array
+          description: A list of string sequences that will truncate (stop) inference text output.
+          items:
+            type: string
+        temperature:
+          type: number
+          description: Determines the degree of randomness in the response.
+          format: float
+        top_p:
+          type: number
+          description: The `top_p` (nucleus) parameter is used to dynamically adjust the number of choices for each predicted token based on the cumulative probabilities.
+          format: float
+        top_k:
+          type: integer
+          description: The `top_k` parameter is used to limit the number of choices for the next predicted word or token.
+          format: int32
+        repetition_penalty:
+          type: number
+          description: A number that controls the diversity of generated text by reducing the likelihood of repeated sequences. Higher values decrease repetition.
+          format: float
+        stream:
+          type: boolean
+          description: "If set, tokens are returned as Server-Sent Events as they are made available. Stream terminates with `data: [DONE]`"
+        logprobs:
+          type: integer
+          minimum: 0
+          maximum: 1
+          description: Determines the number of most likely tokens to return at each token position log probabilities to return
+        echo:
+          type: boolean
+          description: If set, the response will contain the prompt, and will also return prompt logprobs if set with logprobs.
+        n:
+          type: integer
+          description: Number of generations to return
+          minimum: 1
+          maximum: 128
+
+    CompletionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        choices:
+          $ref: "#/components/schemas/CompletionChoicesData"
+        prompt:
+          $ref: "#/components/schemas/PromptPart"
+        usage:
+          $ref: "#/components/schemas/UsageData"
+        created:
+          type: integer
+        model:
+          type: string
+        object:
+          type: string
+          enum:
+            - text_completion
+      required:
+        - id
+        - choices
+        - usage
+        - created
+        - model
+        - object
+
+    ChatCompletionChoicesData:
+      type: array
+      items:
+        type: object
+        properties:
+          message:
+            type: object
+            properties:
+              role:
+                type: string
+                example: assistant
+              content:
+                type: string
+          finish_reason:
+            $ref: "#/components/schemas/FinishReason"
+          logprobs:
+            $ref: "#/components/schemas/LogprobsPart"
+
+    ChatCompletionRequest:
+      type: object
+      required:
+        - model
+        - messages
+      properties:
+        messages:
+          type: array
+          description: A list of messages comprising the conversation so far.
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+                description: 'The role of the messages author. Choice between: system, user, or assistant.'
+                enum:
+                  - system
+                  - user
+                  - assistant
+              content:
+                type: string
+                description: The contents of the message.
+            required:
+              - role
+              - content
+        model:
+          type: string
+          description: The name of the model to query.
+          example: mistralai/Mixtral-8x7B-Instruct-v0.1
+        max_tokens:
+          type: integer
+          description: The maximum number of tokens to generate.
+        stop:
+          type: array
+          description: A list of string sequences that will truncate (stop) inference text output.
+          items:
+            type: string
+        temperature:
+          type: number
+          description: Determines the degree of randomness in the response.
+          format: float
+        top_p:
+          type: number
+          description: The `top_p` (nucleus) parameter is used to dynamically adjust the number of choices for each predicted token based on the cumulative probabilities.
+          format: float
+        top_k:
+          type: integer
+          description: The `top_k` parameter is used to limit the number of choices for the next predicted word or token.
+          format: int32
+        repetition_penalty:
+          type: number
+          description: A number that controls the diversity of generated text by reducing the likelihood of repeated sequences. Higher values decrease repetition.
+          format: float
+        stream:
+          type: boolean
+          description: "If set, tokens are returned as Server-Sent Events as they are made available. Stream terminates with `data: [DONE]`"
+        logprobs:
+          type: integer
+          minimum: 0
+          maximum: 1
+          description: Determines the number of most likely tokens to return at each token position log probabilities to return
+        echo:
+          type: boolean
+          description: If set, the response will contain the prompt, and will also return prompt logprobs if set with logprobs.
+        n:
+          type: integer
+          description: Number of generations to return
+          minimum: 1
+          maximum: 128
+
+    ChatCompletionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        choices:
+          $ref: "#/components/schemas/ChatCompletionChoicesData"
+        usage:
+          $ref: "#/components/schemas/UsageData"
+        created:
+          type: integer
+        model:
+          type: string
+        object:
+          type: string
+          enum:
+            - chat.completion
+
+    EmbeddingsRequest:
+      type: object
+      required:
+        - model
+        - input
+      properties:
+        model:
+          type: string
+          description: The name of the embedding model to use.
+        input:
+          type: string
+          description: A string providing the text for the model to embed.
+
+    EmbeddingsResponse:
+      type: object
+      required:
+        - object
+        - model
+        - data
+      properties:
+        object:
+          type: string
+          enum:
+            - list
+        model:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              object:
+                type: string
+                enum:
+                  - embedding
+              embedding:
+                type: array
+                items:
+                  type: number
+              index:
+                type: integer
