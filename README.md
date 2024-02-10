@@ -1,5 +1,5 @@
 # Together API: OpenAPI Spec
-You can find the OpenAPI Spec for the TogetherAI API in this repository.
+The OpenAPI specification offers a structured and clear format for API design. Within this repository, you'll find the OpenAPI Spec for the TogetherAI API that you can use as a reference when building an API. It's available in both YAML and JSON formats.
 
 Contact us: https://www.together.ai/contact
 
