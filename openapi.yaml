@@ -31,6 +31,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ChatCompletionResponse"
+            text/event-stream:
+              schema:
+                $ref: "#/components/schemas/ChatCompletionStream"
         '400':
           description: 'BadRequest'
           content:
@@ -84,6 +87,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CompletionResponse"
+            text/event-stream:
+              schema:
+                $ref: "#/components/schemas/CompletionStream"
         '400':
           description: 'BadRequest'
           content:
@@ -267,7 +273,9 @@ components:
           finish_reason:
             $ref: "#/components/schemas/FinishReason"
           logprobs:
-            $ref: "#/components/schemas/LogprobsPart"
+            allOf:
+              - $ref: "#/components/schemas/LogprobsPart"
+              - nullable: true
 
     CompletionRequest:
       type: object
@@ -351,6 +359,61 @@ components:
         - model
         - object
 
+    CompletionStream:
+      oneOf:
+        - $ref: "#/components/schemas/CompletionEvent"
+        - $ref: "#/components/schemas/StreamSentinel"
+
+    CompletionEvent:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: "#/components/schemas/CompletionChunk"
+
+    CompletionChunk:
+      type: object
+      required: [id, token, choices, usage, finish_reason]
+      properties:
+        id:
+          type: string
+        token:
+          $ref: "#/components/schemas/CompletionToken"
+        choices:
+          title: CompletionChoices
+          type: array
+          items:
+            $ref: "#/components/schemas/CompletionChoice"
+        usage:
+          allOf:
+            - $ref: "#/components/schemas/UsageData"
+            - nullable: true
+        finish_reason:
+          allOf:
+            - $ref: "#/components/schemas/FinishReason"
+            - nullable: true
+
+    CompletionChoice:
+      type: object
+      required: [index]
+      properties:
+        text:
+          type: string
+
+    CompletionToken:
+      type: object
+      required: [id, text, logprob, special]
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
+        logprob:
+          type: number
+          format: float
+        special:
+          type: boolean
+
     ChatCompletionChoicesData:
       type: array
       items:
@@ -367,7 +430,9 @@ components:
           finish_reason:
             $ref: "#/components/schemas/FinishReason"
           logprobs:
-            $ref: "#/components/schemas/LogprobsPart"
+            allOf:
+              - nullable: true
+              - $ref: "#/components/schemas/LogprobsPart"
 
     ChatCompletionRequest:
       type: object
@@ -456,6 +521,84 @@ components:
           type: string
           enum:
             - chat.completion
+
+    ChatCompletionStream:
+      oneOf:
+        - $ref: "#/components/schemas/ChatCompletionEvent"
+        - $ref: "#/components/schemas/StreamSentinel"
+
+    ChatCompletionEvent:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: "#/components/schemas/ChatCompletionChunk"
+    
+    ChatCompletionChunk:
+      type: object
+      required: [id, object, created, token, choices]
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+          enum:
+            - chat.completion.chunk
+        created:
+          type: integer
+        token:
+          $ref: "#/components/schemas/ChatCompletionToken"
+        choices:
+          title: ChatCompletionChoices
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatCompletionChoice"
+        usage:
+          allOf:
+            - $ref: "#/components/schemas/UsageData"
+            - nullable: true
+        finish_reason:
+          allOf:
+            - $ref: "#/components/schemas/FinishReason"
+            - nullable: true
+
+    StreamSentinel:
+      type: object
+      required: [data]
+      properties:
+        data:
+          title: stream_signal
+          type: string
+          enum:
+            - "[DONE]"
+
+    ChatCompletionToken:
+      type: object
+      required: [id, text, logprob, special]
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
+        logprob:
+          type: number
+          format: float
+        special:
+          type: boolean
+
+    ChatCompletionChoice:
+      type: object
+      required: [index, delta]
+      properties:
+        index:
+          type: integer
+        delta:
+          title: ChatCompletionChoiceDelta
+          type: object
+          required: [content]
+          properties:
+            content:
+              type: string
 
     EmbeddingsRequest:
       type: object
