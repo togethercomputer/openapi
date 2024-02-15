@@ -28,7 +28,7 @@ paths:
         '200':
           description: '200'
           content:
-            application/json:
+            text/event-stream:
               schema:
                 $ref: "#/components/schemas/ChatCompletionResponse"
         '400':
@@ -81,7 +81,7 @@ paths:
         '200':
           description: '200'
           content:
-            application/json:
+            text/event-stream:
               schema:
                 $ref: "#/components/schemas/CompletionResponse"
         '400':
@@ -329,27 +329,24 @@ components:
       properties:
         id:
           type: string
-        choices:
-          $ref: "#/components/schemas/CompletionChoicesData"
-        prompt:
-          $ref: "#/components/schemas/PromptPart"
-        usage:
-          $ref: "#/components/schemas/UsageData"
-        created:
-          type: integer
-        model:
-          type: string
-        object:
-          type: string
-          enum:
-            - text_completion
-      required:
-        - id
-        - choices
-        - usage
-        - created
-        - model
-        - object
+        data:
+          type: object
+          required: [id, choices, usage, created, model, object]
+          properties:
+            choices:
+              $ref: "#/components/schemas/CompletionChoicesData"
+            prompt:
+              $ref: "#/components/schemas/PromptPart"
+            usage:
+              $ref: "#/components/schemas/UsageData"
+            created:
+              type: integer
+            model:
+              type: string
+            object:
+              type: string
+              enum:
+                - text_completion
 
     ChatCompletionChoicesData:
       type: array
@@ -444,18 +441,21 @@ components:
       properties:
         id:
           type: string
-        choices:
-          $ref: "#/components/schemas/ChatCompletionChoicesData"
-        usage:
-          $ref: "#/components/schemas/UsageData"
-        created:
-          type: integer
-        model:
-          type: string
-        object:
-          type: string
-          enum:
-            - chat.completion
+        data:
+          type: object
+          properties:
+            choices:
+              $ref: "#/components/schemas/ChatCompletionChoicesData"
+            usage:
+              $ref: "#/components/schemas/UsageData"
+            created:
+              type: integer
+            model:
+              type: string
+            event:
+              type: string
+              enum:
+                - chat.completion
 
     EmbeddingsRequest:
       type: object
