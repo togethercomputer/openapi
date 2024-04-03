@@ -228,7 +228,215 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
       deprecated: false
-
+  /files:
+    post:
+      summary: Upload a file
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The file to upload.
+                purpose:
+                  type: string
+                  enum: [FineTune, Other]
+                  default: FineTune
+                  description: The purpose of the file.
+      responses:
+        '200':
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileResponse'
+    get:
+      summary: List all files
+      responses:
+        '200':
+          description: List of files
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileList'
+  /files/{id}:
+    get:
+      summary: Retrieve a file
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: File retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileResponse'
+    delete:
+      summary: Delete a file
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: File deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileDeleteResponse'
+  /files/{id}/content:
+    get:
+      summary: Retrieve file content
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: File content retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileObject'
+  /fine-tunes:
+    post:
+      summary: Create a fine-tuning job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - training_file
+                - model
+              properties:
+                training_file:
+                  type: string
+                  description: File-ID of a file uploaded to the Together API
+                model:
+                  type: string
+                  description: Name of the base model to run fine-tune job on
+                n_epochs:
+                  type: integer
+                  default: 1
+                  description: Number of epochs for fine-tuning
+                n_checkpoints:
+                  type: integer
+                  default: 1
+                  description: Number of checkpoints to save during fine-tuning
+                batch_size:
+                  type: integer
+                  default: 32
+                  description: Batch size for fine-tuning
+                learning_rate:
+                  type: number
+                  format: float
+                  default: 0.00001
+                  description: Learning rate multiplier to use for training
+                suffix:
+                  type: string
+                  description: Suffix that will be added to your fine-tuned model name
+                wandb_api_key:
+                  type: string
+                  description: API key for Weights & Biases integration
+      responses:
+        '200':
+          description: Fine-tuning job initiated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinetuneResponse'
+    get:
+      summary: List fine-tune job history
+      responses:
+        '200':
+          description: List of fine-tune jobs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinetuneList'
+  /fine-tunes/{id}:
+    get:
+      summary: Retrieve fine-tune job details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Fine-tune job details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinetuneResponse'
+    post:
+      summary: Cancel a running fine-tuning job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Fine-tuning job cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinetuneResponse'
+  /fine-tunes/{id}/events:
+    get:
+      summary: List events of a fine-tune job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of fine-tune events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinetuneListEvents'
+  /fine-tunes/{id}/download:
+    get:
+      summary: Download fine-tuned model or checkpoint
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: checkpoint_step
+          in: query
+          schema:
+            type: integer
+            default: -1
+            description: Step number for checkpoint to download
+      responses:
+        '200':
+          description: Fine-tuned model or checkpoint downloaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinetuneDownloadResult'
 components:
   securitySchemes:
     bearerAuth:
@@ -747,9 +955,9 @@ components:
           type: integer
           example: 2048
         pricing:
-          $ref: '#/components/schemas/ModelPricingInfo'
+          $ref: '#/components/schemas/Pricing'
 
-    ModelPricingInfo:
+    Pricing:
       type: object
       properties:
         hourly:
@@ -804,3 +1012,102 @@ components:
             name:
               type: string
               example: 'function_name'
+
+    FileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+        created:
+          type: integer
+        type:
+          type: string
+        display_name:
+          type: string
+        organization:
+          type: string
+        link:
+          type: string
+        license:
+          type: string
+        context_length:
+          type: integer
+        pricing:
+          $ref: '#/components/schemas/Pricing'
+    FileList:
+      type: array
+      items:
+        $ref: '#/components/schemas/FileResponse'
+    FileObject:
+      type: object
+      properties:
+        object:
+          type: string
+        id:
+          type: string
+        filename:
+          type: string
+        size:
+          type: integer
+    FileDeleteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        deleted:
+          type: boolean
+    FinetuneResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        model:
+          type: string
+        training_file:
+          type: string
+        n_epochs:
+          type: integer
+        n_checkpoints:
+          type: integer
+        batch_size:
+          type: integer
+        learning_rate:
+          type: number
+          format: float
+        suffix:
+          type: string
+        wandb_api_key:
+          type: string
+    FinetuneList:
+      type: array
+      items:
+        $ref: '#/components/schemas/FinetuneResponse'
+    FinetuneListEvents:
+      type: array
+      items:
+        type: object
+        properties:
+          event:
+            type: string
+          timestamp:
+            type: integer
+          details:
+            type: object
+            additionalProperties: true
+    FinetuneDownloadResult:
+      type: object
+      properties:
+        object:
+          type: string
+        id:
+          type: string
+        checkpoint_step:
+          type: integer
+        filename:
+          type: string
+        size:
+          type: integer
