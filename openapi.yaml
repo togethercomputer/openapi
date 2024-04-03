@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Together API
   description: The Together REST API. Please see https://docs.together.ai/reference for more details.
-  version: "2.0.0"
+  version: '2.0.0'
   termsOfService: https://www.together.ai/terms-of-service
   contact:
     name: Together Support
@@ -23,53 +23,53 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ChatCompletionRequest"
+              $ref: '#/components/schemas/ChatCompletionRequest'
       responses:
         '200':
           description: '200'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ChatCompletionResponse"
+                $ref: '#/components/schemas/ChatCompletionResponse'
             text/event-stream:
               schema:
-                $ref: "#/components/schemas/ChatCompletionStream"
+                $ref: '#/components/schemas/ChatCompletionStream'
         '400':
           description: 'BadRequest'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '401':
           description: 'Unauthorized'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '404':
           description: 'NotFound'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '429':
           description: 'RateLimit'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '503':
           description: 'Overloaded'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '504':
           description: 'Timeout'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
       deprecated: false
   /completions:
     post:
@@ -79,53 +79,53 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CompletionRequest"
+              $ref: '#/components/schemas/CompletionRequest'
       responses:
         '200':
           description: '200'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CompletionResponse"
+                $ref: '#/components/schemas/CompletionResponse'
             text/event-stream:
               schema:
-                $ref: "#/components/schemas/CompletionStream"
+                $ref: '#/components/schemas/CompletionStream'
         '400':
           description: 'BadRequest'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '401':
           description: 'Unauthorized'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '404':
           description: 'NotFound'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '429':
           description: 'RateLimit'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '503':
           description: 'Overloaded'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '504':
           description: 'Timeout'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
       deprecated: false
   /embeddings:
     post:
@@ -135,53 +135,99 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/EmbeddingsRequest"
+              $ref: '#/components/schemas/EmbeddingsRequest'
       responses:
         '200':
           description: '200'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EmbeddingsResponse"
+                $ref: '#/components/schemas/EmbeddingsResponse'
         '400':
           description: 'BadRequest'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '401':
           description: 'Unauthorized'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '404':
           description: 'NotFound'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '429':
           description: 'RateLimit'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '503':
           description: 'Overloaded'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
         '504':
           description: 'Timeout'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorData"
+                $ref: '#/components/schemas/ErrorData'
       deprecated: false
-
-
+  /models:
+    get:
+      summary: Lists all the available models
+      operationId: models
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelInfo'
+        '400':
+          description: 'BadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '404':
+          description: 'NotFound'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '429':
+          description: 'RateLimit'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '503':
+          description: 'Overloaded'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '504':
+          description: 'Timeout'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+      deprecated: false
 
 components:
   securitySchemes:
@@ -250,7 +296,7 @@ components:
             type: string
             example: <s>[INST] What is the capital of France? [/INST]
           logprobs:
-            $ref: "#/components/schemas/LogprobsPart"
+            $ref: '#/components/schemas/LogprobsPart'
 
     UsageData:
       type: object
@@ -271,10 +317,10 @@ components:
             type: string
             example: The capital of France is Paris. It's located in the north-central part of the country and is one of the most populous and visited cities in the world, known for its iconic landmarks like the Eiffel Tower, Louvre Museum, Notre-Dame Cathedral, and more. Paris is also the capital of the Île-de-France region and is a major global center for art, fashion, gastronomy, and culture.
           finish_reason:
-            $ref: "#/components/schemas/FinishReason"
+            $ref: '#/components/schemas/FinishReason'
           logprobs:
             allOf:
-              - $ref: "#/components/schemas/LogprobsPart"
+              - $ref: '#/components/schemas/LogprobsPart'
               - nullable: true
 
     CompletionRequest:
@@ -286,7 +332,7 @@ components:
         prompt:
           type: string
           description: A string providing context for the model to complete.
-          example: "<s>[INST] What is the capital of France? [/INST]"
+          example: '<s>[INST] What is the capital of France? [/INST]'
         model:
           type: string
           description: The name of the model to query.
@@ -317,7 +363,7 @@ components:
           format: float
         stream:
           type: boolean
-          description: "If set, tokens are returned as Server-Sent Events as they are made available. Stream terminates with `data: [DONE]`"
+          description: 'If set, tokens are returned as Server-Sent Events as they are made available. Stream terminates with `data: [DONE]`'
         logprobs:
           type: integer
           minimum: 0
@@ -338,11 +384,11 @@ components:
         id:
           type: string
         choices:
-          $ref: "#/components/schemas/CompletionChoicesData"
+          $ref: '#/components/schemas/CompletionChoicesData'
         prompt:
-          $ref: "#/components/schemas/PromptPart"
+          $ref: '#/components/schemas/PromptPart'
         usage:
-          $ref: "#/components/schemas/UsageData"
+          $ref: '#/components/schemas/UsageData'
         created:
           type: integer
         model:
@@ -361,15 +407,15 @@ components:
 
     CompletionStream:
       oneOf:
-        - $ref: "#/components/schemas/CompletionEvent"
-        - $ref: "#/components/schemas/StreamSentinel"
+        - $ref: '#/components/schemas/CompletionEvent'
+        - $ref: '#/components/schemas/StreamSentinel'
 
     CompletionEvent:
       type: object
       required: [data]
       properties:
         data:
-          $ref: "#/components/schemas/CompletionChunk"
+          $ref: '#/components/schemas/CompletionChunk'
 
     CompletionChunk:
       type: object
@@ -378,19 +424,19 @@ components:
         id:
           type: string
         token:
-          $ref: "#/components/schemas/CompletionToken"
+          $ref: '#/components/schemas/CompletionToken'
         choices:
           title: CompletionChoices
           type: array
           items:
-            $ref: "#/components/schemas/CompletionChoice"
+            $ref: '#/components/schemas/CompletionChoice'
         usage:
           allOf:
-            - $ref: "#/components/schemas/UsageData"
+            - $ref: '#/components/schemas/UsageData'
             - nullable: true
         finish_reason:
           allOf:
-            - $ref: "#/components/schemas/FinishReason"
+            - $ref: '#/components/schemas/FinishReason'
             - nullable: true
 
     CompletionChoice:
@@ -428,11 +474,11 @@ components:
               content:
                 type: string
           finish_reason:
-            $ref: "#/components/schemas/FinishReason"
+            $ref: '#/components/schemas/FinishReason'
           logprobs:
             allOf:
               - nullable: true
-              - $ref: "#/components/schemas/LogprobsPart"
+              - $ref: '#/components/schemas/LogprobsPart'
 
     ChatCompletionRequest:
       type: object
@@ -489,7 +535,7 @@ components:
           format: float
         stream:
           type: boolean
-          description: "If set, tokens are returned as Server-Sent Events as they are made available. Stream terminates with `data: [DONE]`"
+          description: 'If set, tokens are returned as Server-Sent Events as they are made available. Stream terminates with `data: [DONE]`'
         logprobs:
           type: integer
           minimum: 0
@@ -510,9 +556,9 @@ components:
         id:
           type: string
         choices:
-          $ref: "#/components/schemas/ChatCompletionChoicesData"
+          $ref: '#/components/schemas/ChatCompletionChoicesData'
         usage:
-          $ref: "#/components/schemas/UsageData"
+          $ref: '#/components/schemas/UsageData'
         created:
           type: integer
         model:
@@ -524,16 +570,16 @@ components:
 
     ChatCompletionStream:
       oneOf:
-        - $ref: "#/components/schemas/ChatCompletionEvent"
-        - $ref: "#/components/schemas/StreamSentinel"
+        - $ref: '#/components/schemas/ChatCompletionEvent'
+        - $ref: '#/components/schemas/StreamSentinel'
 
     ChatCompletionEvent:
       type: object
       required: [data]
       properties:
         data:
-          $ref: "#/components/schemas/ChatCompletionChunk"
-    
+          $ref: '#/components/schemas/ChatCompletionChunk'
+
     ChatCompletionChunk:
       type: object
       required: [id, object, created, token, choices]
@@ -547,19 +593,19 @@ components:
         created:
           type: integer
         token:
-          $ref: "#/components/schemas/ChatCompletionToken"
+          $ref: '#/components/schemas/ChatCompletionToken'
         choices:
           title: ChatCompletionChoices
           type: array
           items:
-            $ref: "#/components/schemas/ChatCompletionChoice"
+            $ref: '#/components/schemas/ChatCompletionChoice'
         usage:
           allOf:
-            - $ref: "#/components/schemas/UsageData"
+            - $ref: '#/components/schemas/UsageData'
             - nullable: true
         finish_reason:
           allOf:
-            - $ref: "#/components/schemas/FinishReason"
+            - $ref: '#/components/schemas/FinishReason'
             - nullable: true
 
     StreamSentinel:
@@ -570,7 +616,7 @@ components:
           title: stream_signal
           type: string
           enum:
-            - "[DONE]"
+            - '[DONE]'
 
     ChatCompletionToken:
       type: object
@@ -641,3 +687,60 @@ components:
                   type: number
               index:
                 type: integer
+
+    ModelInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 'Austism/chronos-hermes-13b'
+        object:
+          type: string
+          example: 'model'
+        created:
+          type: integer
+          example: 1692896905
+        type:
+          type: string
+          example: 'chat'
+        display_name:
+          type: string
+          example: 'Chronos Hermes (13B)'
+        organization:
+          type: string
+          example: 'Austism'
+        link:
+          type: string
+          example: ''
+        license:
+          type: string
+          example: 'other'
+        context_length:
+          type: integer
+          example: 2048
+        pricing:
+          $ref: '#/components/schemas/ModelPricingInfo'
+
+    ModelPricingInfo:
+      type: object
+      properties:
+        hourly:
+          type: number
+          format: float
+          example: 0
+        input:
+          type: number
+          format: float
+          example: 0.3
+        output:
+          type: number
+          format: float
+          example: 0.3
+        base:
+          type: number
+          format: float
+          example: 0
+        finetune:
+          type: number
+          format: float
+          example: 0
