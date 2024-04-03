@@ -377,6 +377,34 @@ components:
           description: Number of generations to return
           minimum: 1
           maximum: 128
+        response_format:
+          type: object
+          description: Specifies the format of the response.
+          properties:
+            type:
+              type: string
+              description: The type of the response format.
+              example: json
+            schema:
+              type: object
+              additionalProperties: true
+              description: The schema of the response format.
+        tools:
+          type: array
+          description: A list of tools to be used in the query.
+          items:
+            $ref: '#/components/schemas/ToolsPart'
+        tool_choice:
+          type: object
+          description: The choice of tool to use.
+          oneOf:
+            - type: string
+              example: 'tool_name'
+            - $ref: '#/components/schemas/ToolChoice'
+        safety_model:
+          type: string
+          description: The name of the safety model to use.
+          example: 'safety_model_name'
 
     CompletionResponse:
       type: object
@@ -744,3 +772,35 @@ components:
           type: number
           format: float
           example: 0
+
+    ToolsPart:
+      type: object
+      properties:
+        type:
+          type: string
+          example: 'tool_type'
+        function:
+          type: object
+          properties:
+            description:
+              type: string
+              example: 'A description of the function.'
+            name:
+              type: string
+              example: 'function_name'
+            parameters:
+              type: object
+              additionalProperties: true
+              description: 'A map of parameter names to their values.'
+    ToolChoice:
+      type: object
+      properties:
+        type:
+          type: string
+          example: 'tool_choice_type'
+        function:
+          type: object
+          properties:
+            name:
+              type: string
+              example: 'function_name'
