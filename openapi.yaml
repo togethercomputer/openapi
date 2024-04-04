@@ -277,31 +277,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ImageResponse'
   /files:
-    post:
-      summary: Upload a file
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-                  description: The file to upload.
-                purpose:
-                  type: string
-                  enum: [FineTune, Other]
-                  default: FineTune
-                  description: The purpose of the file.
-      responses:
-        '200':
-          description: File uploaded successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FileResponse'
     get:
       summary: List all files
       responses:
@@ -463,28 +438,61 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinetuneListEvents'
-  /fine-tunes/{id}/download:
+  /fine-tunes/download:
     get:
-      summary: Download fine-tuned model or checkpoint
+      summary: Downloads a compressed fine-tuned model or checkpoint to local disk.
       parameters:
-        - name: id
-          in: path
-          required: true
+        - in: query
+          name: ft_id
           schema:
             type: string
-        - name: checkpoint_step
-          in: query
+          required: true
+          description: Fine-tune ID to download. A string that starts with `ft-`.
+        - in: query
+          name: checkpoint_step
           schema:
             type: integer
             default: -1
-            description: Step number for checkpoint to download
+          required: false
+          description: Specifies step number for checkpoint to download. Defaults to -1 (download the final model).
+        - in: query
+          name: output
+          schema:
+            type: string
+          required: false
+          description: Specifies output file name for downloaded model. Defaults to `$PWD/{model_name}.{extension}`.
       responses:
         '200':
-          description: Fine-tuned model or checkpoint downloaded successfully
+          description: Successfully downloaded the fine-tuned model or checkpoint.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinetuneDownloadResult'
+        '400':
+          description: Invalid request parameters.
+        '404':
+          description: Fine-tune ID not found.
+  /fine-tunes/{id}/cancel:
+    post:
+      summary: Cancels a running fine-tuning job.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Fine-tune ID to cancel. A string that starts with `ft-`.
+      responses:
+        '200':
+          description: Successfully cancelled the fine-tuning job.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinetuneResponse'
+        '400':
+          description: Invalid request parameters.
+        '404':
+          description: Fine-tune ID not found.
 components:
   securitySchemes:
     bearerAuth:
@@ -633,34 +641,6 @@ components:
           description: Number of generations to return
           minimum: 1
           maximum: 128
-        response_format:
-          type: object
-          description: Specifies the format of the response.
-          properties:
-            type:
-              type: string
-              description: The type of the response format.
-              example: json
-            schema:
-              type: object
-              additionalProperties: true
-              description: The schema of the response format.
-        tools:
-          type: array
-          description: A list of tools to be used in the query.
-          items:
-            $ref: '#/components/schemas/ToolsPart'
-        tool_choice:
-          type: object
-          description: The choice of tool to use.
-          oneOf:
-            - type: string
-              example: 'tool_name'
-            - $ref: '#/components/schemas/ToolChoice'
-        safety_model:
-          type: string
-          description: The name of the safety model to use.
-          example: 'safety_model_name'
 
     CompletionResponse:
       type: object
@@ -833,6 +813,34 @@ components:
           description: Number of generations to return
           minimum: 1
           maximum: 128
+        response_format:
+          type: object
+          description: Specifies the format of the response.
+          properties:
+            type:
+              type: string
+              description: The type of the response format.
+              example: json
+            schema:
+              type: object
+              additionalProperties: true
+              description: The schema of the response format.
+        tools:
+          type: array
+          description: A list of tools to be used in the query.
+          items:
+            $ref: '#/components/schemas/ToolsPart'
+        tool_choice:
+          type: object
+          description: The choice of tool to use.
+          oneOf:
+            - type: string
+              example: 'tool_name'
+            - $ref: '#/components/schemas/ToolChoice'
+        safety_model:
+          type: string
+          description: The name of the safety model to use.
+          example: 'safety_model_name'
 
     ChatCompletionResponse:
       type: object
@@ -1129,11 +1137,13 @@ components:
       properties:
         id:
           type: string
-        status:
+        training_file:
+          type: string
+        validation_file:
           type: string
         model:
           type: string
-        training_file:
+        output_name:
           type: string
         n_epochs:
           type: integer
@@ -1143,11 +1153,122 @@ components:
           type: integer
         learning_rate:
           type: number
-          format: float
-        suffix:
+        eval_steps:
+          type: integer
+        lora:
+          type: boolean
+        lora_r:
+          type: integer
+        lora_alpha:
+          type: integer
+        lora_dropout:
+          type: integer
+        created_at:
           type: string
-        wandb_api_key:
+        updated_at:
           type: string
+        status:
+          $ref: '#/components/schemas/FinetuneJobStatus'
+        job_id:
+          type: string
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinetuneEvent'
+        token_count:
+          type: integer
+        param_count:
+          type: integer
+        total_price:
+          type: integer
+        epochs_completed:
+          type: integer
+        queue_depth:
+          type: integer
+        wandb_project_name:
+          type: string
+        wandb_url:
+          type: string
+        training_file_num_lines:
+          type: integer
+        training_file_size:
+          type: integer
+
+    FinetuneJobStatus:
+      type: string
+      enum:
+        - pending
+        - queued
+        - running
+        - compressing
+        - uploading
+        - cancel_requested
+        - cancelled
+        - error
+        - completed
+
+    FinetuneEvent:
+      type: object
+      properties:
+        object:
+          type: string
+          enum:
+            - FinetuneEvent
+        created_at:
+          type: string
+        level:
+          $ref: '#/components/schemas/FinetuneEventLevels'
+        message:
+          type: string
+        type:
+          $ref: '#/components/schemas/FinetuneEventType'
+        param_count:
+          type: integer
+        token_count:
+          type: integer
+        wandb_url:
+          type: string
+        hash:
+          type: string
+    FinetuneEventLevels:
+      type: string
+      enum:
+        - null
+        - info
+        - warning
+        - error
+        - legacy_info
+        - legacy_iwarning
+        - legacy_ierror
+    FinetuneEventType:
+      type: string
+      enum:
+        - job_pending
+        - job_start
+        - job_stopped
+        - model_downloading
+        - model_download_complete
+        - training_data_downloading
+        - training_data_download_complete
+        - validation_data_downloading
+        - validation_data_download_complete
+        - wandb_init
+        - training_start
+        - checkpoint_save
+        - billing_limit
+        - epoch_complete
+        - training_complete
+        - model_compressing
+        - model_compression_complete
+        - model_uploading
+        - model_upload_complete
+        - job_complete
+        - job_error
+        - cancel_requested
+        - job_restarted
+        - refund
+        - warning
+
     FinetuneList:
       type: array
       items:
