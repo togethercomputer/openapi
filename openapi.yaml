@@ -407,21 +407,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinetuneResponse'
-    post:
-      summary: Cancel a running fine-tuning job
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Fine-tuning job cancelled successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FinetuneResponse'
   /fine-tunes/{id}/events:
     get:
       summary: List events of a fine-tune job
@@ -641,6 +626,10 @@ components:
           description: Number of generations to return
           minimum: 1
           maximum: 128
+        safety_model:
+          type: string
+          description: The name of the safety model to use.
+          example: 'safety_model_name'
 
     CompletionResponse:
       type: object
