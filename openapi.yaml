@@ -1010,7 +1010,7 @@ components:
           type: array
           items:
             type: object
-            requred: [index, object, embedding]
+            required: [index, object, embedding]
             properties:
               object:
                 type: string
