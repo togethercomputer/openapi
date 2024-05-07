@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Together API
-  description: The Together REST API. Please see https://docs.together.ai/reference for more details.
+  description: The Together REST API. Please see https://docs.together.ai for more details.
   version: '2.0.0'
   termsOfService: https://www.together.ai/terms-of-service
   contact:
@@ -635,6 +635,30 @@ components:
           type: string
           description: The name of the safety model to use.
           example: 'safety_model_name'
+        min_p:
+          type: number
+          description: The `min_p` parameter is a number between 0 and 1 and an alternative to `temperature`.
+          format: float
+        presence_penalty:
+          type: number
+          description: The `presence_penalty` parameter is a number between -2.0 and 2.0 where a positive value will increase the likelihood of a model talking about new topics.
+          format: float
+        frequency_penalty:
+          type: number
+          description: The `frequency_penalty` parameter is a number between -2.0 and 2.0 where a positive value will decrease the likelihood of repeating tokens that were mentioned prior.
+          format: float
+        logit_bias:
+          type: object
+          description: The `logit_bias` parameter allows us to adjust the likelihood of specific tokens appearing in the generated output.
+          properties:
+            token_index:
+              type: number
+              format: int32
+              description: The index of the token to bias.
+            bias:
+              type: number
+              format: float
+              description: The logit bias value to apply to the token.
 
     CompletionResponse:
       type: object
@@ -807,6 +831,30 @@ components:
           description: Number of generations to return
           minimum: 1
           maximum: 128
+        min_p:
+          type: number
+          description: The `min_p` parameter is a number between 0 and 1 and an alternative to `temperature`.
+          format: float
+        presence_penalty:
+          type: number
+          description: The `presence_penalty` parameter is a number between -2.0 and 2.0 where a positive value will increase the likelihood of a model talking about new topics.
+          format: float
+        frequency_penalty:
+          type: number
+          description: The `frequency_penalty` parameter is a number between -2.0 and 2.0 where a positive value will decrease the likelihood of repeating tokens that were mentioned prior.
+          format: float
+        logit_bias:
+          type: object
+          description: The `logit_bias` parameter allows us to adjust the likelihood of specific tokens appearing in the generated output.
+          properties:
+            token_index:
+              type: number
+              format: int32
+              description: The index of the token to bias.
+            bias:
+              type: number
+              format: float
+              description: The logit bias value to apply to the token.
         response_format:
           type: object
           description: Specifies the format of the response.
