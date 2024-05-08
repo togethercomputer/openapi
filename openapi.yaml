@@ -11,7 +11,7 @@ info:
     name: MIT
     url: https://github.com/togethercomputer/openapi/blob/main/LICENSE
 servers:
-  - url: https://api.together.ai/v1
+  - url: https://api.together.xyz/v1
 security:
   - bearerAuth: []
 paths:
