@@ -244,9 +244,11 @@ paths:
                 prompt:
                   type: string
                   description: A description of the desired images. Maximum length varies by model.
+                  example: cat floating in space, cinematic
                 model:
                   type: string
                   description: The model to use for image generation.
+                  example: stabilityai/stable-diffusion-xl-base-1.0
                 steps:
                   type: integer
                   default: 20
@@ -989,9 +991,11 @@ components:
         model:
           type: string
           description: The name of the embedding model to use.
+          example: togethercomputer/m2-bert-80M-8k-retrieval
         input:
           type: string
           description: A string providing the text for the model to embed.
+          example: Our solar system orbits the Milky Way galaxy at about 515,000 mph
 
     EmbeddingsResponse:
       type: object
