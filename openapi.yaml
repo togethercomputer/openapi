@@ -652,10 +652,6 @@ components:
         logit_bias:
           type: object
           description: The `logit_bias` parameter allows us to adjust the likelihood of specific tokens appearing in the generated output.
-          additionalProperties:
-            type: number
-            format: float
-            description: The logit bias value to apply to the token.
     CompletionResponse:
       type: object
       properties:
@@ -842,10 +838,6 @@ components:
         logit_bias:
           type: object
           description: The `logit_bias` parameter allows us to adjust the likelihood of specific tokens appearing in the generated output.
-          additionalProperties:
-            type: number
-            format: float
-            description: The logit bias value to apply to the token.
         response_format:
           type: object
           description: Specifies the format of the response.
