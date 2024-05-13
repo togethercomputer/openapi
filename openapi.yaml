@@ -425,7 +425,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinetuneListEvents'
-  /fine-tunes/download:
+  /finetune/download:
     get:
       summary: Downloads a compressed fine-tuned model or checkpoint to local disk.
       parameters:
@@ -439,9 +439,8 @@ paths:
           name: checkpoint_step
           schema:
             type: integer
-            default: -1
           required: false
-          description: Specifies step number for checkpoint to download. Defaults to -1 (download the final model).
+          description: Specifies step number for checkpoint to download.
         - in: query
           name: output
           schema:
