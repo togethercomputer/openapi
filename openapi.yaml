@@ -650,6 +650,8 @@ components:
           format: float
         logit_bias:
           type: object
+          additionalProperties:
+            type: string
           description: The `logit_bias` parameter allows us to adjust the likelihood of specific tokens appearing in the generated output.
           example: { '1024': -10.5, '105': 21.4 }
     CompletionResponse:
@@ -837,6 +839,8 @@ components:
           format: float
         logit_bias:
           type: object
+          additionalProperties:
+            type: string
           description: The `logit_bias` parameter allows us to adjust the likelihood of specific tokens appearing in the generated output.
           example: { '1024': -10.5, '105': 21.4 }
         response_format:
@@ -849,6 +853,8 @@ components:
               example: json
             schema:
               type: object
+              additionalProperties:
+                type: string
               description: The schema of the response format.
         tools:
           type: array
@@ -1219,7 +1225,6 @@ components:
           type: string
         updated_at:
           type: string
-
         n_epochs:
           type: integer
         n_checkpoints:
