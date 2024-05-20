@@ -651,7 +651,7 @@ components:
         logit_bias:
           type: object
           additionalProperties:
-            type: string
+            type: float
           description: The `logit_bias` parameter allows us to adjust the likelihood of specific tokens appearing in the generated output.
           example: { '1024': -10.5, '105': 21.4 }
     CompletionResponse:
@@ -840,7 +840,7 @@ components:
         logit_bias:
           type: object
           additionalProperties:
-            type: string
+            type: float
           description: The `logit_bias` parameter allows us to adjust the likelihood of specific tokens appearing in the generated output.
           example: { '1024': -10.5, '105': 21.4 }
         response_format:
