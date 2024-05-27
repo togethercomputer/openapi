@@ -1032,7 +1032,13 @@ components:
           type: integer
           example: 1692896905
         type:
-          type: string
+          enum:
+            - chat
+            - language
+            - code
+            - image
+            - embedding
+            - moderation
           example: 'chat'
         display_name:
           type: string
@@ -1058,7 +1064,8 @@ components:
         model:
           type: string
         object:
-          type: string
+          enum:
+            - list
           example: 'list'
         data:
           type: array
@@ -1162,12 +1169,15 @@ components:
           type: integer
           example: 2664
         purpose:
-          type: string
+          enum:
+            - fine-tune
           example: 'fine-tune'
         Processed:
           type: boolean
         FileType:
-          type: string
+          enum:
+            - jsonl
+            - parquet
           example: 'jsonl'
         LineCount:
           type: integer
@@ -1382,11 +1392,43 @@ components:
         created_at:
           type: string
         level:
-          type: string
+          enum:
+            - null
+            - info
+            - warning
+            - error
+            - legacy_info
+            - legacy_iwarning
+            - legacy_ierror
         message:
           type: string
         type:
-          type: string
+          enum:
+            - job_pending
+            - job_start
+            - job_stopped
+            - model_downloading
+            - model_download_complete
+            - training_data_downloading
+            - training_data_download_complete
+            - validation_data_downloading
+            - validation_data_download_complete
+            - wandb_init
+            - training_start
+            - checkpoint_save
+            - billing_limit
+            - epoch_complete
+            - training_complete
+            - model_compressing
+            - model_compression_complete
+            - model_uploading
+            - model_upload_complete
+            - job_complete
+            - job_error
+            - cancel_requested
+            - job_restarted
+            - refund
+            - warning
         param_count:
           type: integer
         token_count:
@@ -1410,7 +1452,9 @@ components:
       type: object
       properties:
         object:
-          type: string
+          enum:
+            - null
+            - local
         id:
           type: string
         checkpoint_step:
