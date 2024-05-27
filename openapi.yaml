@@ -335,6 +335,78 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileObject'
+  /files/upload:
+    post:
+      summary: Upload a file for fine-tuning
+      description: Endpoint to upload a file for fine-tuning purposes.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The file to upload.
+                file_name:
+                  type: string
+                  description: The name of the file.
+                purpose:
+                  type: string
+                  enum: ['fine-tune']
+                  default: 'fine-tune'
+                  description: The purpose of the file upload. Must be "fine-tune".
+              required:
+                - file
+      responses:
+        '200':
+          description: File uploaded successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: File uploaded successfully.
+                  file_id:
+                    type: string
+                    description: The unique ID of the uploaded file.
+        '400':
+          description: Bad request. Invalid purpose or file not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unable to save the file - invalid purpose specified.
+                  error:
+                    type: string
+                    example: File not found.
+        '401':
+          description: Unauthorized. User is not authorized to perform this activity.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User is not authorized to perform this activity.
+        '500':
+          description: Internal server error. Unable to save the file due to an internal error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unable to save the file - internal error.
   /fine-tunes:
     post:
       summary: Create a fine-tuning job
