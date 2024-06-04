@@ -571,6 +571,8 @@ components:
           text:
             type: string
             example: The capital of France is Paris. It's located in the north-central part of the country and is one of the most populous and visited cities in the world, known for its iconic landmarks like the Eiffel Tower, Louvre Museum, Notre-Dame Cathedral, and more. Paris is also the capital of the Île-de-France region and is a major global center for art, fashion, gastronomy, and culture.
+          seed:
+            type: integer
           finish_reason:
             $ref: '#/components/schemas/FinishReason'
           logprobs:
@@ -654,6 +656,10 @@ components:
             type: float
           description: The `logit_bias` parameter allows us to adjust the likelihood of specific tokens appearing in the generated output.
           example: { '1024': -10.5, '105': 21.4 }
+        seed:
+            type: integer
+            description: Seed value for reproducibility.
+            example: 42
     CompletionResponse:
       type: object
       properties:
@@ -710,6 +716,8 @@ components:
           allOf:
             - $ref: '#/components/schemas/UsageData'
             - nullable: true
+        seed:
+            type: integer
         finish_reason:
           allOf:
             - $ref: '#/components/schemas/FinishReason'
@@ -749,6 +757,8 @@ components:
                 example: assistant
               content:
                 type: string
+          seed:
+            type: integer
           finish_reason:
             $ref: '#/components/schemas/FinishReason'
           logprobs:
@@ -843,6 +853,10 @@ components:
             type: float
           description: The `logit_bias` parameter allows us to adjust the likelihood of specific tokens appearing in the generated output.
           example: { '1024': -10.5, '105': 21.4 }
+        seed:
+            type: integer
+            description: Seed value for reproducibility.
+            example: 42
         response_format:
           type: object
           description: Specifies the format of the response.
@@ -926,6 +940,8 @@ components:
           allOf:
             - $ref: '#/components/schemas/UsageData'
             - nullable: true
+        seed:
+            type: integer
         finish_reason:
           allOf:
             - $ref: '#/components/schemas/FinishReason'
