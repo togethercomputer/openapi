@@ -244,7 +244,7 @@ paths:
     post:
       tags: ["Images"]
       summary: Create an image
-      description: Use an image model to generate images for a given prompt.
+      description: Use an image model to generate an image for a given prompt.
       requestBody:
         required: true
         content:
