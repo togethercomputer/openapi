@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: Together API
+  title: Together APIs
   description: The Together REST API. Please see https://docs.together.ai for more details.
   version: '2.0.0'
   termsOfService: https://www.together.ai/terms-of-service
