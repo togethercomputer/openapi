@@ -73,7 +73,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
       deprecated: false
-
   /completions:
     post:
       tags: ['Completion']
@@ -132,7 +131,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
       deprecated: false
-
   /embeddings:
     post:
       tags: ['Embeddings']
@@ -188,7 +186,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
       deprecated: false
-
   /models:
     get:
       tags: ['Models']
@@ -239,7 +236,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
       deprecated: false
-
   /images/generations:
     post:
       tags: ['Images']
@@ -292,7 +288,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ImageResponse'
-
   /files:
     get:
       tags: ['Files']
@@ -305,7 +300,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileList'
-
   /files/{id}:
     get:
       tags: ['Files']
@@ -341,7 +335,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileDeleteResponse'
-
   /files/{id}/content:
     get:
       tags: ['Files']
@@ -360,7 +353,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileObject'
-
   /fine-tunes:
     post:
       tags: ['Fine-tuning']
