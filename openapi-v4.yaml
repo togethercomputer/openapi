@@ -18,7 +18,7 @@ paths:
   /chat/completions:
     post:
       tags: ["Chat"]
-      summary: Create a chat completion
+      summary: Create chat completion
       description: Query a chat model.
       operationId: chat-completions
       requestBody:
@@ -77,7 +77,7 @@ paths:
   /completions:
     post:
       tags: ["Completion"]
-      summary: Create a completion
+      summary: Create completion
       description: Query a language, code, or image model.
       operationId: completions
       requestBody:
@@ -136,7 +136,7 @@ paths:
   /embeddings:
     post:
       tags: ["Embeddings"]
-      summary: Create an embedding
+      summary: Create embedding
       description: Query an embedding model for a given string of text.
       operationId: embeddings
       requestBody:
@@ -243,7 +243,7 @@ paths:
   /images/generations:
     post:
       tags: ["Images"]
-      summary: Create an image
+      summary: Create image
       description: Use an image model to generate an image for a given prompt.
       requestBody:
         required: true
@@ -292,6 +292,231 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ImageResponse"
+
+  /files:
+    get:
+      tags: ["Files"]
+      summary: List all files
+      description: List the metadata for all uploaded data files.
+      responses:
+        "200":
+          description: List of files
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileList"
+
+  /files/{id}:
+    get:
+      tags: ["Files"]
+      summary: List file
+      description: List the metadata for a single uploaded data file.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: File retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileResponse"
+    delete:
+      tags: ["Files"]
+      summary: Delete a file
+      description: Delete a previously uploaded data file.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: File deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileDeleteResponse"
+
+  /files/{id}/content:
+    get:
+      tags: ["Files"]
+      summary: Get file contents
+      description: Get the contents of a single uploaded data file.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: File content retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileObject"
+
+  /fine-tunes:
+    post:
+      tags: ["Fine-tuning"]
+      summary: Create job
+      description: Use a model to create a fine-tuning job.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - training_file
+                - model
+              properties:
+                training_file:
+                  type: string
+                  description: File-ID of a file uploaded to the Together API
+                model:
+                  type: string
+                  description: Name of the base model to run fine-tune job on
+                n_epochs:
+                  type: integer
+                  default: 1
+                  description: Number of epochs for fine-tuning
+                n_checkpoints:
+                  type: integer
+                  default: 1
+                  description: Number of checkpoints to save during fine-tuning
+                batch_size:
+                  type: integer
+                  default: 32
+                  description: Batch size for fine-tuning
+                learning_rate:
+                  type: number
+                  format: float
+                  default: 0.00001
+                  description: Learning rate multiplier to use for training
+                suffix:
+                  type: string
+                  description: Suffix that will be added to your fine-tuned model name
+                wandb_api_key:
+                  type: string
+                  description: API key for Weights & Biases integration
+      responses:
+        "200":
+          description: Fine-tuning job initiated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinetuneResponse"
+    get:
+      tags: ["Fine-tuning"]
+      summary: List all jobs
+      description: List the metadata for all fine-tuning jobs.
+      responses:
+        "200":
+          description: List of fine-tune jobs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinetuneList"
+  /fine-tunes/{id}:
+    get:
+      tags: ["Fine-tuning"]
+      summary: List job
+      description: List the metadata for a single fine-tuning job.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Fine-tune job details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinetuneResponse"
+  /fine-tunes/{id}/events:
+    get:
+      tags: ["Fine-tuning"]
+      summary: List job events
+      description: List the events for a single fine-tuning job.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of fine-tune events
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinetuneListEvents"
+  /finetune/download:
+    get:
+      tags: ["Fine-tuning"]
+      summary: Download model
+      description: Download a compressed fine-tuned model or checkpoint to local disk.
+      parameters:
+        - in: query
+          name: ft_id
+          schema:
+            type: string
+          required: true
+          description: Fine-tune ID to download. A string that starts with `ft-`.
+        - in: query
+          name: checkpoint_step
+          schema:
+            type: integer
+          required: false
+          description: Specifies step number for checkpoint to download.
+        - in: query
+          name: output
+          schema:
+            type: string
+          required: false
+          description: Specifies output file name for downloaded model. Defaults to `$PWD/{model_name}.{extension}`.
+      responses:
+        "200":
+          description: Successfully downloaded the fine-tuned model or checkpoint.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinetuneDownloadResult"
+        "400":
+          description: Invalid request parameters.
+        "404":
+          description: Fine-tune ID not found.
+  /fine-tunes/{id}/cancel:
+    post:
+      tags: ["Fine-tuning"]
+      summary: Cancel job
+      description: Cancel a currently running fine-tuning job.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Fine-tune ID to cancel. A string that starts with `ft-`.
+      responses:
+        "200":
+          description: Successfully cancelled the fine-tuning job.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinetuneResponse"
+        "400":
+          description: Invalid request parameters.
+        "404":
+          description: Fine-tune ID not found.
 
 components:
   securitySchemes:
