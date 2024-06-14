@@ -17,8 +17,9 @@ security:
 paths:
   /chat/completions:
     post:
-      summary: Chat Completions
-      description: Creates a model response for the given chat conversation.
+      tags: ["Chat"]
+      summary: Create chat completion
+      description: Query a chat model.
       operationId: chat-completions
       requestBody:
         content:
@@ -72,9 +73,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorData"
       deprecated: false
+
   /completions:
     post:
-      summary: Creates a completion for the provided prompt and parameters
+      tags: ["Completion"]
+      summary: Create completion
+      description: Query a language, code, or image model.
       operationId: completions
       requestBody:
         content:
@@ -128,9 +132,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorData"
       deprecated: false
+
   /embeddings:
     post:
-      summary: Creates an embedding vector representing the input text
+      tags: ["Embeddings"]
+      summary: Create embedding
+      description: Query an embedding model for a given string of text.
       operationId: embeddings
       requestBody:
         content:
@@ -184,7 +191,9 @@ paths:
 
   /models:
     get:
-      summary: Lists all the available models
+      tags: ["Models"]
+      summary: List all models
+      description: Lists all of Together's open-source models
       operationId: models
       responses:
         "200":
@@ -233,7 +242,9 @@ paths:
 
   /images/generations:
     post:
-      summary: Generate images based on a given prompt using a specified model
+      tags: ["Images"]
+      summary: Create image
+      description: Use an image model to generate an image for a given prompt.
       requestBody:
         required: true
         content:
@@ -284,7 +295,9 @@ paths:
 
   /files:
     get:
+      tags: ["Files"]
       summary: List all files
+      description: List the metadata for all uploaded data files.
       responses:
         "200":
           description: List of files
@@ -295,7 +308,9 @@ paths:
 
   /files/{id}:
     get:
-      summary: Retrieve a file
+      tags: ["Files"]
+      summary: List file
+      description: List the metadata for a single uploaded data file.
       parameters:
         - name: id
           in: path
@@ -310,7 +325,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/FileResponse"
     delete:
+      tags: ["Files"]
       summary: Delete a file
+      description: Delete a previously uploaded data file.
       parameters:
         - name: id
           in: path
@@ -324,9 +341,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FileDeleteResponse"
+
   /files/{id}/content:
     get:
-      summary: Retrieve file content
+      tags: ["Files"]
+      summary: Get file contents
+      description: Get the contents of a single uploaded data file.
       parameters:
         - name: id
           in: path
@@ -340,9 +360,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FileObject"
+
   /fine-tunes:
     post:
-      summary: Create a fine-tuning job
+      tags: ["Fine-tuning"]
+      summary: Create job
+      description: Use a model to create a fine-tuning job.
       requestBody:
         required: true
         content:
@@ -390,7 +413,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/FinetuneResponse"
     get:
-      summary: List fine-tune job history
+      tags: ["Fine-tuning"]
+      summary: List all jobs
+      description: List the metadata for all fine-tuning jobs.
       responses:
         "200":
           description: List of fine-tune jobs
@@ -400,7 +425,9 @@ paths:
                 $ref: "#/components/schemas/FinetuneList"
   /fine-tunes/{id}:
     get:
-      summary: Retrieve fine-tune job details
+      tags: ["Fine-tuning"]
+      summary: List job
+      description: List the metadata for a single fine-tuning job.
       parameters:
         - name: id
           in: path
@@ -416,7 +443,9 @@ paths:
                 $ref: "#/components/schemas/FinetuneResponse"
   /fine-tunes/{id}/events:
     get:
-      summary: List events of a fine-tune job
+      tags: ["Fine-tuning"]
+      summary: List job events
+      description: List the events for a single fine-tuning job.
       parameters:
         - name: id
           in: path
@@ -432,7 +461,9 @@ paths:
                 $ref: "#/components/schemas/FinetuneListEvents"
   /finetune/download:
     get:
-      summary: Downloads a compressed fine-tuned model or checkpoint to local disk.
+      tags: ["Fine-tuning"]
+      summary: Download model
+      description: Download a compressed fine-tuned model or checkpoint to local disk.
       parameters:
         - in: query
           name: ft_id
@@ -465,7 +496,9 @@ paths:
           description: Fine-tune ID not found.
   /fine-tunes/{id}/cancel:
     post:
-      summary: Cancels a running fine-tuning job.
+      tags: ["Fine-tuning"]
+      summary: Cancel job
+      description: Cancel a currently running fine-tuning job.
       parameters:
         - in: path
           name: id
@@ -484,6 +517,7 @@ paths:
           description: Invalid request parameters.
         "404":
           description: Fine-tune ID not found.
+
 components:
   securitySchemes:
     bearerAuth:
