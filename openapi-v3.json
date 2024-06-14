@@ -1,0 +1,43 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "Foo", "version": "1.0" },
+  "servers": [{ "url": "http://api.foo.com" }],
+  "components": { "securitySchemes": {} },
+  "security": [{}],
+  "paths": {
+    "/foo": {
+      "get": {
+        "summary": "Getting Started With Your API XYZ",
+        "description": "This page will help you get started with Foo.",
+        "operationId": "getting-started-with-your-api",
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "examples": { "Result": { "value": "{}" } },
+                "schema": { "type": "object", "properties": {} }
+              }
+            }
+          },
+          "400": {
+            "description": "400",
+            "content": {
+              "application/json": {
+                "examples": { "Result": { "value": "{}" } },
+                "schema": { "type": "object", "properties": {} }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "x-readme": {
+    "headers": [],
+    "explorer-enabled": true,
+    "proxy-enabled": true
+  },
+  "x-readme-fauxas": true
+}
