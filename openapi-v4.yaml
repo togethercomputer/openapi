@@ -18,7 +18,7 @@ paths:
   /chat/completions:
     post:
       tags: ["Chat"]
-      summary: Create chat completion
+      summary: Create a chat completion
       description: Query a chat model.
       operationId: chat-completions
       requestBody:
@@ -77,7 +77,7 @@ paths:
   /completions:
     post:
       tags: ["Completion"]
-      summary: Create completion
+      summary: Create a completion
       description: Query a language, code, or image model.
       operationId: completions
       requestBody:
@@ -95,6 +95,62 @@ paths:
             text/event-stream:
               schema:
                 $ref: "#/components/schemas/CompletionStream"
+        "400":
+          description: "BadRequest"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "404":
+          description: "NotFound"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "429":
+          description: "RateLimit"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "503":
+          description: "Overloaded"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "504":
+          description: "Timeout"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+      deprecated: false
+
+  /embeddings:
+    post:
+      tags: ["Embeddings"]
+      summary: Create an embedding
+      description: Query an embedding model for some text input.
+      operationId: embeddings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmbeddingsRequest"
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmbeddingsResponse"
         "400":
           description: "BadRequest"
           content:
