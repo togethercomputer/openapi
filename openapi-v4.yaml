@@ -137,7 +137,7 @@ paths:
     post:
       tags: ["Embeddings"]
       summary: Create an embedding
-      description: Query an embedding model for some text input.
+      description: Query an embedding model for a given string of text.
       operationId: embeddings
       requestBody:
         content:
@@ -188,6 +188,110 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorData"
       deprecated: false
+
+  /models:
+    get:
+      tags: ["Models"]
+      summary: List all models
+      description: Lists all of Together's open-source models
+      operationId: models
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModelInfoList"
+        "400":
+          description: "BadRequest"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "404":
+          description: "NotFound"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "429":
+          description: "RateLimit"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "503":
+          description: "Overloaded"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "504":
+          description: "Timeout"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+      deprecated: false
+
+  /images/generations:
+    post:
+      tags: ["Images"]
+      summary: Create an image
+      description: Use an image model to generate images for a given prompt.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - prompt
+                - model
+              properties:
+                prompt:
+                  type: string
+                  description: A description of the desired images. Maximum length varies by model.
+                  example: cat floating in space, cinematic
+                model:
+                  type: string
+                  description: The model to use for image generation.
+                  example: stabilityai/stable-diffusion-xl-base-1.0
+                steps:
+                  type: integer
+                  default: 20
+                  description: Number of generation steps.
+                seed:
+                  type: integer
+                  description: Seed used for generation. Can be used to reproduce image generations.
+                n:
+                  type: integer
+                  default: 1
+                  description: Number of image results to generate.
+                height:
+                  type: integer
+                  default: 1024
+                  description: Height of the image to generate in number of pixels.
+                width:
+                  type: integer
+                  default: 1024
+                  description: Width of the image to generate in number of pixels.
+                negative_prompt:
+                  type: string
+                  description: The prompt or prompts not to guide the image generation.
+      responses:
+        "200":
+          description: Image generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImageResponse"
 
 components:
   securitySchemes:
