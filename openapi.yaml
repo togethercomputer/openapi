@@ -555,10 +555,24 @@ components:
         - eos
         - length
         - tool_calls
+        - function_call
+
+    LogProbItem:
+      type: object
+      required: [token, logprob]
+      properties:
+        token:
+          type: string
+        logprob:
+          type: number
 
     LogprobsPart:
       type: object
       properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/LogProbItem'
         tokens:
           type: array
           items:
@@ -568,7 +582,6 @@ components:
           type: array
           items:
             type: number
-            format: float
           description: List of token log probabilities
 
     PromptPart:
@@ -608,9 +621,8 @@ components:
           finish_reason:
             $ref: '#/components/schemas/FinishReason'
           logprobs:
-            allOf:
-              - $ref: '#/components/schemas/LogprobsPart'
-              - nullable: true
+            type: object
+            $ref: '#/components/schemas/LogprobsPart'
 
     CompletionRequest:
       type: object
@@ -686,6 +698,7 @@ components:
           type: object
           additionalProperties:
             type: number
+
             format: float
           description: Adjusts the likelihood of specific tokens appearing in the generated output.
           example: { '1024': -10.5, '105': 21.4 }
@@ -767,7 +780,6 @@ components:
           type: string
         logprob:
           type: number
-          format: float
         special:
           type: boolean
 
@@ -776,20 +788,61 @@ components:
       items:
         type: object
         properties:
-          message:
-            type: object
-            properties:
-              role:
-                type: string
-                example: assistant
-              content:
-                type: string
+          text:
+            type: string
+          index:
+            type: integer
+          seed:
+            type: integer
           finish_reason:
             $ref: '#/components/schemas/FinishReason'
+          message:
+            $ref: '#/components/schemas/ChatCompletionMessage'
           logprobs:
             allOf:
               - nullable: true
               - $ref: '#/components/schemas/LogprobsPart'
+    ChatCompletionMessage:
+      type: object
+      required: [role, content]
+      properties:
+        content:
+          type: string
+          nullable: true
+        role:
+          type: string
+          enum: [assistant]
+        tool_calls:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToolChoice'
+        function_call:
+          type: object
+          deprecated: true
+          required: [arguments, name]
+          properties:
+            arguments:
+              type: string
+            name:
+              type: string
+    ChatCompletionTool:
+      type: object
+      required: [type, function]
+      properties:
+        type:
+          type: string
+          enum: ['function']
+        function:
+          type: object
+          required: [name]
+          properties:
+            description:
+              type: string
+            name:
+              type: string
+            parameters:
+              type: object
+              additionalProperties: true
 
     ChatCompletionRequest:
       type: object
@@ -843,7 +896,6 @@ components:
         repetition_penalty:
           type: number
           description: A number that controls the diversity of generated text by reducing the likelihood of repeated sequences. Higher values decrease repetition.
-          format: float
         stream:
           type: boolean
           description: 'If true, stream tokens as Server-Sent Events as the model generates them instead of waiting for the full model response. The stream terminates with `data: [DONE]`. If false, return a single JSON object containing the results.'
@@ -862,6 +914,7 @@ components:
           maximum: 128
         min_p:
           type: number
+
           description: A number between 0 and 1 that can be used as an alternative to temperature.
           format: float
         presence_penalty:
@@ -879,6 +932,16 @@ components:
             format: float
           description: Adjusts the likelihood of specific tokens appearing in the generated output.
           example: { '1024': -10.5, '105': 21.4 }
+        function_call:
+          oneOf:
+            - type: string
+              enum: [none, auto]
+            - type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+
         response_format:
           type: object
           description: An object specifying the format that the model must output.
@@ -909,6 +972,94 @@ components:
           description: The name of the moderation model used to validate tokens. Choose from the available moderation models found [here](https://docs.together.ai/docs/inference-models#moderation-models).
           example: 'safety_model_name'
 
+    ChatCompletionMessageParam:
+      oneOf:
+        - $ref: '#/components/schemas/ChatCompletionSystemMessageParam'
+        - $ref: '#/components/schemas/ChatCompletionUserMessageParam'
+        - $ref: '#/components/schemas/ChatCompletionAssistantMessageParam'
+        - $ref: '#/components/schemas/ChatCompletionToolMessageParam'
+        - $ref: '#/components/schemas/ChatCompletionFunctionMessageParam'
+
+    # Start Message Params
+
+    ChatCompletionSystemMessageParam:
+      type: object
+      required: [content, role]
+      properties:
+        content:
+          type: string
+        role:
+          type: string
+          enum: ['system']
+        name:
+          type: string
+
+    ChatCompletionUserMessageParam:
+      type: object
+      required: [content, role]
+      properties:
+        content:
+          type: string
+          # TODO: more comple content?
+        role:
+          type: string
+          enum: ['user']
+        name:
+          type: string
+
+    ChatCompletionAssistantMessageParam:
+      type: object
+      required: [role]
+      properties:
+        content:
+          type: string
+          nullable: true
+        role:
+          type: string
+          enum: ['assistant']
+        name:
+          type: string
+        tool_calls:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToolChoice'
+        function_call:
+          type: object
+          deprecated: true
+          properties:
+            arguments:
+              type: string
+            name:
+              type: string
+          required: [arguments, name]
+
+    ChatCompletionFunctionMessageParam:
+      type: object
+      deprecated: true
+      required: [content, role, name]
+      properties:
+        role:
+          type: string
+          enum: ['function']
+        content:
+          type: string
+        name:
+          type: string
+
+    ChatCompletionToolMessageParam:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: ['tool']
+        content:
+          type: string
+        tool_call_id:
+          type: string
+        required: [role, content, tool_call_id]
+
+    # End Message Params
+
     ChatCompletionResponse:
       type: object
       properties:
@@ -926,6 +1077,7 @@ components:
           type: string
           enum:
             - chat.completion
+      required: [choices, id, created, model, object]
 
     ChatCompletionStream:
       oneOf:
@@ -941,7 +1093,7 @@ components:
 
     ChatCompletionChunk:
       type: object
-      required: [id, object, created, token, choices]
+      required: [id, object, created, choices, model]
       properties:
         id:
           type: string
@@ -951,8 +1103,11 @@ components:
             - chat.completion.chunk
         created:
           type: integer
-        token:
-          $ref: '#/components/schemas/ChatCompletionToken'
+        system_fingerprint:
+          type: string
+        model:
+          type: string
+          example: mistralai/Mixtral-8x7B-Instruct-v0.1
         choices:
           title: ChatCompletionChoices
           type: array
@@ -961,10 +1116,6 @@ components:
         usage:
           allOf:
             - $ref: '#/components/schemas/UsageData'
-            - nullable: true
-        finish_reason:
-          allOf:
-            - $ref: '#/components/schemas/FinishReason'
             - nullable: true
 
     StreamSentinel:
@@ -993,17 +1144,43 @@ components:
 
     ChatCompletionChoice:
       type: object
-      required: [index, delta]
+      required: [index, delta, finish_reason]
       properties:
         index:
           type: integer
+        finish_reason:
+          $ref: '#/components/schemas/FinishReason'
+        logprobs:
+          $ref: '#/components/schemas/LogprobsPart'
         delta:
           title: ChatCompletionChoiceDelta
           type: object
-          required: [content]
+          requied: [role]
           properties:
+            token_id:
+              type: integer
+            role:
+              type: string
+              enum: ['system', 'user', 'assistant', 'function', 'tool']
             content:
               type: string
+              nullable: true
+            tool_calls:
+              type: array
+              items:
+                $ref: '#/components/schemas/ToolChoice'
+            function_call:
+              type: object
+              deprecated: true
+              nullable: true
+              properties:
+                arguments:
+                  type: string
+                name:
+                  type: string
+              required:
+                - arguments
+                - name
 
     EmbeddingsRequest:
       type: object
@@ -1126,23 +1303,18 @@ components:
       properties:
         hourly:
           type: number
-          format: float
           example: 0
         input:
           type: number
-          format: float
           example: 0.3
         output:
           type: number
-          format: float
           example: 0.3
         base:
           type: number
-          format: float
           example: 0
         finetune:
           type: number
-          format: float
           example: 0
 
     ToolsPart:
@@ -1166,16 +1338,25 @@ components:
               description: 'A map of parameter names to their values.'
     ToolChoice:
       type: object
+      required: [id, type, function, index]
       properties:
+        # TODO: is this the right place for index?
+        index:
+          type: number
+        id:
+          type: string
         type:
           type: string
-          example: 'tool_choice_type'
+          enum: ['function']
         function:
           type: object
+          required: [name, arguments]
           properties:
             name:
               type: string
               example: 'function_name'
+            arguments:
+              type: string
 
     FileResponse:
       type: object
@@ -1331,11 +1512,12 @@ components:
         object:
           type: string
           enum:
-            - FinetuneEvent
+            - 'FinetuneEvent'
         created_at:
           type: string
         level:
-          $ref: '#/components/schemas/FinetuneEventLevels'
+          anyOf:
+            - $ref: '#/components/schemas/FinetuneEventLevels'
         message:
           type: string
         type:
@@ -1428,6 +1610,7 @@ components:
         created_at:
           type: string
         level:
+          type: string
           enum:
             - null
             - info
@@ -1439,6 +1622,7 @@ components:
         message:
           type: string
         type:
+          type: string
           enum:
             - job_pending
             - job_start
