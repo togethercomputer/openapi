@@ -223,12 +223,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-        '503':
-          description: 'Overloaded'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
         '504':
           description: 'Timeout'
           content:
@@ -318,6 +312,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileResponse'
+        '404':
+          description: 'NotFound'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
     delete:
       tags: ['Files']
       summary: Delete a file
@@ -353,6 +353,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileObject'
+        '404':
+          description: 'NotFound'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '504':
+          description: 'Timeout'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
   /fine-tunes:
     post:
       tags: ['Fine-tuning']
