@@ -1055,7 +1055,7 @@ components:
           type: string
         tool_call_id:
           type: string
-        required: [role, content, tool_call_id]
+      required: [role, content, tool_call_id]
 
     # End Message Params
 
@@ -1154,7 +1154,7 @@ components:
         delta:
           title: ChatCompletionChoiceDelta
           type: object
-          requied: [role]
+          required: [role]
           properties:
             token_id:
               type: integer
