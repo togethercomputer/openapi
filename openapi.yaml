@@ -961,7 +961,6 @@ components:
           items:
             $ref: '#/components/schemas/ToolsPart'
         tool_choice:
-          type: object
           description: Controls which (if any) function is called by the model. By default uses `auto`, which lets the model pick between generating a message or calling a function.
           oneOf:
             - type: string
