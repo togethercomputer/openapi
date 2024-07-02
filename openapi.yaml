@@ -961,7 +961,6 @@ components:
           items:
             $ref: '#/components/schemas/ToolsPart'
         tool_choice:
-          type: object
           description: Controls which (if any) function is called by the model. By default uses `auto`, which lets the model pick between generating a message or calling a function.
           oneOf:
             - type: string
@@ -1056,7 +1055,7 @@ components:
           type: string
         tool_call_id:
           type: string
-        required: [role, content, tool_call_id]
+      required: [role, content, tool_call_id]
 
     # End Message Params
 
@@ -1155,7 +1154,7 @@ components:
         delta:
           title: ChatCompletionChoiceDelta
           type: object
-          requied: [role]
+          required: [role]
           properties:
             token_id:
               type: integer
