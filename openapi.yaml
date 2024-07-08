@@ -1193,9 +1193,15 @@ components:
           description: The name of the embedding model to use.
           example: togethercomputer/m2-bert-80M-8k-retrieval
         input:
-          type: string
-          description: A string providing the text for the model to embed.
-          example: Our solar system orbits the Milky Way galaxy at about 515,000 mph
+          oneOf:
+            - type: string
+              description: A string providing the text for the model to embed.
+              example: Our solar system orbits the Milky Way galaxy at about 515,000 mph
+            - type: array
+              items:
+                type: string
+                description: A string providing the text for the model to embed.
+                example: Our solar system orbits the Milky Way galaxy at about 515,000 mph
 
     EmbeddingsResponse:
       type: object
