@@ -312,12 +312,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileResponse'
-        '404':
-          description: 'NotFound'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
     delete:
       tags: ['Files']
       summary: Delete a file
@@ -353,14 +347,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileObject'
-        '404':
-          description: 'NotFound'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-        '504':
-          description: 'Timeout'
+        '500':
+          description: Internal Server Error
           content:
             application/json:
               schema:
