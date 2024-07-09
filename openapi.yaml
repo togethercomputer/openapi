@@ -223,12 +223,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-        '503':
-          description: 'Overloaded'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
         '504':
           description: 'Timeout'
           content:
@@ -353,6 +347,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileObject'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
   /fine-tunes:
     post:
       tags: ['Fine-tuning']
