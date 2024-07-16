@@ -683,7 +683,7 @@ components:
           example: 'safety_model_name'
         min_p:
           type: number
-          description: A number between 0 and 1 that can be used as an alternative to temperature.
+          description: A number between 0 and 1 that can be used as an alternative to top-p and top-k.
           format: float
         presence_penalty:
           type: number
@@ -913,8 +913,7 @@ components:
           maximum: 128
         min_p:
           type: number
-
-          description: A number between 0 and 1 that can be used as an alternative to temperature.
+          description: A number between 0 and 1 that can be used as an alternative to top_p and top-k.
           format: float
         presence_penalty:
           type: number
