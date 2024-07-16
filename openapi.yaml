@@ -513,9 +513,8 @@ paths:
 components:
   securitySchemes:
     bearerAuth:
-      type: apiKey
-      in: header
-      name: Authorization
+      type: http
+      scheme: bearer
       x-bearer-format: bearer
       x-default: default
 
