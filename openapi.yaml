@@ -862,6 +862,7 @@ components:
                   - system
                   - user
                   - assistant
+                  - tool
               content:
                 type: string
                 description: The contents of the message.
