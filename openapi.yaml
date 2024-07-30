@@ -1,6 +1,6 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
-  title: Together API
+  title: Together APIs
   description: The Together REST API. Please see https://docs.together.ai for more details.
   version: '2.0.0'
   termsOfService: https://www.together.ai/terms-of-service
@@ -17,7 +17,9 @@ security:
 paths:
   /chat/completions:
     post:
-      summary: Creates a model response for the given chat conversation.
+      tags: ['Chat']
+      summary: Create chat completion
+      description: Query a chat model.
       operationId: chat-completions
       requestBody:
         content:
@@ -73,7 +75,9 @@ paths:
       deprecated: false
   /completions:
     post:
-      summary: Creates a completion for the provided prompt and parameters
+      tags: ['Completion']
+      summary: Create completion
+      description: Query a language, code, or image model.
       operationId: completions
       requestBody:
         content:
@@ -129,7 +133,9 @@ paths:
       deprecated: false
   /embeddings:
     post:
-      summary: Creates an embedding vector representing the input text
+      tags: ['Embeddings']
+      summary: Create embedding
+      description: Query an embedding model for a given string of text.
       operationId: embeddings
       requestBody:
         content:
@@ -182,7 +188,9 @@ paths:
       deprecated: false
   /models:
     get:
-      summary: Lists all the available models
+      tags: ['Models']
+      summary: List all models
+      description: Lists all of Together's open-source models
       operationId: models
       responses:
         '200':
@@ -215,12 +223,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-        '503':
-          description: 'Overloaded'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
         '504':
           description: 'Timeout'
           content:
@@ -230,7 +232,9 @@ paths:
       deprecated: false
   /images/generations:
     post:
-      summary: Generate images based on a given prompt using a specified model
+      tags: ['Images']
+      summary: Create image
+      description: Use an image model to generate an image for a given prompt.
       requestBody:
         required: true
         content:
@@ -280,7 +284,9 @@ paths:
                 $ref: '#/components/schemas/ImageResponse'
   /files:
     get:
+      tags: ['Files']
       summary: List all files
+      description: List the metadata for all uploaded data files.
       responses:
         '200':
           description: List of files
@@ -290,7 +296,9 @@ paths:
                 $ref: '#/components/schemas/FileList'
   /files/{id}:
     get:
-      summary: Retrieve a file
+      tags: ['Files']
+      summary: List file
+      description: List the metadata for a single uploaded data file.
       parameters:
         - name: id
           in: path
@@ -305,7 +313,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/FileResponse'
     delete:
+      tags: ['Files']
       summary: Delete a file
+      description: Delete a previously uploaded data file.
       parameters:
         - name: id
           in: path
@@ -321,7 +331,9 @@ paths:
                 $ref: '#/components/schemas/FileDeleteResponse'
   /files/{id}/content:
     get:
-      summary: Retrieve file content
+      tags: ['Files']
+      summary: Get file contents
+      description: Get the contents of a single uploaded data file.
       parameters:
         - name: id
           in: path
@@ -409,7 +421,9 @@ paths:
                     example: Unable to save the file - internal error.
   /fine-tunes:
     post:
-      summary: Create a fine-tuning job
+      tags: ['Fine-tuning']
+      summary: Create job
+      description: Use a model to create a fine-tuning job.
       requestBody:
         required: true
         content:
@@ -457,7 +471,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/FinetuneResponse'
     get:
-      summary: List fine-tune job history
+      tags: ['Fine-tuning']
+      summary: List all jobs
+      description: List the metadata for all fine-tuning jobs.
       responses:
         '200':
           description: List of fine-tune jobs
@@ -467,7 +483,9 @@ paths:
                 $ref: '#/components/schemas/FinetuneList'
   /fine-tunes/{id}:
     get:
-      summary: Retrieve fine-tune job details
+      tags: ['Fine-tuning']
+      summary: List job
+      description: List the metadata for a single fine-tuning job.
       parameters:
         - name: id
           in: path
@@ -483,7 +501,9 @@ paths:
                 $ref: '#/components/schemas/FinetuneResponse'
   /fine-tunes/{id}/events:
     get:
-      summary: List events of a fine-tune job
+      tags: ['Fine-tuning']
+      summary: List job events
+      description: List the events for a single fine-tuning job.
       parameters:
         - name: id
           in: path
@@ -499,7 +519,9 @@ paths:
                 $ref: '#/components/schemas/FinetuneListEvents'
   /finetune/download:
     get:
-      summary: Downloads a compressed fine-tuned model or checkpoint to local disk.
+      tags: ['Fine-tuning']
+      summary: Download model
+      description: Download a compressed fine-tuned model or checkpoint to local disk.
       parameters:
         - in: query
           name: ft_id
@@ -532,7 +554,9 @@ paths:
           description: Fine-tune ID not found.
   /fine-tunes/{id}/cancel:
     post:
-      summary: Cancels a running fine-tuning job.
+      tags: ['Fine-tuning']
+      summary: Cancel job
+      description: Cancel a currently running fine-tuning job.
       parameters:
         - in: path
           name: id
@@ -551,11 +575,14 @@ paths:
           description: Invalid request parameters.
         '404':
           description: Fine-tune ID not found.
+
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
+      x-bearer-format: bearer
+      x-default: default
 
   schemas:
     ErrorData:
@@ -593,10 +620,24 @@ components:
         - eos
         - length
         - tool_calls
+        - function_call
+
+    LogProbItem:
+      type: object
+      required: [token, logprob]
+      properties:
+        token:
+          type: string
+        logprob:
+          type: number
 
     LogprobsPart:
       type: object
       properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/LogProbItem'
         tokens:
           type: array
           items:
@@ -606,7 +647,6 @@ components:
           type: array
           items:
             type: number
-            format: float
           description: List of token log probabilities
 
     PromptPart:
@@ -646,9 +686,8 @@ components:
           finish_reason:
             $ref: '#/components/schemas/FinishReason'
           logprobs:
-            allOf:
-              - $ref: '#/components/schemas/LogprobsPart'
-              - nullable: true
+            type: object
+            $ref: '#/components/schemas/LogprobsPart'
 
     CompletionRequest:
       type: object
@@ -669,20 +708,20 @@ components:
           description: The maximum number of tokens to generate.
         stop:
           type: array
-          description: A list of string sequences that will truncate (stop) inference text output.
+          description: A list of string sequences that will truncate (stop) inference text output. For example, "</s>" will stop generation as soon as the model generates the given token.
           items:
             type: string
         temperature:
           type: number
-          description: Determines the degree of randomness in the response.
+          description: A decimal number from 0-1 that determines the degree of randomness in the response. A temperature less than 1 favors more correctness and is appropriate for question answering or summarization. A value closer to 1 introduces more randomness in the output.
           format: float
         top_p:
           type: number
-          description: The `top_p` (nucleus) parameter is used to dynamically adjust the number of choices for each predicted token based on the cumulative probabilities.
+          description: A percentage (also called the nucleus parameter) that's used to dynamically adjust the number of choices for each predicted token based on the cumulative probabilities. It specifies a probability threshold below which all less likely tokens are filtered out. This technique helps maintain diversity and generate more fluent and natural-sounding text.
           format: float
         top_k:
           type: integer
-          description: The `top_k` parameter is used to limit the number of choices for the next predicted word or token.
+          description: An integer that's used to limit the number of choices for the next predicted word or token. It specifies the maximum number of tokens to consider at each step, based on their probability of occurrence. This technique helps to speed up the generation process and can improve the quality of the generated text by focusing on the most likely options.
           format: int32
         repetition_penalty:
           type: number
@@ -690,41 +729,43 @@ components:
           format: float
         stream:
           type: boolean
-          description: 'If set, tokens are returned as Server-Sent Events as they are made available. Stream terminates with `data: [DONE]`'
+          description: 'If true, stream tokens as Server-Sent Events as the model generates them instead of waiting for the full model response. The stream terminates with `data: [DONE]`. If false, return a single JSON object containing the results.'
         logprobs:
           type: integer
           minimum: 0
           maximum: 1
-          description: Determines the number of most likely tokens to return at each token position log probabilities to return
+          description: Determines the number of most likely tokens to return at each token position log probabilities to return.
         echo:
           type: boolean
-          description: If set, the response will contain the prompt, and will also return prompt logprobs if set with logprobs.
+          description: If true, the response will contain the prompt. Can be used with `logprobs` to return prompt logprobs.
         n:
           type: integer
-          description: Number of generations to return
+          description: The number of completions to generate for each prompt.
           minimum: 1
           maximum: 128
         safety_model:
           type: string
-          description: The name of the safety model to use.
+          description: The name of the moderation model used to validate tokens. Choose from the available moderation models found [here](https://docs.together.ai/docs/inference-models#moderation-models).
           example: 'safety_model_name'
         min_p:
           type: number
-          description: The `min_p` parameter is a number between 0 and 1 and an alternative to `temperature`.
+          description: A number between 0 and 1 that can be used as an alternative to top-p and top-k.
           format: float
         presence_penalty:
           type: number
-          description: The `presence_penalty` parameter is a number between -2.0 and 2.0 where a positive value will increase the likelihood of a model talking about new topics.
+          description: A number between -2.0 and 2.0 where a positive value increases the likelihood of a model talking about new topics.
           format: float
         frequency_penalty:
           type: number
-          description: The `frequency_penalty` parameter is a number between -2.0 and 2.0 where a positive value will decrease the likelihood of repeating tokens that were mentioned prior.
+          description: A number between -2.0 and 2.0 where a positive value decreases the likelihood of repeating tokens that have already been mentioned.
           format: float
         logit_bias:
           type: object
           additionalProperties:
-            type: float
-          description: The `logit_bias` parameter allows us to adjust the likelihood of specific tokens appearing in the generated output.
+            type: number
+
+            format: float
+          description: Adjusts the likelihood of specific tokens appearing in the generated output.
           example: { '1024': -10.5, '105': 21.4 }
     CompletionResponse:
       type: object
@@ -804,7 +845,6 @@ components:
           type: string
         logprob:
           type: number
-          format: float
         special:
           type: boolean
 
@@ -813,20 +853,61 @@ components:
       items:
         type: object
         properties:
-          message:
-            type: object
-            properties:
-              role:
-                type: string
-                example: assistant
-              content:
-                type: string
+          text:
+            type: string
+          index:
+            type: integer
+          seed:
+            type: integer
           finish_reason:
             $ref: '#/components/schemas/FinishReason'
+          message:
+            $ref: '#/components/schemas/ChatCompletionMessage'
           logprobs:
             allOf:
               - nullable: true
               - $ref: '#/components/schemas/LogprobsPart'
+    ChatCompletionMessage:
+      type: object
+      required: [role, content]
+      properties:
+        content:
+          type: string
+          nullable: true
+        role:
+          type: string
+          enum: [assistant]
+        tool_calls:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToolChoice'
+        function_call:
+          type: object
+          deprecated: true
+          required: [arguments, name]
+          properties:
+            arguments:
+              type: string
+            name:
+              type: string
+    ChatCompletionTool:
+      type: object
+      required: [type, function]
+      properties:
+        type:
+          type: string
+          enum: ['function']
+        function:
+          type: object
+          required: [name]
+          properties:
+            description:
+              type: string
+            name:
+              type: string
+            parameters:
+              type: object
+              additionalProperties: true
 
     ChatCompletionRequest:
       type: object
@@ -862,62 +943,72 @@ components:
           description: The maximum number of tokens to generate.
         stop:
           type: array
-          description: A list of string sequences that will truncate (stop) inference text output.
+          description: A list of string sequences that will truncate (stop) inference text output. For example, "</s>" will stop generation as soon as the model generates the given token.
           items:
             type: string
         temperature:
           type: number
-          description: Determines the degree of randomness in the response.
+          description: A decimal number from 0-1 that determines the degree of randomness in the response. A temperature less than 1 favors more correctness and is appropriate for question answering or summarization. A value closer to 1 introduces more randomness in the output.
           format: float
         top_p:
           type: number
-          description: The `top_p` (nucleus) parameter is used to dynamically adjust the number of choices for each predicted token based on the cumulative probabilities.
+          description: A percentage (also called the nucleus parameter) that's used to dynamically adjust the number of choices for each predicted token based on the cumulative probabilities. It specifies a probability threshold below which all less likely tokens are filtered out. This technique helps maintain diversity and generate more fluent and natural-sounding text.
           format: float
         top_k:
           type: integer
-          description: The `top_k` parameter is used to limit the number of choices for the next predicted word or token.
+          description: An integer that's used to limit the number of choices for the next predicted word or token. It specifies the maximum number of tokens to consider at each step, based on their probability of occurrence. This technique helps to speed up the generation process and can improve the quality of the generated text by focusing on the most likely options.
           format: int32
         repetition_penalty:
           type: number
           description: A number that controls the diversity of generated text by reducing the likelihood of repeated sequences. Higher values decrease repetition.
-          format: float
         stream:
           type: boolean
-          description: 'If set, tokens are returned as Server-Sent Events as they are made available. Stream terminates with `data: [DONE]`'
+          description: 'If true, stream tokens as Server-Sent Events as the model generates them instead of waiting for the full model response. The stream terminates with `data: [DONE]`. If false, return a single JSON object containing the results.'
         logprobs:
           type: integer
           minimum: 0
           maximum: 1
-          description: Determines the number of most likely tokens to return at each token position log probabilities to return
+          description: Determines the number of most likely tokens to return at each token position log probabilities to return.
         echo:
           type: boolean
-          description: If set, the response will contain the prompt, and will also return prompt logprobs if set with logprobs.
+          description: If true, the response will contain the prompt. Can be used with `logprobs` to return prompt logprobs.
         n:
           type: integer
-          description: Number of generations to return
+          description: The number of completions to generate for each prompt.
           minimum: 1
           maximum: 128
         min_p:
           type: number
-          description: The `min_p` parameter is a number between 0 and 1 and an alternative to `temperature`.
+          description: A number between 0 and 1 that can be used as an alternative to top_p and top-k.
           format: float
         presence_penalty:
           type: number
-          description: The `presence_penalty` parameter is a number between -2.0 and 2.0 where a positive value will increase the likelihood of a model talking about new topics.
+          description: A number between -2.0 and 2.0 where a positive value increases the likelihood of a model talking about new topics.
           format: float
         frequency_penalty:
           type: number
-          description: The `frequency_penalty` parameter is a number between -2.0 and 2.0 where a positive value will decrease the likelihood of repeating tokens that were mentioned prior.
+          description: A number between -2.0 and 2.0 where a positive value decreases the likelihood of repeating tokens that have already been mentioned.
           format: float
         logit_bias:
           type: object
           additionalProperties:
-            type: float
-          description: The `logit_bias` parameter allows us to adjust the likelihood of specific tokens appearing in the generated output.
+            type: number
+            format: float
+          description: Adjusts the likelihood of specific tokens appearing in the generated output.
           example: { '1024': -10.5, '105': 21.4 }
+        function_call:
+          oneOf:
+            - type: string
+              enum: [none, auto]
+            - type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+
         response_format:
           type: object
-          description: Specifies the format of the response.
+          description: An object specifying the format that the model must output.
           properties:
             type:
               type: string
@@ -930,20 +1021,107 @@ components:
               description: The schema of the response format.
         tools:
           type: array
-          description: A list of tools to be used in the query.
+          description: A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for.
           items:
             $ref: '#/components/schemas/ToolsPart'
         tool_choice:
-          type: object
-          description: The choice of tool to use.
+          description: Controls which (if any) function is called by the model. By default uses `auto`, which lets the model pick between generating a message or calling a function.
           oneOf:
             - type: string
               example: 'tool_name'
             - $ref: '#/components/schemas/ToolChoice'
         safety_model:
           type: string
-          description: The name of the safety model to use.
+          description: The name of the moderation model used to validate tokens. Choose from the available moderation models found [here](https://docs.together.ai/docs/inference-models#moderation-models).
           example: 'safety_model_name'
+
+    ChatCompletionMessageParam:
+      oneOf:
+        - $ref: '#/components/schemas/ChatCompletionSystemMessageParam'
+        - $ref: '#/components/schemas/ChatCompletionUserMessageParam'
+        - $ref: '#/components/schemas/ChatCompletionAssistantMessageParam'
+        - $ref: '#/components/schemas/ChatCompletionToolMessageParam'
+        - $ref: '#/components/schemas/ChatCompletionFunctionMessageParam'
+
+    # Start Message Params
+
+    ChatCompletionSystemMessageParam:
+      type: object
+      required: [content, role]
+      properties:
+        content:
+          type: string
+        role:
+          type: string
+          enum: ['system']
+        name:
+          type: string
+
+    ChatCompletionUserMessageParam:
+      type: object
+      required: [content, role]
+      properties:
+        content:
+          type: string
+          # TODO: more comple content?
+        role:
+          type: string
+          enum: ['user']
+        name:
+          type: string
+
+    ChatCompletionAssistantMessageParam:
+      type: object
+      required: [role]
+      properties:
+        content:
+          type: string
+          nullable: true
+        role:
+          type: string
+          enum: ['assistant']
+        name:
+          type: string
+        tool_calls:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToolChoice'
+        function_call:
+          type: object
+          deprecated: true
+          properties:
+            arguments:
+              type: string
+            name:
+              type: string
+          required: [arguments, name]
+
+    ChatCompletionFunctionMessageParam:
+      type: object
+      deprecated: true
+      required: [content, role, name]
+      properties:
+        role:
+          type: string
+          enum: ['function']
+        content:
+          type: string
+        name:
+          type: string
+
+    ChatCompletionToolMessageParam:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: ['tool']
+        content:
+          type: string
+        tool_call_id:
+          type: string
+      required: [role, content, tool_call_id]
+
+    # End Message Params
 
     ChatCompletionResponse:
       type: object
@@ -962,6 +1140,7 @@ components:
           type: string
           enum:
             - chat.completion
+      required: [choices, id, created, model, object]
 
     ChatCompletionStream:
       oneOf:
@@ -977,7 +1156,7 @@ components:
 
     ChatCompletionChunk:
       type: object
-      required: [id, object, created, token, choices]
+      required: [id, object, created, choices, model]
       properties:
         id:
           type: string
@@ -987,8 +1166,11 @@ components:
             - chat.completion.chunk
         created:
           type: integer
-        token:
-          $ref: '#/components/schemas/ChatCompletionToken'
+        system_fingerprint:
+          type: string
+        model:
+          type: string
+          example: mistralai/Mixtral-8x7B-Instruct-v0.1
         choices:
           title: ChatCompletionChoices
           type: array
@@ -997,10 +1179,6 @@ components:
         usage:
           allOf:
             - $ref: '#/components/schemas/UsageData'
-            - nullable: true
-        finish_reason:
-          allOf:
-            - $ref: '#/components/schemas/FinishReason'
             - nullable: true
 
     StreamSentinel:
@@ -1029,17 +1207,43 @@ components:
 
     ChatCompletionChoice:
       type: object
-      required: [index, delta]
+      required: [index, delta, finish_reason]
       properties:
         index:
           type: integer
+        finish_reason:
+          $ref: '#/components/schemas/FinishReason'
+        logprobs:
+          $ref: '#/components/schemas/LogprobsPart'
         delta:
           title: ChatCompletionChoiceDelta
           type: object
-          required: [content]
+          required: [role]
           properties:
+            token_id:
+              type: integer
+            role:
+              type: string
+              enum: ['system', 'user', 'assistant', 'function', 'tool']
             content:
               type: string
+              nullable: true
+            tool_calls:
+              type: array
+              items:
+                $ref: '#/components/schemas/ToolChoice'
+            function_call:
+              type: object
+              deprecated: true
+              nullable: true
+              properties:
+                arguments:
+                  type: string
+                name:
+                  type: string
+              required:
+                - arguments
+                - name
 
     EmbeddingsRequest:
       type: object
@@ -1052,9 +1256,15 @@ components:
           description: The name of the embedding model to use.
           example: togethercomputer/m2-bert-80M-8k-retrieval
         input:
-          type: string
-          description: A string providing the text for the model to embed.
-          example: Our solar system orbits the Milky Way galaxy at about 515,000 mph
+          oneOf:
+            - type: string
+              description: A string providing the text for the model to embed.
+              example: Our solar system orbits the Milky Way galaxy at about 515,000 mph
+            - type: array
+              items:
+                type: string
+                description: A string providing the text for the model to embed.
+                example: Our solar system orbits the Milky Way galaxy at about 515,000 mph
 
     EmbeddingsResponse:
       type: object
@@ -1162,23 +1372,18 @@ components:
       properties:
         hourly:
           type: number
-          format: float
           example: 0
         input:
           type: number
-          format: float
           example: 0.3
         output:
           type: number
-          format: float
           example: 0.3
         base:
           type: number
-          format: float
           example: 0
         finetune:
           type: number
-          format: float
           example: 0
 
     ToolsPart:
@@ -1202,16 +1407,25 @@ components:
               description: 'A map of parameter names to their values.'
     ToolChoice:
       type: object
+      required: [id, type, function, index]
       properties:
+        # TODO: is this the right place for index?
+        index:
+          type: number
+        id:
+          type: string
         type:
           type: string
-          example: 'tool_choice_type'
+          enum: ['function']
         function:
           type: object
+          required: [name, arguments]
           properties:
             name:
               type: string
               example: 'function_name'
+            arguments:
+              type: string
 
     FileResponse:
       type: object
@@ -1367,11 +1581,12 @@ components:
         object:
           type: string
           enum:
-            - FinetuneEvent
+            - 'FinetuneEvent'
         created_at:
           type: string
         level:
-          $ref: '#/components/schemas/FinetuneEventLevels'
+          anyOf:
+            - $ref: '#/components/schemas/FinetuneEventLevels'
         message:
           type: string
         type:
@@ -1464,6 +1679,7 @@ components:
         created_at:
           type: string
         level:
+          type: string
           enum:
             - null
             - info
@@ -1475,6 +1691,7 @@ components:
         message:
           type: string
         type:
+          type: string
           enum:
             - job_pending
             - job_start
