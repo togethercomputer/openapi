@@ -1109,7 +1109,45 @@ components:
           title: ChatCompletionChoices
           type: array
           items:
-            $ref: '#/components/schemas/ChatCompletionChoice'
+            type: object
+            required: [index, delta, finish_reason]
+            properties:
+              index:
+                type: integer
+              finish_reason:
+                $ref: '#/components/schemas/FinishReason'
+              logprobs:
+                type: number
+                nullable: true
+              delta:
+                title: ChatCompletionChoiceDelta
+                type: object
+                required: [role]
+                properties:
+                  token_id:
+                    type: integer
+                  role:
+                    type: string
+                    enum: ['system', 'user', 'assistant', 'function', 'tool']
+                  content:
+                    type: string
+                    nullable: true
+                  tool_calls:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ToolChoice'
+                  function_call:
+                    type: object
+                    deprecated: true
+                    nullable: true
+                    properties:
+                      arguments:
+                        type: string
+                      name:
+                        type: string
+                    required:
+                      - arguments
+                      - name   
         usage:
           allOf:
             - $ref: '#/components/schemas/UsageData'
