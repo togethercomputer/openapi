@@ -556,22 +556,14 @@ components:
         - tool_calls
         - function_call
 
-    LogProbItem:
-      type: object
-      required: [token, logprob]
-      properties:
-        token:
-          type: string
-        logprob:
-          type: number
-
     LogprobsPart:
       type: object
       properties:
-        content:
+        token_ids:
           type: array
           items:
-            $ref: '#/components/schemas/LogProbItem'
+            type: number
+          description: List of token IDs corresponding to the logprobs
         tokens:
           type: array
           items:
