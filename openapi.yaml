@@ -1109,6 +1109,7 @@ components:
                 type: integer
               finish_reason:
                 $ref: '#/components/schemas/FinishReason'
+                nullable: true
               logprobs:
                 type: number
                 nullable: true
