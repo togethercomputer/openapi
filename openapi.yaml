@@ -579,7 +579,7 @@ components:
         model:
           type: string
           description: The model to be used for the rerank request.
-          example: salesforce/turboranker-0.8-3778-6328
+          example: Salesforce/Llama-Rank-V1
         query:
           type: string
           description: The search query to be used for ranking.
