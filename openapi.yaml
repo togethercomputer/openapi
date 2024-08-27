@@ -1463,6 +1463,7 @@ components:
             - image
             - embedding
             - moderation
+            - rerank
           example: 'chat'
         display_name:
           type: string
