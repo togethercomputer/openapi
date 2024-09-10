@@ -249,10 +249,12 @@ paths:
                   type: string
                   description: A description of the desired images. Maximum length varies by model.
                   example: cat floating in space, cinematic
+                  default: cat floating in space, cinematic
                 model:
                   type: string
                   description: The model to use for image generation.
                   example: stabilityai/stable-diffusion-xl-base-1.0
+                  default: stabilityai/stable-diffusion-xl-base-1.0
                 steps:
                   type: integer
                   default: 20
@@ -414,7 +416,7 @@ paths:
                 lora_alpha:
                   type: integer
                   default: 8
-                  description: The alpha value for LoRA adapter training. 
+                  description: The alpha value for LoRA adapter training.
                 lora_dropout:
                   type: number
                   format: float
@@ -607,10 +609,12 @@ components:
           type: string
           description: The model to be used for the rerank request.
           example: Salesforce/Llama-Rank-V1
+          default: Salesforce/Llama-Rank-V1
         query:
           type: string
           description: The search query to be used for ranking.
-          example: 'What animals can I find near Peru?'
+          example: What animals can I find near Peru?
+          default: What animals can I find near Peru?
         documents:
           description: List of documents, which can be either strings or objects.
           oneOf:
@@ -623,6 +627,23 @@ components:
                 type: string
                 example: Our solar system orbits the Milky Way galaxy at about 515,000 mph
           example:
+            - {
+                'title': 'Llama',
+                'text': 'The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era.',
+              }
+            - {
+                'title': 'Panda',
+                'text': 'The giant panda (Ailuropoda melanoleuca), also known as the panda bear or simply panda, is a bear species endemic to China.',
+              }
+            - {
+                'title': 'Guanaco',
+                'text': 'The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations.',
+              }
+            - {
+                'title': 'Wild Bactrian camel',
+                'text': 'The wild Bactrian camel (Camelus ferus) is an endangered species of camel endemic to Northwest China and southwestern Mongolia.',
+              }
+          default:
             - {
                 'title': 'Llama',
                 'text': 'The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era.',
@@ -829,11 +850,13 @@ components:
         prompt:
           type: string
           description: A string providing context for the model to complete.
-          example: '<s>[INST] What is the capital of France? [/INST]'
+          example: <s>[INST] What is the capital of France? [/INST]
+          default: <s>[INST] What is the capital of France? [/INST]
         model:
           type: string
           description: The name of the model to query.
           example: mistralai/Mixtral-8x7B-Instruct-v0.1
+          default: mistralai/Mixtral-8x7B-Instruct-v0.1
         max_tokens:
           type: integer
           description: The maximum number of tokens to generate.
@@ -899,9 +922,9 @@ components:
           description: Adjusts the likelihood of specific tokens appearing in the generated output.
           example: { '1024': -10.5, '105': 21.4 }
         seed:
-            type: integer
-            description: Seed value for reproducibility.
-            example: 42
+          type: integer
+          description: Seed value for reproducibility.
+          example: 42
     CompletionResponse:
       type: object
       properties:
@@ -959,7 +982,7 @@ components:
             - $ref: '#/components/schemas/UsageData'
             - nullable: true
         seed:
-            type: integer
+          type: integer
         finish_reason:
           allOf:
             - $ref: '#/components/schemas/FinishReason'
@@ -1072,10 +1095,16 @@ components:
             required:
               - role
               - content
+          default:
+            - role: system
+              content: You are a helpful assistant
+            - role: user
+              content: What is 1 + 1?
         model:
           type: string
           description: The name of the model to query.
           example: mistralai/Mixtral-8x7B-Instruct-v0.1
+          default: mistralai/Mixtral-8x7B-Instruct-v0.1
         max_tokens:
           type: integer
           description: The maximum number of tokens to generate.
@@ -1135,9 +1164,9 @@ components:
           description: Adjusts the likelihood of specific tokens appearing in the generated output.
           example: { '1024': -10.5, '105': 21.4 }
         seed:
-            type: integer
-            description: Seed value for reproducibility.
-            example: 42
+          type: integer
+          description: Seed value for reproducibility.
+          example: 42
         function_call:
           oneOf:
             - type: string
@@ -1438,6 +1467,7 @@ components:
           type: string
           description: The name of the embedding model to use.
           example: togethercomputer/m2-bert-80M-8k-retrieval
+          default: togethercomputer/m2-bert-80M-8k-retrieval
         input:
           oneOf:
             - type: string
@@ -1448,6 +1478,7 @@ components:
                 type: string
                 description: A string providing the text for the model to embed.
                 example: Our solar system orbits the Milky Way galaxy at about 515,000 mph
+          default: Our solar system orbits the Milky Way galaxy at about 515,000 mph
 
     EmbeddingsResponse:
       type: object
