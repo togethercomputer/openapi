@@ -1733,16 +1733,11 @@ components:
           type: number
         eval_steps:
           type: integer
-        lora:
-          type: boolean
-        lora_r:
-          type: integer
-        lora_alpha:
-          type: integer
-        lora_dropout:
-          type: number
-        lora_trainable_modules:
-          type: string
+        training_type:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FullTrainingType'
+            - $ref: '#/components/schemas/LoRATrainingType'
         status:
           $ref: '#/components/schemas/FinetuneJobStatus'
         job_id:
