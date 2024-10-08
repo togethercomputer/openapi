@@ -406,26 +406,11 @@ paths:
                 wandb_api_key:
                   type: string
                   description: API key for Weights & Biases integration
-                lora:
-                  type: boolean
-                  description: Whether to enable LoRA training. If not provided, full fine-tuning will be applied.
-                lora_r:
-                  type: integer
-                  default: 8
-                  description: Rank for LoRA adapter weights
-                lora_alpha:
-                  type: integer
-                  default: 8
-                  description: The alpha value for LoRA adapter training.
-                lora_dropout:
-                  type: number
-                  format: float
-                  default: 0.0
-                  description: The dropout probability for Lora layers.
-                lora_trainable_modules:
-                  type: string
-                  default: 'all-linear'
-                  description: A list of LoRA trainable modules, separated by a comma
+                training_type:
+                  type: object
+                  oneOf:
+                    - $ref: '#/components/schemas/FullTrainingType'
+                    - $ref: '#/components/schemas/LoRATrainingType'
       responses:
         '200':
           description: Fine-tuning job initiated successfully
@@ -1971,3 +1956,33 @@ components:
           type: string
         size:
           type: integer
+
+    FullTrainingType:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: ['Full']
+      required:
+        - type
+    LoRATrainingType:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: ['Lora']
+        lora_r:
+          type: integer
+        lora_alpha:
+          type: integer
+        lora_dropout:
+          type: number
+          format: float
+          default: 0.0
+        lora_trainable_modules:
+          type: string
+          default: 'all-linear'
+      required:
+        - type
+        - lora_r
+        - lora_alpha
