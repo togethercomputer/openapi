@@ -400,6 +400,11 @@ paths:
                   format: float
                   default: 0.00001
                   description: Learning rate multiplier to use for training
+                warmup_ratio:
+                  type: number
+                  format: float
+                  default: 0.0
+                  description: The percent of steps at the start of training to linearly increase the learning-rate.
                 suffix:
                   type: string
                   description: Suffix that will be added to your fine-tuned model name
@@ -1730,6 +1735,8 @@ components:
         batch_size:
           type: integer
         learning_rate:
+          type: number
+        warmup_ratio:
           type: number
         eval_steps:
           type: integer
