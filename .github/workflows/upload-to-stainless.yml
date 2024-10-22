@@ -19,4 +19,4 @@ jobs:
           project_name: 'TogetherAI'
       - uses: readmeio/rdme@v8
         with:
-          rdme: openapi "openapi.documented.yaml" --key=${{ secrets.README_TOKEN }} --id=${{ secrets.README_DEFINITION_ID }}
+          rdme: openapi "openapi.yaml" --key=${{ secrets.README_TOKEN }} --id=${{ secrets.README_DEFINITION_ID }}
