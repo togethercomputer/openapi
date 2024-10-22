@@ -1091,10 +1091,20 @@ components:
             - role: user
               content: What is 1 + 1?
         model:
+          description: >
+            The name of the model to query.<br>
+            <br>
+            Popular models:
+
+              - meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+              - meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+              - meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo
+              - Qwen/Qwen2.5-7B-Instruct-Turbo
+              - Qwen/Qwen2.5-72B-Instruct-Turbo
+              
+            [See all of Together AI's chat models](https://docs.together.ai/docs/serverless-models)
+          example: meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
           type: string
-          description: The name of the model to query.
-          example: mistralai/Mixtral-8x7B-Instruct-v0.1
-          default: mistralai/Mixtral-8x7B-Instruct-v0.1
         max_tokens:
           type: integer
           description: The maximum number of tokens to generate.
