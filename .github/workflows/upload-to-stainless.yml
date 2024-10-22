@@ -17,6 +17,6 @@ jobs:
           input_path: 'openapi.yaml'
           output_path: 'openapi.documented.yaml'
           project_name: 'TogetherAI'
-      # - uses: readmeio/rdme@v8
-      #   with:
-      #     rdme: openapi "openapi.documented.yaml" --key=${{ secrets.README_TOKEN }} --id=${{ secrets.README_DEFINITION_ID }}
+      - uses: readmeio/rdme@v8
+        with:
+          rdme: openapi "openapi.documented.yaml" --key=${{ secrets.README_TOKEN }} --id=${{ secrets.README_DEFINITION_ID }}
