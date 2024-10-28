@@ -485,7 +485,15 @@ paths:
           schema:
             type: integer
           required: false
-          description: Specifies step number for checkpoint to download.
+          description: Specifies step number for checkpoint to download. Ignores `checkpoint` value if set.
+        - in: query
+          name: checkpoint
+          schema:
+            type: string
+            enum:
+            - merged
+            - adapter
+          description: Specifies checkpoint type to download - `merged` vs `adapter`. This field is required if the checkpoint_step is not set.
         - in: query
           name: output
           schema:
