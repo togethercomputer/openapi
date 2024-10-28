@@ -253,6 +253,13 @@ paths:
                   type: string
                   description: The model to use for image generation.
                   example: stabilityai/stable-diffusion-xl-base-1.0
+                  anyOf:
+                    - type: string
+                      enum:
+                        - black-forest-labs/FLUX.1-schnell-Free
+                        - black-forest-labs/FLUX.1-schnell
+                        - black-forest-labs/FLUX.1.1-pro
+                    - type: string
                 steps:
                   type: integer
                   default: 20
@@ -597,6 +604,12 @@ components:
           type: string
           description: The model to be used for the rerank request.
           example: Salesforce/Llama-Rank-V1
+          anyOf:
+            - type: string
+              enum:
+                - Salesforce/Llama-Rank-v1
+            - type: string
+
         query:
           type: string
           description: The search query to be used for ranking.
@@ -824,6 +837,14 @@ components:
           type: string
           description: The name of the model to query.
           example: mistralai/Mixtral-8x7B-Instruct-v0.1
+          anyOf:
+            - type: string
+              enum:
+                - meta-llama/Llama-2-70b-hf
+                - mistralai/Mistral-7B-v0.1
+                - mistralai/Mixtral-8x7B-v0.1
+                - Meta-Llama/Llama-Guard-7b
+            - type: string
         max_tokens:
           type: integer
           description: The maximum number of tokens to generate.
@@ -868,6 +889,11 @@ components:
           type: string
           description: The name of the moderation model used to validate tokens. Choose from the available moderation models found [here](https://docs.together.ai/docs/inference-models#moderation-models).
           example: 'safety_model_name'
+          anyOf:
+            - type: string
+              enum:
+                - Meta-Llama/Llama-Guard-7b
+            - type: string
         min_p:
           type: number
           description: A number between 0 and 1 that can be used as an alternative to top-p and top-k.
@@ -1436,6 +1462,14 @@ components:
           type: string
           description: The name of the embedding model to use.
           example: togethercomputer/m2-bert-80M-8k-retrieval
+          anyOf:
+            - type: string
+              enum:
+                - WhereIsAI/UAE-Large-V1
+                - BAAI/bge-large-en-v1.5
+                - BAAI/bge-base-en-v1.5
+                - togethercomputer/m2-bert-80M-8k-retrieval
+            - type: string
         input:
           oneOf:
             - type: string
