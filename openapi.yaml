@@ -251,7 +251,10 @@ paths:
                   example: cat floating in space, cinematic
                 model:
                   type: string
-                  description: The model to use for image generation.
+                  description: >
+                    The model to use for image generation.<br>
+                    <br>
+                    [See all of Together AI's image models](https://docs.together.ai/docs/serverless-models#image-models)
                   example: stabilityai/stable-diffusion-xl-base-1.0
                   anyOf:
                     - type: string
@@ -602,7 +605,10 @@ components:
       properties:
         model:
           type: string
-          description: The model to be used for the rerank request.
+          description: >
+            The model to be used for the rerank request.<br>
+            <br>
+            [See all of Together AI's rerank models](https://docs.together.ai/docs/serverless-models#rerank-models)
           example: Salesforce/Llama-Rank-V1
           anyOf:
             - type: string
@@ -835,7 +841,10 @@ components:
           example: <s>[INST] What is the capital of France? [/INST]
         model:
           type: string
-          description: The name of the model to query.
+          description: >
+            The name of the model to query.<br>
+            <br>
+            [See all of Together AI's chat models](https://docs.together.ai/docs/serverless-models#chat-models)
           example: mistralai/Mixtral-8x7B-Instruct-v0.1
           anyOf:
             - type: string
@@ -1089,7 +1098,10 @@ components:
               - role
               - content
         model:
-          description: The name of the model to query.
+          description: >
+            The name of the model to query.<br>
+            <br>
+            [See all of Together AI's chat models](https://docs.together.ai/docs/serverless-models#chat-models)
           example: meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
           anyOf:
             - type: string
@@ -1460,7 +1472,10 @@ components:
       properties:
         model:
           type: string
-          description: The name of the embedding model to use.
+          description: >
+            The name of the embedding model to use.<br>
+            <br>
+            [See all of Together AI's embedding models](https://docs.together.ai/docs/serverless-models#embedding-models)
           example: togethercomputer/m2-bert-80M-8k-retrieval
           anyOf:
             - type: string
