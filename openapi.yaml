@@ -419,6 +419,15 @@ paths:
                 wandb_api_key:
                   type: string
                   description: API key for Weights & Biases integration
+                train_on_inputs:
+                  oneOf:
+                    - type: boolean
+                    - type: string
+                      enum:
+                        - auto
+                  type: boolean
+                  default: auto
+                  description: Whether to mask the user messages in conversational data or prompts in instruction data.
                 training_type:
                   type: object
                   oneOf:
@@ -1775,6 +1784,13 @@ components:
           type: number
         eval_steps:
           type: integer
+        train_on_inputs:
+          oneOf:
+            - type: boolean
+            - type: string
+              enum:
+                - auto
+          default: auto
         training_type:
           type: object
           oneOf:
