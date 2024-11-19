@@ -411,7 +411,7 @@ paths:
                 lr_scheduler:
                   type: object
                   default: none
-                  $ref: '#/components/schemas/LRSceduler'
+                  $ref: '#/components/schemas/LRScheduler'
                 warmup_ratio:
                   type: number
                   format: float
@@ -1796,7 +1796,7 @@ components:
           type: number
         lr_scheduler:
           type: object
-          $ref: '#/components/schemas/LRSceduler'
+          $ref: '#/components/schemas/LRScheduler'
         warmup_ratio:
           type: number
         max_grad_norm:
@@ -2062,7 +2062,7 @@ components:
         - type
         - lora_r
         - lora_alpha
-    LRSceduler:
+    LRScheduler:
       type: object
       properties:
         lr_scheduler_type:
