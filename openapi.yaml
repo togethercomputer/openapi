@@ -421,7 +421,7 @@ paths:
                   type: number
                   format: float
                   default: 1.0
-                  description: Max gradient norm to be used for gradient clipping. 
+                  description: Max gradient norm to be used for gradient clipping. Set to 0 to disable.
                 weight_decay:
                   type: number
                   format: float
