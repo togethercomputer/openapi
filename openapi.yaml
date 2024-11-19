@@ -408,11 +408,25 @@ paths:
                   format: float
                   default: 0.00001
                   description: Learning rate multiplier to use for training
+                lr_scheduler:
+                  type: object
+                  default: none
+                  $ref: '#/components/schemas/LRScheduler'
                 warmup_ratio:
                   type: number
                   format: float
                   default: 0.0
                   description: The percent of steps at the start of training to linearly increase the learning rate.
+                max_grad_norm:
+                  type: number
+                  format: float
+                  default: 1.0
+                  description: Max gradient norm to be used for gradient clipping. Set to 0 to disable.
+                weight_decay:
+                  type: number
+                  format: float
+                  default: 0.0
+                  description: Weight decay
                 suffix:
                   type: string
                   description: Suffix that will be added to your fine-tuned model name
@@ -1780,8 +1794,17 @@ components:
           type: integer
         learning_rate:
           type: number
+        lr_scheduler:
+          type: object
+          $ref: '#/components/schemas/LRScheduler'
         warmup_ratio:
           type: number
+        max_grad_norm:
+          type: number
+          format: float
+        weight_decay:
+          type: number
+          format: float
         eval_steps:
           type: integer
         train_on_inputs:
@@ -2039,3 +2062,21 @@ components:
         - type
         - lora_r
         - lora_alpha
+    LRScheduler:
+      type: object
+      properties:
+        lr_scheduler_type:
+          type: string
+        lr_scheduler_args:
+          type: object
+          $ref: '#/components/schemas/LinearLRSchedulerArgs'
+      required:
+        - lr_scheduler_type
+    LinearLRSchedulerArgs:
+      type: object
+      properties:
+        min_lr_ratio:
+          type: number
+          format: float
+          default: 0.0
+          description: The ratio of the final learning rate to the peak learning rate
