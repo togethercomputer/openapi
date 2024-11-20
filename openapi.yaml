@@ -438,7 +438,7 @@ paths:
                   description: The base URL of a dedicated Weights & Biases instance.
                 wandb_project_name:
                   type: string
-                  description: The Weights & Biases project for your run.
+                  description: The Weights & Biases project for your run. If not specified, will use `together` as the project name.
                 wandb_name:
                   type: string
                   description: The Weights & Biases name for your run.
