@@ -1143,6 +1143,42 @@ components:
               content:
                 description: The content of the message, which can either be a simple string or a structured format.
                 type: string
+                oneOf:
+                  - type: string
+                    description: A plain text message.
+                  - type: array
+                    description: A structured message with mixed content types.
+                    items:
+                      type: object
+                      oneOf:
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                                - text
+                            text:
+                              type: string
+                          required:
+                            - type
+                            - text
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                                - image_url
+                            image_url:
+                              type: object
+                              properties:
+                                url:
+                                  type: string
+                                  description: The URL of the image as a plain string.
+                              required:
+                                - url
+                          required:
+                            - type
+                            - image_url
             required:
               - role
               - content
