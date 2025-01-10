@@ -640,6 +640,48 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorData"
       deprecated: false
+  /audio/speech:
+    post:
+      tags: ["Audio"]
+      summary: Create audio generation request
+      description: Generate audio from input text
+      operationId: audio-speech
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AudioSpeechRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+            audio/wav:
+              schema:
+                type: string
+                format: binary
+            audio/mpeg:
+              schema:
+                type: string
+                format: binary
+            text/event-stream:
+              schema:
+                $ref: "#/components/schemas/AudioSpeechStreamResponse"
+        "400":
+          description: "BadRequest"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "429":
+          description: "RateLimit"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
 components:
   securitySchemes:
     bearerAuth:
@@ -682,21 +724,21 @@ components:
                 example: Our solar system orbits the Milky Way galaxy at about 515,000 mph
           example:
             - {
-                "title": "Llama",
-                "text": "The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era.",
-              }
+              "title": "Llama",
+              "text": "The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era.",
+            }
             - {
-                "title": "Panda",
-                "text": "The giant panda (Ailuropoda melanoleuca), also known as the panda bear or simply panda, is a bear species endemic to China.",
-              }
+              "title": "Panda",
+              "text": "The giant panda (Ailuropoda melanoleuca), also known as the panda bear or simply panda, is a bear species endemic to China.",
+            }
             - {
-                "title": "Guanaco",
-                "text": "The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations.",
-              }
+              "title": "Guanaco",
+              "text": "The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations.",
+            }
             - {
-                "title": "Wild Bactrian camel",
-                "text": "The wild Bactrian camel (Camelus ferus) is an endangered species of camel endemic to Northwest China and southwestern Mongolia.",
-              }
+              "title": "Wild Bactrian camel",
+              "text": "The wild Bactrian camel (Camelus ferus) is an endangered species of camel endemic to Northwest China and southwestern Mongolia.",
+            }
         top_n:
           type: integer
           description: The number of top results to return.
@@ -756,21 +798,21 @@ components:
                     nullable: true
           example:
             - {
-                "index": 0,
-                "relevance_score": 0.29980177813003117,
-                "document":
-                  {
-                    "text": '{"title":"Llama","text":"The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era."}',
-                  },
-              }
+              "index": 0,
+              "relevance_score": 0.29980177813003117,
+              "document":
+                {
+                  "text": '{"title":"Llama","text":"The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era."}',
+                },
+            }
             - {
-                "index": 2,
-                "relevance_score": 0.2752447527354349,
-                "document":
-                  {
-                    "text": '{"title":"Guanaco","text":"The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations."}',
-                  },
-              }
+              "index": 2,
+              "relevance_score": 0.2752447527354349,
+              "document":
+                {
+                  "text": '{"title":"Guanaco","text":"The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations."}',
+                },
+            }
         usage:
           $ref: "#/components/schemas/UsageData"
           example:
@@ -1484,6 +1526,89 @@ components:
           allOf:
             - $ref: "#/components/schemas/UsageData"
             - nullable: true
+
+    AudioSpeechRequest:
+      type: object
+      required:
+        - model
+        - input
+      properties:
+        model:
+          description: >
+            The name of the model to query.<br>
+            <br>
+            [See all of Together AI's chat models](https://docs.together.ai/docs/serverless-models#audio-models)
+          example: cartesia/audio-v1
+          anyOf:
+            - type: string
+            - type: string
+              enum:
+                - Cartesia/Audio-v1
+        input:
+          type: string
+          description: Input text to generate the audio for
+          maxLength: 4096
+        voice:
+          type: string
+          description: The voice to use for generating the audi. Supported voices are listed [here](https://together.ai/docs/voices)
+        response_format:
+          type: string
+          description: The format of audio output
+          default: wav
+          enum:
+            - mp3
+            - wav
+            - raw
+        language:
+          type: string
+          description: Language of input text
+          default: en
+          enum:
+            - en
+        response_encoding:
+          type: string
+          description: Audio encoding of response
+          default: pcm_f32le
+          enum:
+            - pcm_f32le
+            - pcm_s16le
+            - pcm_mulaw
+            - pcm_alaw
+        sample_rate:
+          type: number
+          default: 44100
+          description: Sampling rate to use for the output audio
+        stream:
+          type: boolean
+          default: false
+          description: "If true, output is streamed for several characters at a time instead of waiting for the full response. The stream terminates with `data: [DONE]`. If false, return the encoded audio as octet stream"
+
+    AudioSpeechStreamResponse:
+      oneOf:
+        - $ref: "#/components/schemas/AudioSpeechStreamEvent"
+        - $ref: "#/components/schemas/StreamSentinel"
+
+    AudioSpeechStreamEvent:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: "#/components/schemas/AudioSpeechStreamChunk"
+
+    AudioSpeechStreamChunk:
+      type: object
+      required: [object, model, b64]
+      properties:
+        object:
+          type: string
+          enum:
+            - audio.tts.chunk
+        model:
+          type: string
+          example: suno/bark
+        b64:
+          type: string
+          description: base64 encoded audio stream
 
     StreamSentinel:
       type: object
