@@ -1538,16 +1538,14 @@ components:
             The name of the model to query.<br>
             <br>
             [See all of Together AI's chat models](https://docs.together.ai/docs/serverless-models#audio-models)
-          example: cartesia/audio-v1
+          example: cartesia/sonic
           anyOf:
             - type: string
-            - type: string
               enum:
-                - Cartesia/Audio-v1
+                - cartesia/sonic
         input:
           type: string
           description: Input text to generate the audio for
-          maxLength: 4096
         voice:
           type: string
           description: The voice to use for generating the audi. Supported voices are listed [here](https://together.ai/docs/voices)
@@ -1565,6 +1563,20 @@ components:
           default: en
           enum:
             - en
+            - de
+            - fr
+            - es
+            - hi
+            - it
+            - ja
+            - ko
+            - nl
+            - pl
+            - pt
+            - ru
+            - sv
+            - tr
+            - zh
         response_encoding:
           type: string
           description: Audio encoding of response
