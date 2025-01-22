@@ -1617,11 +1617,10 @@ components:
             - audio.tts.chunk
         model:
           type: string
-          example: suno/bark
+          example: cartesia/sonic
         b64:
           type: string
           description: base64 encoded audio stream
-
     StreamSentinel:
       type: object
       required: [data]
