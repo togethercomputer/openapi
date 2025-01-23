@@ -1544,6 +1544,7 @@ components:
             - type: string
               enum:
                 - cartesia/sonic
+            - type: string
         input:
           type: string
           description: Input text to generate the audio for
@@ -1556,6 +1557,7 @@ components:
                 - polite man
                 - storyteller lady
                 - friendly sidekick
+            - type: string
         response_format:
           type: string
           description: The format of audio output
