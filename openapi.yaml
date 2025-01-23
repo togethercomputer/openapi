@@ -1547,8 +1547,14 @@ components:
           type: string
           description: Input text to generate the audio for
         voice:
-          type: string
-          description: The voice to use for generating the audi. Supported voices are listed [here](https://together.ai/docs/voices)
+          description: The voice to use for generating the audio. [View all supported voices here](https://docs.together.ai/docs/text-to-speech#voices-available).
+          anyOf:
+            - type: string
+              enum:
+                - laidback woman
+                - polite man
+                - storyteller lady
+                - friendly sidekick
         response_format:
           type: string
           description: The format of audio output
