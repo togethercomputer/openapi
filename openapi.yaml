@@ -1532,6 +1532,7 @@ components:
       required:
         - model
         - input
+        - voice
       properties:
         model:
           description: >
