@@ -309,7 +309,7 @@ paths:
                         description: The URL of the LoRA to apply (e.g. https://huggingface.co/strangerzonehf/Flux-Midjourney-Mix2-LoRA).
                       scale: 
                         type: number
-                        description: The strength of the LoRA’s influence, where 0 disables the LoRA and 1 applies it fully.
+                        description: The strength of the LoRA's influence. Most LoRA's recommend a value of 1.
 
       responses:
         "200":
