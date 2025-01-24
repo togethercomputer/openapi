@@ -303,6 +303,7 @@ paths:
                   type: array
                   items:
                     type: object
+                    required: [path, scale]
                     properties:
                       path:
                         type: string
