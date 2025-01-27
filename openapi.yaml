@@ -294,6 +294,24 @@ paths:
                   enum:
                     - base64
                     - url
+                guidance:
+                  type: number
+                  description: Adjusts the alignment of the generated image with the input prompt. Higher values (e.g., 8-10) make the output more faithful to the prompt, while lower values (e.g., 1-5) encourage more creative freedom.
+                  default: 3.5
+                image_loras:
+                  description: An array of objects that define LoRAs (Low-Rank Adaptations) to influence the generated image.
+                  type: array
+                  items:
+                    type: object
+                    required: [path, scale]
+                    properties:
+                      path:
+                        type: string
+                        description: The URL of the LoRA to apply (e.g. https://huggingface.co/strangerzonehf/Flux-Midjourney-Mix2-LoRA).
+                      scale: 
+                        type: number
+                        description: The strength of the LoRA's influence. Most LoRA's recommend a value of 1.
+
       responses:
         "200":
           description: Image generated successfully
