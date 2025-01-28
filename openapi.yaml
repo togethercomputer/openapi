@@ -700,6 +700,219 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorData"
+  /endpoints:
+    get:
+      tags: ["Endpoints"]
+      summary: List endpoints
+      operationId: listEndpoints
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EndpointList"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+    post:
+      tags: ["Endpoints"]
+      summary: Create endpoint
+      operationId: createEndpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEndpointRequest"
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Endpoint"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
+  /endpoints/{id}:
+    get:
+      tags: ["Endpoints"]
+      summary: Get endpoint by ID
+      operationId: getEndpoint
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Endpoint"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+    delete:
+      tags: ["Endpoints"]
+      summary: Delete endpoint
+      operationId: deleteEndpoint
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Endpoint"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
+  /endpoints/{id}/hardware:
+    get:
+      tags: ["Endpoints"]
+      summary: Get available hardware for an endpoint
+      operationId: getEndpointHardware
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HardwareResponse"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
+  /endpoints/{id}/start:
+    post:
+      tags: ["Endpoints"]
+      summary: Start endpoint
+      operationId: startEndpoint
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StartEndpointRequest"
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Endpoint"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
+  /endpoints/{id}/stop:
+    post:
+      tags: ["Endpoints"]
+      summary: Stop endpoint
+      operationId: stopEndpoint
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Endpoint"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -1668,7 +1881,6 @@ components:
           type: string
         logprob:
           type: number
-          format: float
         special:
           type: boolean
 
@@ -2303,3 +2515,224 @@ components:
           format: float
           default: 0.0
           description: The ratio of the final learning rate to the peak learning rate
+
+    NamedObject:
+      type: object
+      properties:
+        object:
+          type: string
+          enum:
+            - model
+        id:
+          type: string
+          examples:
+            - model-42168e53-cfc5-474e-adb1-06fcd7aba56b
+        name:
+          type: string
+          examples:
+            - meta-llama/Llama-3-70b-chat-hf
+
+    Owner:
+      type: object
+      properties:
+        user:
+          type: string
+          examples:
+            - devuser
+        organization:
+          type: string
+          examples:
+            - together.ai
+
+    Autoscaling:
+      type: object
+      properties:
+        min_replicas:
+          type: integer
+          format: int32
+          examples:
+            - 2
+        max_replicas:
+          type: integer
+          format: int32
+          examples:
+            - 5
+
+    HardwareSpec:
+      type: object
+      properties:
+        gpu_type:
+          type: string
+          examples:
+            - a100-80gb
+        gpu_link:
+          type: string
+          examples:
+            - sxm
+        gpu_memory:
+          type: number
+          format: float
+          examples:
+            - 80
+        gpu_count:
+          type: integer
+          format: int32
+          examples:
+            - 2
+
+    EndpointHardware:
+      type: object
+      properties:
+        name:
+          type: string
+          examples:
+            - 2x_nvidia_a100_80gb_sxm
+        specs:
+          $ref: "#/components/schemas/HardwareSpec"
+
+    EndpointPricing:
+      type: object
+      properties:
+        input:
+          type: number
+          format: float
+          examples:
+            - 0
+        output:
+          type: number
+          format: float
+          examples:
+            - 0
+        cents_per_minute:
+          type: number
+          format: float
+          examples:
+            - 5.42
+
+    Deployment:
+      type: object
+      properties:
+        object:
+          type: string
+          enum:
+            - deployment
+        status:
+          type: string
+          enum:
+            - running
+            - pending
+            - queued
+            - deployed
+            - cancel_requested
+            - cancelled
+            - error
+        autoscaling:
+          $ref: "#/components/schemas/Autoscaling"
+        hardware:
+          $ref: "#/components/schemas/EndpointHardware"
+        pricing:
+          $ref: "#/components/schemas/EndpointPricing"
+
+    Endpoint:
+      type: object
+      properties:
+        object:
+          type: string
+          enum:
+            - endpoint
+        id:
+          type: string
+          examples:
+            - endpoint-4c88c864-9f71-4c50-9b32-879001a46511
+        name:
+          type: string
+          examples:
+            - devuser/meta-llama/Llama-3-70b-chat-hf-prodDeploy7
+        model:
+          $ref: "#/components/schemas/NamedObject"
+        owner:
+          $ref: "#/components/schemas/Owner"
+        deployments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Deployment"
+        created_at:
+          type: string
+          format: date-time
+
+    EndpointList:
+      type: object
+      properties:
+        object:
+          type: string
+          enum:
+            - list
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Endpoint"
+
+    HardwareAvailability:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - available
+            - unavailable
+            - insufficient
+
+    HardwareWithStatus:
+      type: object
+      properties:
+        object:
+          type: string
+          enum:
+            - hardware
+        name:
+          type: string
+          examples:
+            - 2x_nvidia_a100_80gb_sxm
+        pricing:
+          $ref: "#/components/schemas/EndpointPricing"
+        specs:
+          $ref: "#/components/schemas/HardwareSpec"
+        availability:
+          $ref: "#/components/schemas/HardwareAvailability"
+        updated_at:
+          type: string
+          format: date-time
+
+    HardwareResponse:
+      type: object
+      properties:
+        object:
+          type: string
+          enum:
+            - list
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/HardwareWithStatus"
+
+    CreateEndpointRequest:
+      type: object
+      properties:
+        model:
+          type: string
+          examples:
+            - meta-llama/Llama-3-70b-chat-hf
+        suffix:
+          type: string
+          examples:
+            - prodDeploy7
+        hardware_name:
+          type: string
+          examples:
+            - 2x_nvidia_a100_80gb_sxm
+
+    StartEndpointRequest:
+      type: object
+      properties:
+        autoscaling:
+          $ref: "#/components/schemas/Autoscaling"
