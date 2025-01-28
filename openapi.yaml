@@ -813,6 +813,50 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorData"
+    patch:
+      tags: ["Endpoints"]
+      summary: Update endpoint
+      operationId: updateEndpoint
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                min_replicas:
+                  type: integer
+                  format: int32
+                  example: 2
+                max_replicas:
+                  type: integer
+                  format: int32
+                  example: 2
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Endpoint"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
 
   /endpoints/{id}/hardware:
     get:
@@ -861,7 +905,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/StartEndpointRequest"
+              type: object
+              required:
+                - hardware_id
+                - autoscaling
+              properties:
+                hardware_id:
+                  type: string
+                  example: "1x_nvidia_h100_80gb_sxm"
+                autoscaling:
+                  $ref: "#/components/schemas/Autoscaling"
       responses:
         "200":
           description: "200"
@@ -2709,6 +2762,12 @@ components:
 
     StartEndpointRequest:
       type: object
+      required:
+        - hardware_id
+        - autoscaling
       properties:
+        hardware_id:
+          type: string
+          example: "1x_nvidia_h100_80gb_sxm"
         autoscaling:
           $ref: "#/components/schemas/Autoscaling"
