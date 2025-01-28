@@ -2261,7 +2261,7 @@ components:
         events:
           type: array
           items:
-            $ref: "#/components/schemas/FinetuneEvent"
+            $ref: "#/components/schemas/FineTuneEvent"
         token_count:
           type: integer
         param_count:
@@ -2290,30 +2290,6 @@ components:
         - error
         - completed
 
-    FinetuneEvent:
-      type: object
-      properties:
-        object:
-          type: string
-          enum:
-            - "FinetuneEvent"
-        created_at:
-          type: string
-        level:
-          anyOf:
-            - $ref: "#/components/schemas/FinetuneEventLevels"
-        message:
-          type: string
-        type:
-          $ref: "#/components/schemas/FinetuneEventType"
-        param_count:
-          type: integer
-        token_count:
-          type: integer
-        wandb_url:
-          type: string
-        hash:
-          type: string
     FinetuneEventLevels:
       type: string
       enum:
