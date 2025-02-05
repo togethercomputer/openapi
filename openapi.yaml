@@ -1283,6 +1283,11 @@ components:
           type: integer
           description: An integer that's used to limit the number of choices for the next predicted word or token. It specifies the maximum number of tokens to consider at each step, based on their probability of occurrence. This technique helps to speed up the generation process and can improve the quality of the generated text by focusing on the most likely options.
           format: int32
+        context_length_exceeded_behavior:
+          type: string
+          enum: [ "truncate", "error" ]
+          default: "error"
+          description: Defined the behavior of the API when max_tokens exceed the maximum context length of the model. When set to 'error', API will return 400 with appropriate error message. When set to 'truncate', override the max_tokens with maximum context length of the model.
         repetition_penalty:
           type: number
           description: A number that controls the diversity of generated text by reducing the likelihood of repeated sequences. Higher values decrease repetition.
