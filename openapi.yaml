@@ -2706,3 +2706,75 @@ components:
         autoscaling:
           $ref: "#/components/schemas/Autoscaling"
           description: Configuration for automatic scaling of the endpoint
+
+    Endpoint:
+      type: object
+      description: Details about a dedicated endpoint deployment
+      required:
+        - object
+        - id
+        - name
+        - display_name
+        - model
+        - hardware
+        - type
+        - owner
+        - state
+        - autoscaling
+        - created_at
+      properties:
+        object:
+          type: string
+          enum:
+            - endpoint
+          description: The type of object
+          example: endpoint
+        id:
+          type: string
+          description: Unique identifier for the endpoint
+          example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
+        name:
+          type: string
+          description: System name for the endpoint
+          example: devuser/meta-llama/Llama-3-8b-chat-hf-a32b82a1
+        display_name:
+          type: string
+          description: Human-readable name for the endpoint
+          example: My Llama3 70b endpoint
+        model:
+          type: string
+          description: The model deployed on this endpoint
+          example: meta-llama/Llama-3-8b-chat-hf
+        hardware:
+          type: string
+          description: The hardware configuration used for this endpoint
+          example: 1x_nvidia_a100_80gb_sxm
+        type:
+          type: string
+          enum:
+            - dedicated
+            - serverless
+          description: The type of endpoint
+          example: dedicated
+        owner:
+          type: string
+          description: The owner of this endpoint
+          example: devuser
+        state:
+          type: string
+          enum:
+            - PENDING
+            - STARTED 
+            - STOPPING
+            - STOPPED
+            - ERROR
+          description: Current state of the endpoint
+          example: STARTED
+        autoscaling:
+          $ref: "#/components/schemas/Autoscaling"
+          description: Configuration for automatic scaling of the endpoint
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the endpoint was created
+          example: 2025-02-04T10:43:55.405Z
