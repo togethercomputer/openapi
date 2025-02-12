@@ -840,6 +840,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorData"
+
     patch:
       tags: ["Endpoints"]
       summary: Update endpoint, this can also be used to start or stop a dedicated endpoint
@@ -2706,6 +2707,22 @@ components:
         autoscaling:
           $ref: "#/components/schemas/Autoscaling"
           description: Configuration for automatic scaling of the endpoint
+        disable_prompt_cache:
+          type: boolean
+          description: Whether to disable the prompt cache for this endpoint
+          default: false
+        disable_speculative_decoding:
+          type: boolean
+          description: Whether to disable speculative decoding for this endpoint
+          default: false
+        state:
+          type: string
+          description: The desired state of the endpoint
+          enum:
+            - STARTED
+            - STOPPED
+          default: STARTED
+          example: STARTED        
 
     Endpoint:
       type: object
