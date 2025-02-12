@@ -2575,6 +2575,9 @@ components:
     Autoscaling:
       type: object
       description: Configuration for automatic scaling of replicas based on demand.
+      required:
+        - min_replicas
+        - max_replicas
       properties:
         min_replicas:
           type: integer
@@ -2592,6 +2595,11 @@ components:
     HardwareSpec:
       type: object
       description: Detailed specifications of a hardware configuration
+      required:
+        - gpu_type
+        - gpu_link
+        - gpu_memory
+        - gpu_count
       properties:
         gpu_type:
           type: string
@@ -2619,6 +2627,8 @@ components:
     EndpointPricing:
       type: object
       description: Pricing details for using an endpoint
+      required:
+        - cents_per_minute
       properties:
         cents_per_minute:
           type: number
@@ -2630,6 +2640,8 @@ components:
     HardwareAvailability:
       type: object
       description: Indicates the current availability status of a hardware configuration
+      required:
+        - status
       properties:
         status:
           type: string
@@ -2642,6 +2654,12 @@ components:
     HardwareWithStatus:
       type: object
       description: Hardware configuration details including current availability status
+      required:
+        - object
+        - name
+        - pricing
+        - specs
+        - updated_at
       properties:
         object:
           type: string
