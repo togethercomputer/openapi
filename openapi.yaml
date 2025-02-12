@@ -705,13 +705,52 @@ paths:
       tags: ["Endpoints"]
       summary: List endpoints
       operationId: listEndpoints
+      parameters:
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - dedicated
+              - serverless
+          description: Filter endpoints by type
+          example: dedicated
       responses:
         "200":
           description: "200"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EndpointList"
+                type: object
+                required:
+                  - object
+                  - data
+                properties:
+                  object:
+                    type: string
+                    enum:
+                      - list
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Endpoint"
+                example:
+                  object: "list"
+                  data:
+                    - object: "endpoint"
+                      id: "endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7"
+                      name: "devuser/meta-llama/Llama-3-8b-chat-hf-a32b82a1"
+                      display_name: "My Llama3 70b endpoint"
+                      model: "meta-llama/Llama-3-8b-chat-hf"
+                      hardware: "1x_nvidia_a100_80gb_sxm"
+                      type: "dedicated"
+                      owner: "devuser"
+                      state: "PENDING"
+                      autoscaling:
+                        min_replicas: 1
+                        max_replicas: 3
+                      created_at: "2025-02-04T10:43:55.405Z"
         "403":
           description: "Unauthorized"
           content:
@@ -754,218 +793,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorData"
 
-  /endpoints/{id}:
-    get:
-      tags: ["Endpoints"]
-      summary: Get endpoint by ID
-      operationId: getEndpoint
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: "200"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Endpoint"
-        "403":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-        "500":
-          description: "Internal error"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-    delete:
-      tags: ["Endpoints"]
-      summary: Delete endpoint
-      operationId: deleteEndpoint
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: "200"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Endpoint"
-        "403":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-        "500":
-          description: "Internal error"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-    patch:
-      tags: ["Endpoints"]
-      summary: Update endpoint
-      operationId: updateEndpoint
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                min_replicas:
-                  type: integer
-                  format: int32
-                  example: 2
-                max_replicas:
-                  type: integer
-                  format: int32
-                  example: 2
-      responses:
-        "200":
-          description: "200"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Endpoint"
-        "403":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-        "500":
-          description: "Internal error"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-
-  /endpoints/{id}/hardware:
-    get:
-      tags: ["Endpoints"]
-      summary: Get available hardware for an endpoint
-      operationId: getEndpointHardware
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: "200"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/HardwareResponse"
-        "403":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-        "500":
-          description: "Internal error"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-
-  /endpoints/{id}/start:
-    post:
-      tags: ["Endpoints"]
-      summary: Start endpoint
-      operationId: startEndpoint
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - hardware_id
-                - autoscaling
-              properties:
-                hardware_id:
-                  type: string
-                  example: "1x_nvidia_h100_80gb_sxm"
-                autoscaling:
-                  $ref: "#/components/schemas/Autoscaling"
-      responses:
-        "200":
-          description: "200"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Endpoint"
-        "403":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-        "500":
-          description: "Internal error"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-
-  /endpoints/{id}/stop:
-    post:
-      tags: ["Endpoints"]
-      summary: Stop endpoint
-      operationId: stopEndpoint
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: "200"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Endpoint"
-        "403":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-        "500":
-          description: "Internal error"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-
   /endpoints/{endpointId}:
     get:
       tags: ["Endpoints"]
@@ -986,6 +813,98 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Endpoint"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "404":
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+    patch:
+      tags: ["Endpoints"]
+      summary: Update endpoint
+      operationId: updateEndpoint
+      parameters:
+        - name: endpointId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the endpoint to update
+          example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                display_name:
+                  type: string
+                  description: A human-readable name for the endpoint
+                  example: My Llama3 70b endpoint
+                state:
+                  type: string
+                  description: The desired state of the endpoint
+                  enum:
+                    - STARTED
+                    - STOPPED
+                  example: STARTED
+                autoscaling:
+                  $ref: "#/components/schemas/Autoscaling"
+                  description: New autoscaling configuration for the endpoint
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Endpoint"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "404":
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
+    delete:
+      tags: ["Endpoints"]
+      summary: Delete endpoint
+      operationId: deleteEndpoint
+      parameters:
+        - name: endpointId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the endpoint to delete
+          example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
+      responses:
+        "204":
+          description: "No Content - Endpoint successfully deleted"
         "403":
           description: "Unauthorized"
           content:
@@ -2677,30 +2596,6 @@ components:
           examples:
             - 5.42
 
-    Deployment:
-      type: object
-      properties:
-        object:
-          type: string
-          enum:
-            - deployment
-        status:
-          type: string
-          enum:
-            - running
-            - pending
-            - queued
-            - deployed
-            - cancel_requested
-            - cancelled
-            - error
-        autoscaling:
-          $ref: "#/components/schemas/Autoscaling"
-        hardware:
-          $ref: "#/components/schemas/EndpointHardware"
-        pricing:
-          $ref: "#/components/schemas/EndpointPricing"
-
     Endpoint:
       type: object
       properties:
@@ -2742,6 +2637,7 @@ components:
           enum:
             - PENDING
             - STARTED
+            - STOPPING
             - STOPPED
             - ERROR
         autoscaling:
