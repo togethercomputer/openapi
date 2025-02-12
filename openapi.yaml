@@ -741,23 +741,17 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Endpoint"
+                      $ref: "#/components/schemas/ListEndpoint"
                 example:
                   object: "list"
                   data:
                     - object: "endpoint"
-                      id: "endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7"
-                      name: "devuser/meta-llama/Llama-3-8b-chat-hf-a32b82a1"
-                      display_name: "My Llama3 70b endpoint"
-                      model: "meta-llama/Llama-3-8b-chat-hf"
-                      hardware: "1x_nvidia_a100_80gb_sxm"
-                      type: "dedicated"
-                      owner: "devuser"
-                      state: "PENDING"
-                      autoscaling:
-                        min_replicas: 1
-                        max_replicas: 3
-                      created_at: "2025-02-04T10:43:55.405Z"
+                      name: "allenai/OLMo-7B"
+                      model: "allenai/OLMo-7B"
+                      type: "serverless"
+                      owner: "together"
+                      state: "STARTED"
+                      created_at: "2024-02-28T21:34:35.444Z"
         "403":
           description: "Unauthorized"
           content:
@@ -787,7 +781,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Endpoint"
+                $ref: "#/components/schemas/DedicatedEndpoint"
         "403":
           description: "Unauthorized"
           content:
@@ -821,7 +815,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Endpoint"
+                $ref: "#/components/schemas/DedicatedEndpoint"
         "403":
           description: "Unauthorized"
           content:
@@ -881,7 +875,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Endpoint"
+                $ref: "#/components/schemas/DedicatedEndpoint"
         "403":
           description: "Unauthorized"
           content:
@@ -2722,7 +2716,7 @@ components:
           default: STARTED
           example: STARTED        
 
-    Endpoint:
+    DedicatedEndpoint:
       type: object
       description: Details about a dedicated endpoint deployment
       required:
@@ -2768,7 +2762,6 @@ components:
           type: string
           enum:
             - dedicated
-            - serverless
           description: The type of endpoint
           example: dedicated
         owner:
@@ -2779,6 +2772,7 @@ components:
           type: string
           enum:
             - PENDING
+            - STARTING
             - STARTED 
             - STOPPING
             - STOPPED
@@ -2793,3 +2787,62 @@ components:
           format: date-time
           description: Timestamp when the endpoint was created
           example: 2025-02-04T10:43:55.405Z
+
+    ListEndpoint:
+      type: object
+      description: Details about an endpoint when listed via the list endpoint
+      required:
+        - id
+        - object
+        - name
+        - model
+        - type
+        - owner
+        - state
+        - created_at
+      properties:
+        object:
+          type: string
+          enum:
+            - endpoint
+          description: The type of object
+          example: endpoint
+        id:
+          type: string
+          description: Unique identifier for the endpoint
+          example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
+        name:
+          type: string
+          description: System name for the endpoint
+          example: allenai/OLMo-7B
+        model:
+          type: string
+          description: The model deployed on this endpoint
+          example: allenai/OLMo-7B
+        type:
+          type: string
+          enum:
+            - serverless
+            - dedicated
+          description: The type of endpoint
+          example: serverless
+        owner:
+          type: string
+          description: The owner of this endpoint
+          example: together
+        state:
+          type: string
+          enum:
+            - PENDING
+            - STARTING
+            - STARTED 
+            - STOPPING
+            - STOPPED
+            - ERROR
+          description: Current state of the endpoint
+          example: STARTED
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the endpoint was created
+          example: 2024-02-28T21:34:35.444Z
