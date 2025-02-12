@@ -2653,18 +2653,6 @@ components:
       type: object
       description: Pricing details for using an endpoint
       properties:
-        input:
-          type: number
-          format: float
-          description: Cost per 1000 input tokens
-          examples:
-            - 0
-        output:
-          type: number
-          format: float
-          description: Cost per 1000 output tokens
-          examples:
-            - 0
         cents_per_minute:
           type: number
           format: float
