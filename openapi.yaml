@@ -703,7 +703,7 @@ paths:
   /endpoints:
     get:
       tags: ["Endpoints"]
-      summary: List endpoints
+      summary: List all endpoints, can be filtered by type
       operationId: listEndpoints
       parameters:
         - name: type
@@ -765,7 +765,7 @@ paths:
                 $ref: "#/components/schemas/ErrorData"
     post:
       tags: ["Endpoints"]
-      summary: Create endpoint
+      summary: Create a dedicated endpoint, it will start automatically
       operationId: createEndpoint
       requestBody:
         required: true
@@ -833,7 +833,7 @@ paths:
                 $ref: "#/components/schemas/ErrorData"
     patch:
       tags: ["Endpoints"]
-      summary: Update endpoint
+      summary: Update endpoint, this can also be used to start or stop a dedicated endpoint
       operationId: updateEndpoint
       parameters:
         - name: endpointId
@@ -913,6 +913,91 @@ paths:
                 $ref: "#/components/schemas/ErrorData"
         "404":
           description: "Not Found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
+  /hardware:
+    get:
+      tags: ["Hardware"]
+      summary: List available hardware configurations
+      operationId: listHardware
+      parameters:
+        - name: model
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter hardware configurations by model compatibility
+          example: meta-llama/Llama-3-70b-chat-hf
+      responses:
+        "200":
+          description: "List of available hardware configurations"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    description: Response when no model filter is provided
+                    required:
+                      - object
+                      - data
+                    properties:
+                      object:
+                        type: string
+                        enum:
+                          - list
+                      data:
+                        type: array
+                        items:
+                          allOf:
+                            - $ref: "#/components/schemas/HardwareWithStatus"
+                            - type: object
+                              properties:
+                                availability:
+                                  not: {}
+                  - type: object
+                    description: Response when model filter is provided
+                    required:
+                      - object
+                      - data
+                    properties:
+                      object:
+                        type: string
+                        enum:
+                          - list
+                      data:
+                        type: array
+                        items:
+                          allOf:
+                            - $ref: "#/components/schemas/HardwareWithStatus"
+                            - type: object
+                              required:
+                                - availability
+                example:
+                  object: "list"
+                  data:
+                    - object: "hardware"
+                      name: "2x_nvidia_a100_80gb_sxm"
+                      pricing:
+                        input: 0
+                        output: 0
+                        cents_per_minute: 5.42
+                      specs:
+                        gpu_type: "a100-80gb"
+                        gpu_link: "sxm"
+                        gpu_memory: 80
+                        gpu_count: 2
+                      updated_at: "2024-01-01T00:00:00Z"
+        "403":
+          description: "Unauthorized"
           content:
             application/json:
               schema:
