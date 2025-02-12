@@ -704,6 +704,7 @@ paths:
     get:
       tags: ["Endpoints"]
       summary: List all endpoints, can be filtered by type
+      description: Returns a list of all endpoints associated with your account. You can filter the results by type (dedicated or serverless).
       operationId: listEndpoints
       parameters:
         - name: type
@@ -766,6 +767,7 @@ paths:
     post:
       tags: ["Endpoints"]
       summary: Create a dedicated endpoint, it will start automatically
+      description: Creates a new dedicated endpoint for serving models. The endpoint will automatically start after creation. You can deploy any supported model on hardware configurations that meet the model's requirements.
       operationId: createEndpoint
       requestBody:
         required: true
@@ -797,6 +799,7 @@ paths:
     get:
       tags: ["Endpoints"]
       summary: Get endpoint by ID
+      description: Retrieves details about a specific endpoint, including its current state, configuration, and scaling settings.
       operationId: getEndpoint
       parameters:
         - name: endpointId
@@ -834,6 +837,7 @@ paths:
     patch:
       tags: ["Endpoints"]
       summary: Update endpoint, this can also be used to start or stop a dedicated endpoint
+      description: Updates an existing endpoint's configuration. You can modify the display name, autoscaling settings, or change the endpoint's state (start/stop).
       operationId: updateEndpoint
       parameters:
         - name: endpointId
@@ -893,6 +897,7 @@ paths:
     delete:
       tags: ["Endpoints"]
       summary: Delete endpoint
+      description: Permanently deletes an endpoint. This action cannot be undone.
       operationId: deleteEndpoint
       parameters:
         - name: endpointId
@@ -927,7 +932,8 @@ paths:
   /hardware:
     get:
       tags: ["Hardware"]
-      summary: List available hardware configurations
+      summary: List available hardware configurations 
+      description: Returns a list of available hardware configurations for deploying models. When a model parameter is provided, it returns only hardware configurations compatible with that model, including their current availability status.
       operationId: listHardware
       parameters:
         - name: model
@@ -2588,177 +2594,80 @@ components:
           default: 0.0
           description: The ratio of the final learning rate to the peak learning rate
 
-    NamedObject:
-      type: object
-      properties:
-        object:
-          type: string
-          enum:
-            - model
-        id:
-          type: string
-          examples:
-            - model-42168e53-cfc5-474e-adb1-06fcd7aba56b
-        name:
-          type: string
-          examples:
-            - meta-llama/Llama-3-70b-chat-hf
-
-    Owner:
-      type: object
-      properties:
-        user:
-          type: string
-          examples:
-            - devuser
-        organization:
-          type: string
-          examples:
-            - together.ai
-
     Autoscaling:
       type: object
+      description: Configuration for automatic scaling of replicas based on demand.
       properties:
         min_replicas:
           type: integer
           format: int32
+          description: The minimum number of replicas to maintain, even when there is no load
           examples:
             - 2
         max_replicas:
           type: integer
           format: int32
+          description: The maximum number of replicas to scale up to under load
           examples:
             - 5
 
     HardwareSpec:
       type: object
+      description: Detailed specifications of a hardware configuration
       properties:
         gpu_type:
           type: string
+          description: The type/model of GPU
           examples:
             - a100-80gb
         gpu_link:
           type: string
+          description: The GPU interconnect technology
           examples:
             - sxm
         gpu_memory:
           type: number
           format: float
+          description: Amount of GPU memory in GB
           examples:
             - 80
         gpu_count:
           type: integer
           format: int32
+          description: Number of GPUs in this configuration
           examples:
             - 2
 
-    EndpointHardware:
-      type: object
-      properties:
-        name:
-          type: string
-          examples:
-            - 2x_nvidia_a100_80gb_sxm
-        specs:
-          $ref: "#/components/schemas/HardwareSpec"
-
     EndpointPricing:
       type: object
+      description: Pricing details for using an endpoint
       properties:
         input:
           type: number
           format: float
+          description: Cost per 1000 input tokens
           examples:
             - 0
         output:
           type: number
           format: float
+          description: Cost per 1000 output tokens
           examples:
             - 0
         cents_per_minute:
           type: number
           format: float
+          description: Cost per minute of endpoint uptime in cents
           examples:
             - 5.42
 
-    Endpoint:
-      type: object
-      properties:
-        object:
-          type: string
-          enum:
-            - endpoint
-        id:
-          type: string
-          examples:
-            - endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
-        name:
-          type: string
-          examples:
-            - devuser/meta-llama/Llama-3-8b-chat-hf-a32b82a1
-        display_name:
-          type: string
-          description: A human-readable name for the endpoint
-          examples:
-            - My Llama3 70b endpoint
-        model:
-          type: string
-          examples:
-            - meta-llama/Llama-3-8b-chat-hf
-        hardware:
-          type: string
-          examples:
-            - 1x_nvidia_a100_80gb_sxm
-        type:
-          type: string
-          enum:
-            - dedicated
-        owner:
-          type: string
-          examples:
-            - devuser
-        state:
-          type: string
-          enum:
-            - PENDING
-            - STARTED
-            - STOPPING
-            - STOPPED
-            - ERROR
-        autoscaling:
-          $ref: "#/components/schemas/Autoscaling"
-        created_at:
-          type: string
-          format: date-time
-      required:
-        - object
-        - id
-        - name
-        - model
-        - hardware
-        - type
-        - owner
-        - state
-        - autoscaling
-        - created_at
-
-    EndpointList:
-      type: object
-      properties:
-        object:
-          type: string
-          enum:
-            - list
-        data:
-          type: array
-          items:
-            $ref: "#/components/schemas/Endpoint"
-
     HardwareAvailability:
       type: object
+      description: Indicates the current availability status of a hardware configuration
       properties:
         status:
           type: string
+          description: The availability status of the hardware configuration
           enum:
             - available
             - unavailable
@@ -2766,6 +2675,7 @@ components:
 
     HardwareWithStatus:
       type: object
+      description: Hardware configuration details including current availability status
       properties:
         object:
           type: string
@@ -2773,6 +2683,7 @@ components:
             - hardware
         name:
           type: string
+          description: Unique identifier for the hardware configuration
           examples:
             - 2x_nvidia_a100_80gb_sxm
         pricing:
@@ -2784,18 +2695,7 @@ components:
         updated_at:
           type: string
           format: date-time
-
-    HardwareResponse:
-      type: object
-      properties:
-        object:
-          type: string
-          enum:
-            - list
-        data:
-          type: array
-          items:
-            $ref: "#/components/schemas/HardwareWithStatus"
+          description: Timestamp of when the hardware status was last updated
 
     CreateEndpointRequest:
       type: object
@@ -2822,15 +2722,3 @@ components:
         autoscaling:
           $ref: "#/components/schemas/Autoscaling"
           description: Configuration for automatic scaling of the endpoint
-
-    StartEndpointRequest:
-      type: object
-      required:
-        - hardware_id
-        - autoscaling
-      properties:
-        hardware_id:
-          type: string
-          example: "1x_nvidia_h100_80gb_sxm"
-        autoscaling:
-          $ref: "#/components/schemas/Autoscaling"
