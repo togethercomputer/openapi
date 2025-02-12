@@ -2672,22 +2672,55 @@ components:
         id:
           type: string
           examples:
-            - endpoint-4c88c864-9f71-4c50-9b32-879001a46511
+            - endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
         name:
           type: string
           examples:
-            - devuser/meta-llama/Llama-3-70b-chat-hf-prodDeploy7
+            - devuser/meta-llama/Llama-3-8b-chat-hf-a32b82a1
+        display_name:
+          type: string
+          description: A human-readable name for the endpoint
+          examples:
+            - My Llama3 70b endpoint
         model:
-          $ref: "#/components/schemas/NamedObject"
+          type: string
+          examples:
+            - meta-llama/Llama-3-8b-chat-hf
+        hardware:
+          type: string
+          examples:
+            - 1x_nvidia_a100_80gb_sxm
+        type:
+          type: string
+          enum:
+            - dedicated
         owner:
-          $ref: "#/components/schemas/Owner"
-        deployments:
-          type: array
-          items:
-            $ref: "#/components/schemas/Deployment"
+          type: string
+          examples:
+            - devuser
+        state:
+          type: string
+          enum:
+            - PENDING
+            - RUNNING
+            - STOPPED
+            - ERROR
+        autoscaling:
+          $ref: "#/components/schemas/Autoscaling"
         created_at:
           type: string
           format: date-time
+      required:
+        - object
+        - id
+        - name
+        - model
+        - hardware
+        - type
+        - owner
+        - state
+        - autoscaling
+        - created_at
 
     EndpointList:
       type: object
@@ -2746,19 +2779,29 @@ components:
 
     CreateEndpointRequest:
       type: object
+      required:
+        - model
+        - hardware
+        - autoscaling
       properties:
+        display_name:
+          type: string
+          description: A human-readable name for the endpoint
+          examples:
+            - My Llama3 70b endpoint
         model:
           type: string
+          description: The model to deploy on this endpoint
           examples:
-            - meta-llama/Llama-3-70b-chat-hf
-        suffix:
+            - meta-llama/Llama-3-8b-chat-hf
+        hardware:
           type: string
+          description: The hardware configuration to use for this endpoint
           examples:
-            - prodDeploy7
-        hardware_name:
-          type: string
-          examples:
-            - 2x_nvidia_a100_80gb_sxm
+            - 1x_nvidia_a100_80gb_sxm
+        autoscaling:
+          $ref: "#/components/schemas/Autoscaling"
+          description: Configuration for automatic scaling of the endpoint
 
     StartEndpointRequest:
       type: object
