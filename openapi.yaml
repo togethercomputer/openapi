@@ -1187,8 +1187,6 @@ components:
           required:
             - type
             - message
-            - param
-            - code
 
     FinishReason:
       type: string
