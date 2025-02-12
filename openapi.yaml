@@ -966,6 +966,45 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorData"
 
+  /endpoints/{endpointId}:
+    get:
+      tags: ["Endpoints"]
+      summary: Get endpoint by ID
+      operationId: getEndpoint
+      parameters:
+        - name: endpointId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the endpoint to retrieve
+          example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Endpoint"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "404":
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -2702,7 +2741,7 @@ components:
           type: string
           enum:
             - PENDING
-            - RUNNING
+            - STARTED
             - STOPPED
             - ERROR
         autoscaling:
