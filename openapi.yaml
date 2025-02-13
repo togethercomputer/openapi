@@ -706,6 +706,281 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorData"
+  /endpoints:
+    get:
+      tags: ["Endpoints"]
+      summary: List all endpoints, can be filtered by type
+      description: Returns a list of all endpoints associated with your account. You can filter the results by type (dedicated or serverless).
+      operationId: listEndpoints
+      parameters:
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - dedicated
+              - serverless
+          description: Filter endpoints by type
+          example: dedicated
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - object
+                  - data
+                properties:
+                  object:
+                    type: string
+                    enum:
+                      - list
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ListEndpoint"
+                example:
+                  object: "list"
+                  data:
+                    - object: "endpoint"
+                      name: "allenai/OLMo-7B"
+                      model: "allenai/OLMo-7B"
+                      type: "serverless"
+                      owner: "together"
+                      state: "STARTED"
+                      created_at: "2024-02-28T21:34:35.444Z"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+    post:
+      tags: ["Endpoints"]
+      summary: Create a dedicated endpoint, it will start automatically
+      description: Creates a new dedicated endpoint for serving models. The endpoint will automatically start after creation. You can deploy any supported model on hardware configurations that meet the model's requirements.
+      operationId: createEndpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEndpointRequest"
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DedicatedEndpoint"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
+  /endpoints/{endpointId}:
+    get:
+      tags: ["Endpoints"]
+      summary: Get endpoint by ID
+      description: Retrieves details about a specific endpoint, including its current state, configuration, and scaling settings.
+      operationId: getEndpoint
+      parameters:
+        - name: endpointId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the endpoint to retrieve
+          example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DedicatedEndpoint"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "404":
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
+    patch:
+      tags: ["Endpoints"]
+      summary: Update endpoint, this can also be used to start or stop a dedicated endpoint
+      description: Updates an existing endpoint's configuration. You can modify the display name, autoscaling settings, or change the endpoint's state (start/stop).
+      operationId: updateEndpoint
+      parameters:
+        - name: endpointId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the endpoint to update
+          example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                display_name:
+                  type: string
+                  description: A human-readable name for the endpoint
+                  example: My Llama3 70b endpoint
+                state:
+                  type: string
+                  description: The desired state of the endpoint
+                  enum:
+                    - STARTED
+                    - STOPPED
+                  example: STARTED
+                autoscaling:
+                  $ref: "#/components/schemas/Autoscaling"
+                  description: New autoscaling configuration for the endpoint
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DedicatedEndpoint"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "404":
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
+    delete:
+      tags: ["Endpoints"]
+      summary: Delete endpoint
+      description: Permanently deletes an endpoint. This action cannot be undone.
+      operationId: deleteEndpoint
+      parameters:
+        - name: endpointId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the endpoint to delete
+          example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
+      responses:
+        "204":
+          description: "No Content - Endpoint successfully deleted"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "404":
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
+  /hardware:
+    get:
+      tags: ["Hardware"]
+      summary: List available hardware configurations
+      description: >
+        Returns a list of available hardware configurations for deploying models.
+        When a model parameter is provided, it returns only hardware configurations compatible 
+        with that model, including their current availability status.
+      operationId: listHardware
+      parameters:
+        - name: model
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >
+            Filter hardware configurations by model compatibility. When provided, 
+            the response includes availability status for each compatible configuration.
+          example: meta-llama/Llama-3-70b-chat-hf
+      responses:
+        "200":
+          description: "List of available hardware configurations"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - object
+                  - data
+                properties:
+                  object:
+                    type: string
+                    enum:
+                      - list
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/HardwareWithStatus"
+        "403":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -748,21 +1023,21 @@ components:
                 example: Our solar system orbits the Milky Way galaxy at about 515,000 mph
           example:
             - {
-              "title": "Llama",
-              "text": "The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era.",
-            }
+                "title": "Llama",
+                "text": "The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era.",
+              }
             - {
-              "title": "Panda",
-              "text": "The giant panda (Ailuropoda melanoleuca), also known as the panda bear or simply panda, is a bear species endemic to China.",
-            }
+                "title": "Panda",
+                "text": "The giant panda (Ailuropoda melanoleuca), also known as the panda bear or simply panda, is a bear species endemic to China.",
+              }
             - {
-              "title": "Guanaco",
-              "text": "The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations.",
-            }
+                "title": "Guanaco",
+                "text": "The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations.",
+              }
             - {
-              "title": "Wild Bactrian camel",
-              "text": "The wild Bactrian camel (Camelus ferus) is an endangered species of camel endemic to Northwest China and southwestern Mongolia.",
-            }
+                "title": "Wild Bactrian camel",
+                "text": "The wild Bactrian camel (Camelus ferus) is an endangered species of camel endemic to Northwest China and southwestern Mongolia.",
+              }
         top_n:
           type: integer
           description: The number of top results to return.
@@ -822,21 +1097,21 @@ components:
                     nullable: true
           example:
             - {
-              "index": 0,
-              "relevance_score": 0.29980177813003117,
-              "document":
-                {
-                  "text": '{"title":"Llama","text":"The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era."}',
-                },
-            }
+                "index": 0,
+                "relevance_score": 0.29980177813003117,
+                "document":
+                  {
+                    "text": '{"title":"Llama","text":"The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era."}',
+                  },
+              }
             - {
-              "index": 2,
-              "relevance_score": 0.2752447527354349,
-              "document":
-                {
-                  "text": '{"title":"Guanaco","text":"The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations."}',
-                },
-            }
+                "index": 2,
+                "relevance_score": 0.2752447527354349,
+                "document":
+                  {
+                    "text": '{"title":"Guanaco","text":"The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations."}',
+                  },
+              }
         usage:
           $ref: "#/components/schemas/UsageData"
           example:
@@ -871,8 +1146,6 @@ components:
           required:
             - type
             - message
-            - param
-            - code
 
     FinishReason:
       type: string
@@ -1037,7 +1310,7 @@ components:
 
             format: float
           description: Adjusts the likelihood of specific tokens appearing in the generated output.
-          example: {"1024": -10.5, "105": 21.4}
+          example: { "1024": -10.5, "105": 21.4 }
         seed:
           type: integer
           description: Seed value for reproducibility.
@@ -1285,7 +1558,7 @@ components:
           format: int32
         context_length_exceeded_behavior:
           type: string
-          enum: [ "truncate", "error" ]
+          enum: ["truncate", "error"]
           default: "error"
           description: Defined the behavior of the API when max_tokens exceed the maximum context length of the model. When set to 'error', API will return 400 with appropriate error message. When set to 'truncate', override the max_tokens with maximum context length of the model.
         repetition_penalty:
@@ -1325,7 +1598,7 @@ components:
             type: number
             format: float
           description: Adjusts the likelihood of specific tokens appearing in the generated output.
-          example: {"1024": -10.5, "105": 21.4}
+          example: { "1024": -10.5, "105": 21.4 }
         seed:
           type: integer
           description: Seed value for reproducibility.
@@ -1679,7 +1952,6 @@ components:
           type: string
         logprob:
           type: number
-          format: float
         special:
           type: boolean
 
@@ -2060,7 +2332,7 @@ components:
         events:
           type: array
           items:
-            $ref: "#/components/schemas/FinetuneEvent"
+            $ref: "#/components/schemas/FineTuneEvent"
         token_count:
           type: integer
         param_count:
@@ -2089,30 +2361,6 @@ components:
         - error
         - completed
 
-    FinetuneEvent:
-      type: object
-      properties:
-        object:
-          type: string
-          enum:
-            - "FinetuneEvent"
-        created_at:
-          type: string
-        level:
-          anyOf:
-            - $ref: "#/components/schemas/FinetuneEventLevels"
-        message:
-          type: string
-        type:
-          $ref: "#/components/schemas/FinetuneEventType"
-        param_count:
-          type: integer
-        token_count:
-          type: integer
-        wandb_url:
-          type: string
-        hash:
-          type: string
     FinetuneEventLevels:
       type: string
       enum:
@@ -2193,45 +2441,12 @@ components:
         created_at:
           type: string
         level:
-          type: string
-          enum:
-            - null
-            - info
-            - warning
-            - error
-            - legacy_info
-            - legacy_iwarning
-            - legacy_ierror
+          anyOf:
+            - $ref: "#/components/schemas/FinetuneEventLevels"
         message:
           type: string
         type:
-          type: string
-          enum:
-            - job_pending
-            - job_start
-            - job_stopped
-            - model_downloading
-            - model_download_complete
-            - training_data_downloading
-            - training_data_download_complete
-            - validation_data_downloading
-            - validation_data_download_complete
-            - wandb_init
-            - training_start
-            - checkpoint_save
-            - billing_limit
-            - epoch_complete
-            - training_complete
-            - model_compressing
-            - model_compression_complete
-            - model_uploading
-            - model_upload_complete
-            - job_complete
-            - job_error
-            - cancel_requested
-            - job_restarted
-            - refund
-            - warning
+          $ref: "#/components/schemas/FinetuneEventType"
         param_count:
           type: integer
         token_count:
@@ -2314,3 +2529,285 @@ components:
           format: float
           default: 0.0
           description: The ratio of the final learning rate to the peak learning rate
+
+    Autoscaling:
+      type: object
+      description: Configuration for automatic scaling of replicas based on demand.
+      required:
+        - min_replicas
+        - max_replicas
+      properties:
+        min_replicas:
+          type: integer
+          format: int32
+          description: The minimum number of replicas to maintain, even when there is no load
+          examples:
+            - 2
+        max_replicas:
+          type: integer
+          format: int32
+          description: The maximum number of replicas to scale up to under load
+          examples:
+            - 5
+
+    HardwareSpec:
+      type: object
+      description: Detailed specifications of a hardware configuration
+      required:
+        - gpu_type
+        - gpu_link
+        - gpu_memory
+        - gpu_count
+      properties:
+        gpu_type:
+          type: string
+          description: The type/model of GPU
+          examples:
+            - a100-80gb
+        gpu_link:
+          type: string
+          description: The GPU interconnect technology
+          examples:
+            - sxm
+        gpu_memory:
+          type: number
+          format: float
+          description: Amount of GPU memory in GB
+          examples:
+            - 80
+        gpu_count:
+          type: integer
+          format: int32
+          description: Number of GPUs in this configuration
+          examples:
+            - 2
+
+    EndpointPricing:
+      type: object
+      description: Pricing details for using an endpoint
+      required:
+        - cents_per_minute
+      properties:
+        cents_per_minute:
+          type: number
+          format: float
+          description: Cost per minute of endpoint uptime in cents
+          examples:
+            - 5.42
+
+    HardwareAvailability:
+      type: object
+      description: Indicates the current availability status of a hardware configuration
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: The availability status of the hardware configuration
+          enum:
+            - available
+            - unavailable
+            - insufficient
+
+    HardwareWithStatus:
+      type: object
+      description: Hardware configuration details with optional availability status
+      required:
+        - object
+        - id
+        - pricing
+        - specs
+        - updated_at
+      properties:
+        object:
+          type: string
+          enum:
+            - hardware
+        id:
+          type: string
+          description: Unique identifier for the hardware configuration
+          examples:
+            - 2x_nvidia_a100_80gb_sxm
+        pricing:
+          $ref: "#/components/schemas/EndpointPricing"
+        specs:
+          $ref: "#/components/schemas/HardwareSpec"
+        availability:
+          $ref: "#/components/schemas/HardwareAvailability"
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp of when the hardware status was last updated
+
+    CreateEndpointRequest:
+      type: object
+      required:
+        - model
+        - hardware
+        - autoscaling
+      properties:
+        display_name:
+          type: string
+          description: A human-readable name for the endpoint
+          examples:
+            - My Llama3 70b endpoint
+        model:
+          type: string
+          description: The model to deploy on this endpoint
+          examples:
+            - meta-llama/Llama-3-8b-chat-hf
+        hardware:
+          type: string
+          description: The hardware configuration to use for this endpoint
+          examples:
+            - 1x_nvidia_a100_80gb_sxm
+        autoscaling:
+          $ref: "#/components/schemas/Autoscaling"
+          description: Configuration for automatic scaling of the endpoint
+        disable_prompt_cache:
+          type: boolean
+          description: Whether to disable the prompt cache for this endpoint
+          default: false
+        disable_speculative_decoding:
+          type: boolean
+          description: Whether to disable speculative decoding for this endpoint
+          default: false
+        state:
+          type: string
+          description: The desired state of the endpoint
+          enum:
+            - STARTED
+            - STOPPED
+          default: STARTED
+          example: STARTED
+
+    DedicatedEndpoint:
+      type: object
+      description: Details about a dedicated endpoint deployment
+      required:
+        - object
+        - id
+        - name
+        - display_name
+        - model
+        - hardware
+        - type
+        - owner
+        - state
+        - autoscaling
+        - created_at
+      properties:
+        object:
+          type: string
+          enum:
+            - endpoint
+          description: The type of object
+          example: endpoint
+        id:
+          type: string
+          description: Unique identifier for the endpoint
+          example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
+        name:
+          type: string
+          description: System name for the endpoint
+          example: devuser/meta-llama/Llama-3-8b-chat-hf-a32b82a1
+        display_name:
+          type: string
+          description: Human-readable name for the endpoint
+          example: My Llama3 70b endpoint
+        model:
+          type: string
+          description: The model deployed on this endpoint
+          example: meta-llama/Llama-3-8b-chat-hf
+        hardware:
+          type: string
+          description: The hardware configuration used for this endpoint
+          example: 1x_nvidia_a100_80gb_sxm
+        type:
+          type: string
+          enum:
+            - dedicated
+          description: The type of endpoint
+          example: dedicated
+        owner:
+          type: string
+          description: The owner of this endpoint
+          example: devuser
+        state:
+          type: string
+          enum:
+            - PENDING
+            - STARTING
+            - STARTED
+            - STOPPING
+            - STOPPED
+            - ERROR
+          description: Current state of the endpoint
+          example: STARTED
+        autoscaling:
+          $ref: "#/components/schemas/Autoscaling"
+          description: Configuration for automatic scaling of the endpoint
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the endpoint was created
+          example: 2025-02-04T10:43:55.405Z
+
+    ListEndpoint:
+      type: object
+      description: Details about an endpoint when listed via the list endpoint
+      required:
+        - id
+        - object
+        - name
+        - model
+        - type
+        - owner
+        - state
+        - created_at
+      properties:
+        object:
+          type: string
+          enum:
+            - endpoint
+          description: The type of object
+          example: endpoint
+        id:
+          type: string
+          description: Unique identifier for the endpoint
+          example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
+        name:
+          type: string
+          description: System name for the endpoint
+          example: allenai/OLMo-7B
+        model:
+          type: string
+          description: The model deployed on this endpoint
+          example: allenai/OLMo-7B
+        type:
+          type: string
+          enum:
+            - serverless
+            - dedicated
+          description: The type of endpoint
+          example: serverless
+        owner:
+          type: string
+          description: The owner of this endpoint
+          example: together
+        state:
+          type: string
+          enum:
+            - PENDING
+            - STARTING
+            - STARTED
+            - STOPPING
+            - STOPPED
+            - ERROR
+          description: Current state of the endpoint
+          example: STARTED
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the endpoint was created
+          example: 2024-02-28T21:34:35.444Z
