@@ -1512,12 +1512,26 @@ components:
                               properties:
                                 url:
                                   type: string
-                                  description: The URL of the image as a plain string.
+                                  description: The URL of the image
+                              required:
+                                - url
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                                - video_url
+                            video_url:
+                              type: object
+                              properties:
+                                url:
+                                  type: string
+                                  description: The URL of the video
                               required:
                                 - url
                           required:
                             - type
-                            - image_url
+                            - video_url
             required:
               - role
               - content
