@@ -1273,7 +1273,7 @@ components:
           type: integer
           minimum: 0
           maximum: 1
-          description: Determines the number of most likely tokens to return at each token position log probabilities to return.
+          description: Integer (0 or 1) that controls whether log probabilities of generated tokens are returned. Log probabilities help assess model confidence in token predictions.
         echo:
           type: boolean
           description: If true, the response will contain the prompt. Can be used with `logprobs` to return prompt logprobs.
