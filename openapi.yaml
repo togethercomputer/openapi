@@ -2354,7 +2354,6 @@ components:
         from_step:
           type: integer
           default: -1
-          description: From which checkpoint start a fine-tuning job
 
     FinetuneJobStatus:
       type: string
