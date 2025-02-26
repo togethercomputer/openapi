@@ -489,10 +489,9 @@ paths:
                   oneOf:
                     - $ref: "#/components/schemas/FullTrainingType"
                     - $ref: "#/components/schemas/LoRATrainingType"
-                from_step:
-                  type: integer
-                  default: -1
-                  description: From which checkpoint start a fine-tuning job
+                from_checkpoint:
+                  type: string
+                  description: The checkpoint to be used in the fine-tuning.
       responses:
         "200":
           description: Fine-tuning job initiated successfully
@@ -2351,9 +2350,8 @@ components:
           type: string
         wandb_url:
           type: string
-        from_step:
-          type: integer
-          default: -1
+        from_checkpoint:
+          type: string
 
     FinetuneJobStatus:
       type: string
