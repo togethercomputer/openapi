@@ -423,11 +423,11 @@ paths:
                 n_epochs:
                   type: integer
                   default: 1
-                  description: Number of epochs for fine-tuning
+                  description: Number of complete passes through the training dataset (higher values may improve results but increase cost and risk of overfitting)
                 n_checkpoints:
                   type: integer
                   default: 1
-                  description: Number of checkpoints to save during fine-tuning
+                  description: Number of intermediate model versions saved during training for evaluation
                 n_evals:
                   type: integer
                   default: 0
@@ -435,12 +435,12 @@ paths:
                 batch_size:
                   type: integer
                   default: 32
-                  description: Batch size for fine-tuning
+                  description: Number of training examples processed together (larger batches use more memory but may train faster)
                 learning_rate:
                   type: number
                   format: float
                   default: 0.00001
-                  description: Learning rate multiplier to use for training
+                  description: Controls how quickly the model adapts to new information (too high may cause instability, too low may slow convergence)
                 lr_scheduler:
                   type: object
                   default: none
@@ -465,7 +465,7 @@ paths:
                   description: Suffix that will be added to your fine-tuned model name
                 wandb_api_key:
                   type: string
-                  description: API key for Weights & Biases integration
+                  description: Integration key for tracking experiments and model metrics on W&B platform
                 wandb_base_url:
                   type: string
                   description: The base URL of a dedicated Weights & Biases instance.
@@ -1571,7 +1571,7 @@ components:
           type: integer
           minimum: 0
           maximum: 1
-          description: Determines the number of most likely tokens to return at each token position log probabilities to return.
+          description: Integer (0 or 1) that controls whether log probabilities of generated tokens are returned. Log probabilities help assess model confidence in token predictions.
         echo:
           type: boolean
           description: If true, the response will contain the prompt. Can be used with `logprobs` to return prompt logprobs.
