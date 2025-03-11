@@ -489,6 +489,9 @@ paths:
                   oneOf:
                     - $ref: "#/components/schemas/FullTrainingType"
                     - $ref: "#/components/schemas/LoRATrainingType"
+                from_checkpoint:
+                  type: string
+                  description: The checkpoint identifier to continue training from a previous fine-tuning job. Format: {$JOB_ID/$OUTPUT_MODEL_NAME}:{$STEP}. The step value is optional, without it the final checkpoint will be used.
       responses:
         "200":
           description: Fine-tuning job initiated successfully
@@ -2360,6 +2363,8 @@ components:
         wandb_project_name:
           type: string
         wandb_url:
+          type: string
+        from_checkpoint:
           type: string
 
     FinetuneJobStatus:
