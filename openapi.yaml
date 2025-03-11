@@ -484,6 +484,18 @@ paths:
                   type: boolean
                   default: auto
                   description: Whether to mask the user messages in conversational data or prompts in instruction data.
+                training_method:
+                  type: string
+                  enum:
+                    - sft
+                    - dpo
+                  default: sft
+                  description: The training method to use. 'sft' for Supervised Fine-Tuning or 'dpo' for Direct Preference Optimization.
+                dpo_beta:
+                  type: number
+                  format: float
+                  default: 0.1
+                  description: The beta parameter for DPO training. Only applicable when training_method is 'dpo'.
                 training_type:
                   type: object
                   oneOf:
@@ -2337,6 +2349,16 @@ components:
               enum:
                 - auto
           default: auto
+        training_method:
+          type: string
+          enum:
+            - sft
+            - dpo
+          default: sft
+        dpo_beta:
+          type: number
+          format: float
+          default: 0.1
         training_type:
           type: object
           oneOf:
