@@ -491,7 +491,7 @@ paths:
                     - $ref: "#/components/schemas/LoRATrainingType"
                 from_checkpoint:
                   type: string
-                  description: The checkpoint to be used in the fine-tuning.
+                  description: The checkpoint identifier to continue training from a previous fine-tuning job. Format: {$JOB_ID/$OUTPUT_MODEL_NAME}:{$STEP}.
       responses:
         "200":
           description: Fine-tuning job initiated successfully
