@@ -886,7 +886,7 @@ paths:
                   description: New autoscaling configuration for the endpoint
                 inactive_timeout:
                   type: integer
-                  description: The number of minutes of inactivity after which the endpoint will be automatically stopped. Set to null to disable automatic timeout.
+                  description: The number of minutes of inactivity after which the endpoint will be automatically stopped. Set to 0 to disable automatic timeout.
                   nullable: true
                   example: 60
       responses:
