@@ -884,6 +884,11 @@ paths:
                 autoscaling:
                   $ref: "#/components/schemas/Autoscaling"
                   description: New autoscaling configuration for the endpoint
+                inactive_timeout:
+                  type: integer
+                  description: The number of minutes of inactivity after which the endpoint will be automatically stopped. Set to 0 to disable automatic timeout.
+                  nullable: true
+                  example: 60
       responses:
         "200":
           description: "200"
@@ -2721,6 +2726,11 @@ components:
             - STOPPED
           default: STARTED
           example: STARTED
+        inactive_timeout:
+          type: integer
+          description: The number of minutes of inactivity after which the endpoint will be automatically stopped. Set to null, omit or set to 0 to disable automatic timeout.
+          nullable: true
+          example: 60
 
     DedicatedEndpoint:
       type: object
