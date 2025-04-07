@@ -433,9 +433,13 @@ paths:
                   default: 0
                   description: Number of evaluations to be run on a given validation set during training
                 batch_size:
-                  type: integer
-                  default: 32
-                  description: Number of training examples processed together (larger batches use more memory but may train faster)
+                  oneOf:
+                    - type: integer
+                    - type: string
+                      enum:
+                        - max
+                  default: "max"
+                  description: Number of training examples processed together (larger batches use more memory but may train faster). Defaults to "max". We use training optimizations like packing, so the effective batch size may be different than the value you set.
                 learning_rate:
                   type: number
                   format: float
@@ -445,6 +449,7 @@ paths:
                   type: object
                   default: none
                   $ref: "#/components/schemas/LRScheduler"
+                  description: The learning rate scheduler to use. It specifies how the learning rate is adjusted during training.
                 warmup_ratio:
                   type: number
                   format: float
@@ -459,7 +464,7 @@ paths:
                   type: number
                   format: float
                   default: 0.0
-                  description: Weight decay
+                  description: Weight decay. Regularization parameter for the optimizer.
                 suffix:
                   type: string
                   description: Suffix that will be added to your fine-tuned model name
@@ -485,17 +490,11 @@ paths:
                   default: auto
                   description: Whether to mask the user messages in conversational data or prompts in instruction data.
                 training_method:
-                  type: string
-                  enum:
-                    - sft
-                    - dpo
-                  default: sft
+                  type: object
+                  oneOf:
+                    - $ref: "#/components/schemas/TrainingMethodSFT"
+                    - $ref: "#/components/schemas/TrainingMethodDPO"
                   description: The training method to use. 'sft' for Supervised Fine-Tuning or 'dpo' for Direct Preference Optimization.
-                dpo_beta:
-                  type: number
-                  format: float
-                  default: 0.1
-                  description: The beta parameter for DPO training. Only applicable when training_method is 'dpo'.
                 training_type:
                   type: object
                   oneOf:
@@ -503,7 +502,7 @@ paths:
                     - $ref: "#/components/schemas/LoRATrainingType"
                 from_checkpoint:
                   type: string
-                  description: The checkpoint identifier to continue training from a previous fine-tuning job. Format `{$JOB_ID}:{$STEP}` or `{$OUTPUT_MODEL_NAME}:{$STEP}`. The step value is optional, without it the final checkpoint will be used.
+                  description: The checkpoint identifier to continue training from a previous fine-tuning job. Format is `{$JOB_ID}` or `{$OUTPUT_MODEL_NAME}` or `{$JOB_ID}:{$STEP}` or `{$OUTPUT_MODEL_NAME}:{$STEP}`. The step value is optional; without it, the final checkpoint will be used.
       responses:
         "200":
           description: Fine-tuning job initiated successfully
@@ -2331,7 +2330,12 @@ components:
         n_evals:
           type: integer
         batch_size:
-          type: integer
+          oneOf:
+            - type: integer
+            - type: string
+              enum:
+                - max
+          default: "max"
         learning_rate:
           type: number
         lr_scheduler:
@@ -2355,15 +2359,10 @@ components:
                 - auto
           default: auto
         training_method:
-          type: string
-          enum:
-            - sft
-            - dpo
-          default: sft
-        dpo_beta:
-          type: number
-          format: float
-          default: 0.1
+          type: object
+          oneOf:
+            - $ref: "#/components/schemas/TrainingMethodSFT"
+            - $ref: "#/components/schemas/TrainingMethodDPO"
         training_type:
           type: object
           oneOf:
@@ -2557,6 +2556,28 @@ components:
         - type
         - lora_r
         - lora_alpha
+    TrainingMethodSFT:
+      type: object
+      properties:
+        method:
+          type: string
+          enum: ["sft"]
+      required:
+        - method
+      
+    TrainingMethodDPO:
+      type: object
+      properties:
+        method:
+          type: string
+          enum: ["dpo"]
+        dpo_beta:
+          type: number
+          format: float
+          default: 0.1
+      required:
+        - method
+          
     LRScheduler:
       type: object
       properties:
