@@ -230,6 +230,230 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorData"
       deprecated: false
+    post:
+      tags: ["Models"]
+      summary: Upload a custom model
+      description: Upload a custom model from Hugging Face or S3
+      operationId: uploadModel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model_name
+                - model_source
+              properties:
+                model_name:
+                  type: string
+                  description: The name to give to your uploaded model
+                  example: "Qwen2.5-72B-Instruct"
+                model_source:
+                  type: string
+                  description: The source location of the model (Hugging Face repo or S3 path)
+                  example: "unsloth/Qwen2.5-72B-Instruct"
+                hf_token:
+                  type: string
+                  description: Hugging Face token (if uploading from Hugging Face)
+                  example: "hf_examplehuggingfacetoken"
+                description:
+                  type: string
+                  description: A description of your model
+                  example: "Finetuned Qwen2.5-72B-Instruct by Unsloth"
+      responses:
+        "200":
+          description: Model upload job created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - message
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - job_id
+                      - model_name
+                      - model_id
+                      - model_source
+                    properties:
+                      job_id:
+                        type: string
+                        example: "job-a15dad11-8d8e-4007-97c5-a211304de284"
+                      model_name:
+                        type: string
+                        example: "necolinehubner/Qwen2.5-72B-Instruct"
+                      model_id:
+                        type: string
+                        example: "model-c0e32dfc-637e-47b2-bf4e-e9b2e58c9da7"
+                      model_source:
+                        type: string
+                        example: "huggingface"
+                  message:
+                    type: string
+                    example: "Processing model weights. Job created."
+
+  /jobs/{jobId}:
+    get:
+      tags: ["Jobs"]
+      summary: Get job status
+      description: Get the status of a specific job
+      operationId: getJob
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the job to retrieve
+          example: job-a15dad11-8d8e-4007-97c5-a211304de284
+      responses:
+        "200":
+          description: Job status retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - type
+                  - job_id
+                  - status
+                  - status_updates
+                  - args
+                  - created_at
+                  - updated_at
+                properties:
+                  type:
+                    type: string
+                    example: "model_upload"
+                  job_id:
+                    type: string
+                    example: "job-a15dad11-8d8e-4007-97c5-a211304de284"
+                  status:
+                    type: string
+                    enum: ["Queued", "Running", "Complete", "Failed"]
+                    example: "Complete"
+                  status_updates:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - status
+                        - message
+                        - timestamp
+                      properties:
+                        status:
+                          type: string
+                          example: "Complete"
+                        message:
+                          type: string
+                          example: "Job is Complete"
+                        timestamp:
+                          type: string
+                          format: date-time
+                          example: "2025-03-11T22:36:12Z"
+                  args:
+                    type: object
+                    properties:
+                      description:
+                        type: string
+                        example: "Finetuned Qwen2.5-72B-Instruct by Unsloth"
+                      modelName:
+                        type: string
+                        example: "necolinehubner/Qwen2.5-72B-Instruct"
+                      modelSource:
+                        type: string
+                        example: "unsloth/Qwen2.5-72B-Instruct"
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2025-03-11T22:05:43Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2025-03-11T22:36:12Z"
+
+  /jobs:
+    get:
+      tags: ["Jobs"]
+      summary: List all jobs
+      description: List all jobs and their statuses
+      operationId: listJobs
+      responses:
+        "200":
+          description: Jobs retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - job_id
+                        - status
+                        - status_updates
+                        - args
+                        - created_at
+                        - updated_at
+                      properties:
+                        type:
+                          type: string
+                          example: "model_upload"
+                        job_id:
+                          type: string
+                          example: "job-a15dad11-8d8e-4007-97c5-a211304de284"
+                        status:
+                          type: string
+                          enum: ["Queued", "Running", "Complete", "Failed"]
+                          example: "Complete"
+                        status_updates:
+                          type: array
+                          items:
+                            type: object
+                            required:
+                              - status
+                              - message
+                              - timestamp
+                            properties:
+                              status:
+                                type: string
+                                example: "Complete"
+                              message:
+                                type: string
+                                example: "Job is Complete"
+                              timestamp:
+                                type: string
+                                format: date-time
+                                example: "2025-03-11T22:36:12Z"
+                        args:
+                          type: object
+                          properties:
+                            description:
+                              type: string
+                              example: "Finetuned Qwen2.5-72B-Instruct by Unsloth"
+                            modelName:
+                              type: string
+                              example: "necolinehubner/Qwen2.5-72B-Instruct"
+                            modelSource:
+                              type: string
+                              example: "unsloth/Qwen2.5-72B-Instruct"
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: "2025-03-11T22:05:43Z"
+                        updated_at:
+                          type: string
+                          format: date-time
+                          example: "2025-03-11T22:36:12Z"
   /images/generations:
     post:
       tags: ["Images"]
