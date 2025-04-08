@@ -1223,6 +1223,44 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorData"
+  /tci/execute:
+    post:
+      tags: ["Code Interpreter"]
+      callbacks: {}
+      description: |
+        Executes the given code snippet and returns the output. Without a session_id, a new session will be created to run the code. If you do pass in a valid session_id, the code will be run in that session. This is useful for running multiple code snippets in the same environment, because dependencies and similar things are persisted
+        between calls to the same session.
+      operationId: tci/execute
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExecuteRequest'
+        description: Execute Request
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecuteResponse'
+          description: Execute Response
+  /tci/sessions:
+    get:
+      tags: ["Code Interpreter"]
+      callbacks: {}
+      description: |
+        Lists all your currently active sessions.
+      operationId: sessions/list
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionListResponse'
+          description: List Response
 
 components:
   securitySchemes:
@@ -3124,3 +3162,557 @@ components:
           format: date-time
           description: Timestamp when the endpoint was created
           example: 2024-02-28T21:34:35.444Z
+    DisplayorExecuteOutput:
+      properties:
+        data:
+          properties:
+            application/geo+json:
+              type: object
+              x-struct:
+              x-validate:
+            application/javascript:
+              type: string
+              x-struct:
+              x-validate:
+            application/json:
+              type: object
+              x-struct:
+              x-validate:
+            application/pdf:
+              format: byte
+              type: string
+              x-struct:
+              x-validate:
+            application/vnd.vega.v5+json:
+              type: object
+              x-struct:
+              x-validate:
+            application/vnd.vegalite.v4+json:
+              type: object
+              x-struct:
+              x-validate:
+            image/gif:
+              format: byte
+              type: string
+              x-struct:
+              x-validate:
+            image/jpeg:
+              format: byte
+              type: string
+              x-struct:
+              x-validate:
+            image/png:
+              format: byte
+              type: string
+              x-struct:
+              x-validate:
+            image/svg+xml:
+              type: string
+              x-struct:
+              x-validate:
+            text/html:
+              type: string
+              x-struct:
+              x-validate:
+            text/latex:
+              type: string
+              x-struct:
+              x-validate:
+            text/markdown:
+              type: string
+              x-struct:
+              x-validate:
+            text/plain:
+              type: string
+              x-struct:
+              x-validate:
+          type: object
+          x-struct:
+          x-validate:
+        type:
+          enum:
+            - display_data
+            - execute_result
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - data
+      title: DisplayorExecuteOutput
+      x-struct:
+      x-validate:
+    Error:
+      oneOf:
+        - type: string
+          x-struct:
+          x-validate:
+        - additionalProperties: true
+          type: object
+          x-struct:
+          x-validate:
+      title: Error
+      x-struct:
+      x-validate:
+    ErrorOutput:
+      description: Errors and exceptions that occurred. If this output type is present, your code did not execute successfully.
+      properties:
+        data:
+          type: string
+          x-struct:
+          x-validate:
+        type:
+          enum:
+            - error
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - data
+      title: ErrorOutput
+      x-struct:
+      x-validate:
+    ExecuteRequest:
+      properties:
+        code:
+          description: 'Code snippet to execute. '
+          example: "print('Hello, world!')"
+          type: string
+          x-struct:
+          x-validate:
+        language:
+          default: python
+          description: Programming language for the code to execute. Currently only supports Python, but more will be added.
+          enum:
+            - python
+          x-struct:
+          x-validate:
+        session_id:
+          description: Identifier of the current session. Used to make follow-up calls. Requests will return an error if the session does not belong to the caller or has expired.
+          example: ses_abcDEF123
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - language
+        - code
+      title: ExecuteRequest
+      x-struct:
+      x-validate:
+    ExecuteResponse:
+      allOf:
+        - properties:
+            errors:
+              items:
+                oneOf:
+                  - type: string
+                    x-struct:
+                    x-validate:
+                  - additionalProperties: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                title: Error
+                x-struct:
+                x-validate:
+              type: array
+              x-struct:
+              x-validate:
+          title: Response
+          type: object
+          x-struct:
+          x-validate:
+        - properties:
+            data:
+              properties:
+                outputs:
+                  items:
+                    discriminator:
+                      propertyName: type
+                    oneOf:
+                      - description: Outputs that were printed to stdout or stderr
+                        properties:
+                          data:
+                            type: string
+                            x-struct:
+                            x-validate:
+                          type:
+                            enum:
+                              - stdout
+                              - stderr
+                            type: string
+                            x-struct:
+                            x-validate:
+                        required:
+                          - type
+                          - data
+                        title: StreamOutput
+                        x-struct:
+                        x-validate:
+                      - description: Errors and exceptions that occurred. If this output type is present, your code did not execute successfully.
+                        properties:
+                          data:
+                            type: string
+                            x-struct:
+                            x-validate:
+                          type:
+                            enum:
+                              - error
+                            type: string
+                            x-struct:
+                            x-validate:
+                        required:
+                          - type
+                          - data
+                        title: ErrorOutput
+                        x-struct:
+                        x-validate:
+                      - properties:
+                          data:
+                            properties:
+                              application/geo+json:
+                                type: object
+                                x-struct:
+                                x-validate:
+                              application/javascript:
+                                type: string
+                                x-struct:
+                                x-validate:
+                              application/json:
+                                type: object
+                                x-struct:
+                                x-validate:
+                              application/pdf:
+                                format: byte
+                                type: string
+                                x-struct:
+                                x-validate:
+                              application/vnd.vega.v5+json:
+                                type: object
+                                x-struct:
+                                x-validate:
+                              application/vnd.vegalite.v4+json:
+                                type: object
+                                x-struct:
+                                x-validate:
+                              image/gif:
+                                format: byte
+                                type: string
+                                x-struct:
+                                x-validate:
+                              image/jpeg:
+                                format: byte
+                                type: string
+                                x-struct:
+                                x-validate:
+                              image/png:
+                                format: byte
+                                type: string
+                                x-struct:
+                                x-validate:
+                              image/svg+xml:
+                                type: string
+                                x-struct:
+                                x-validate:
+                              text/html:
+                                type: string
+                                x-struct:
+                                x-validate:
+                              text/latex:
+                                type: string
+                                x-struct:
+                                x-validate:
+                              text/markdown:
+                                type: string
+                                x-struct:
+                                x-validate:
+                              text/plain:
+                                type: string
+                                x-struct:
+                                x-validate:
+                            type: object
+                            x-struct:
+                            x-validate:
+                          type:
+                            enum:
+                              - display_data
+                              - execute_result
+                            type: string
+                            x-struct:
+                            x-validate:
+                        required:
+                          - type
+                          - data
+                        title: DisplayorExecuteOutput
+                        x-struct:
+                        x-validate:
+                    title: InterpreterOutput
+                    x-struct:
+                    x-validate:
+                  type: array
+                  x-struct:
+                  x-validate:
+                session_id:
+                  description: Identifier of the current session. Used to make follow-up calls.
+                  example: ses_abcDEF123
+                  nullable: false
+                  type: string
+                  x-struct:
+                  x-validate:
+              required:
+                - session_id
+                - status
+                - outputs
+              x-struct:
+              x-validate:
+          type: object
+          x-struct:
+          x-validate:
+      title: ExecuteResponse
+      type: object
+      x-struct:
+      x-validate:
+    InterpreterOutput:
+      discriminator:
+        propertyName: type
+      oneOf:
+        - description: Outputs that were printed to stdout or stderr
+          properties:
+            data:
+              type: string
+              x-struct:
+              x-validate:
+            type:
+              enum:
+                - stdout
+                - stderr
+              type: string
+              x-struct:
+              x-validate:
+          required:
+            - type
+            - data
+          title: StreamOutput
+          x-struct:
+          x-validate:
+        - description: Errors and exceptions that occurred. If this output type is present, your code did not execute successfully.
+          properties:
+            data:
+              type: string
+              x-struct:
+              x-validate:
+            type:
+              enum:
+                - error
+              type: string
+              x-struct:
+              x-validate:
+          required:
+            - type
+            - data
+          title: ErrorOutput
+          x-struct:
+          x-validate:
+        - properties:
+            data:
+              properties:
+                application/geo+json:
+                  type: object
+                  x-struct:
+                  x-validate:
+                application/javascript:
+                  type: string
+                  x-struct:
+                  x-validate:
+                application/json:
+                  type: object
+                  x-struct:
+                  x-validate:
+                application/pdf:
+                  format: byte
+                  type: string
+                  x-struct:
+                  x-validate:
+                application/vnd.vega.v5+json:
+                  type: object
+                  x-struct:
+                  x-validate:
+                application/vnd.vegalite.v4+json:
+                  type: object
+                  x-struct:
+                  x-validate:
+                image/gif:
+                  format: byte
+                  type: string
+                  x-struct:
+                  x-validate:
+                image/jpeg:
+                  format: byte
+                  type: string
+                  x-struct:
+                  x-validate:
+                image/png:
+                  format: byte
+                  type: string
+                  x-struct:
+                  x-validate:
+                image/svg+xml:
+                  type: string
+                  x-struct:
+                  x-validate:
+                text/html:
+                  type: string
+                  x-struct:
+                  x-validate:
+                text/latex:
+                  type: string
+                  x-struct:
+                  x-validate:
+                text/markdown:
+                  type: string
+                  x-struct:
+                  x-validate:
+                text/plain:
+                  type: string
+                  x-struct:
+                  x-validate:
+              type: object
+              x-struct:
+              x-validate:
+            type:
+              enum:
+                - display_data
+                - execute_result
+              type: string
+              x-struct:
+              x-validate:
+          required:
+            - type
+            - data
+          title: DisplayorExecuteOutput
+          x-struct:
+          x-validate:
+      title: InterpreterOutput
+      x-struct:
+      x-validate:
+    Response:
+      properties:
+        errors:
+          items:
+            oneOf:
+              - type: string
+                x-struct:
+                x-validate:
+              - additionalProperties: true
+                type: object
+                x-struct:
+                x-validate:
+            title: Error
+            x-struct:
+            x-validate:
+          type: array
+          x-struct:
+          x-validate:
+      title: Response
+      type: object
+      x-struct:
+      x-validate:
+    SessionListResponse:
+      allOf:
+        - properties:
+            errors:
+              items:
+                oneOf:
+                  - type: string
+                    x-struct:
+                    x-validate:
+                  - additionalProperties: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                title: Error
+                x-struct:
+                x-validate:
+              type: array
+              x-struct:
+              x-validate:
+          title: Response
+          type: object
+          x-struct:
+          x-validate:
+        - properties:
+            data:
+              properties:
+                sessions:
+                  items:
+                    properties:
+                      execute_count:
+                        type: integer
+                        x-struct:
+                        x-validate:
+                      expires_at:
+                        format: date-time
+                        type: string
+                        x-struct:
+                        x-validate:
+                      id:
+                        description: Session Identifier. Used to make follow-up calls.
+                        example: ses_abcDEF123
+                        type: string
+                        x-struct:
+                        x-validate:
+                      last_execute_at:
+                        format: date-time
+                        type: string
+                        x-struct:
+                        x-validate:
+                      started_at:
+                        format: date-time
+                        type: string
+                        x-struct:
+                        x-validate:
+                    required:
+                      - execute_count
+                      - expires_at
+                      - id
+                      - last_execute_at
+                      - started_at
+                    type: object
+                    x-struct:
+                    x-validate:
+                  type: array
+                  x-struct:
+                  x-validate:
+              required:
+                - sessions
+              x-struct:
+              x-validate:
+          type: object
+          x-struct:
+          x-validate:
+      title: SessionListResponse
+      type: object
+      x-struct:
+      x-validate:
+    StreamOutput:
+      description: Outputs that were printed to stdout or stderr
+      properties:
+        data:
+          type: string
+          x-struct:
+          x-validate:
+        type:
+          enum:
+            - stdout
+            - stderr
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - data
+      title: StreamOutput
+      x-struct:
+      x-validate:
