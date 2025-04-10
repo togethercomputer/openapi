@@ -17,10 +17,8 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-
             // Get the list of PRs merged into the current commit
-            const { data: prs } = await octokit.rest.repos.listPullRequestsAssociatedWithCommit({
+            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: context.sha,
