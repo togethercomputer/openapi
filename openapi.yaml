@@ -1223,6 +1223,44 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorData"
+  /tci/execute:
+    post:
+      tags: ["Code Interpreter"]
+      callbacks: {}
+      description: |
+        Executes the given code snippet and returns the output. Without a session_id, a new session will be created to run the code. If you do pass in a valid session_id, the code will be run in that session. This is useful for running multiple code snippets in the same environment, because dependencies and similar things are persisted
+        between calls to the same session.
+      operationId: tci/execute
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExecuteRequest'
+        description: Execute Request
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecuteResponse'
+          description: Execute Response
+  /tci/sessions:
+    get:
+      tags: ["Code Interpreter"]
+      callbacks: {}
+      description: |
+        Lists all your currently active sessions.
+      operationId: sessions/list
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionListResponse'
+          description: List Response
 
 components:
   securitySchemes:
@@ -1759,6 +1797,7 @@ components:
                               required:
                                 - url
                         - type: object
+                          title: Video
                           properties:
                             type:
                               type: string
@@ -3124,3 +3163,360 @@ components:
           format: date-time
           description: Timestamp when the endpoint was created
           example: 2024-02-28T21:34:35.444Z
+
+    DisplayorExecuteOutput:
+      properties:
+        data:
+          properties:
+            application/geo+json:
+              type: object
+            application/javascript:
+              type: string
+            application/json:
+              type: object
+            application/pdf:
+              format: byte
+              type: string
+            application/vnd.vega.v5+json:
+              type: object
+            application/vnd.vegalite.v4+json:
+              type: object
+            image/gif:
+              format: byte
+              type: string
+            image/jpeg:
+              format: byte
+              type: string
+            image/png:
+              format: byte
+              type: string
+            image/svg+xml:
+              type: string
+            text/html:
+              type: string
+            text/latex:
+              type: string
+            text/markdown:
+              type: string
+            text/plain:
+              type: string
+          type: object
+        type:
+          enum:
+            - display_data
+            - execute_result
+          type: string
+      required:
+        - type
+        - data
+      title: DisplayorExecuteOutput
+
+    Error:
+      oneOf:
+        - type: string
+        - additionalProperties: true
+          type: object
+      title: Error
+
+    ErrorOutput:
+      title: ErrorOutput
+      description: Errors and exceptions that occurred. If this output type is present, your code did not execute successfully.
+      properties:
+        data:
+          type: string
+        type:
+          enum:
+            - error
+          type: string
+      required:
+        - type
+        - data
+
+    ExecuteRequest:
+      title: ExecuteRequest
+      required:
+        - language
+        - code
+      properties:
+        code:
+          description: 'Code snippet to execute. '
+          example: "print('Hello, world!')"
+          type: string
+        language:
+          default: python
+          description: Programming language for the code to execute. Currently only supports Python, but more will be added.
+          enum:
+            - python
+        session_id:
+          description: Identifier of the current session. Used to make follow-up calls. Requests will return an error if the session does not belong to the caller or has expired.
+          example: ses_abcDEF123
+          nullable: false
+          type: string
+
+    ExecuteResponse:
+      title: ExecuteResponse
+      type: object
+      description: "The result of the execution. If successful, `data` contains the result and `errors` will be null. If unsuccessful, `data` will be null and `errors` will contain the errors."
+      oneOf:
+        - title: SuccessfulExecution
+          type: object
+          required: [data, errors]
+          properties:
+            errors:
+              type: "null"
+            data:
+              type: object
+              nullable: false
+              required: [session_id, outputs]
+              properties:
+                outputs:
+                  type: array
+                  items:
+                    discriminator:
+                      propertyName: type
+                    oneOf:
+                      - title: StreamOutput
+                        description: Outputs that were printed to stdout or stderr
+                        type: object
+                        required: [type, data]
+                        properties:
+                          type:
+                            enum:
+                              - stdout
+                              - stderr
+                            type: string
+                          data:
+                            type: string
+                      - description: Errors and exceptions that occurred. If this output type is present, your code did not execute successfully.
+                        properties:
+                          data:
+                            type: string
+                          type:
+                            enum:
+                              - error
+                            type: string
+                        required:
+                          - type
+                          - data
+                        title: ErrorOutput
+                      - properties:
+                          data:
+                            properties:
+                              application/geo+json:
+                                type: object
+                                additionalProperties: true
+                              application/javascript:
+                                type: string
+                              application/json:
+                                type: object
+                                additionalProperties: true
+                              application/pdf:
+                                format: byte
+                                type: string
+                              application/vnd.vega.v5+json:
+                                type: object
+                                additionalProperties: true
+                              application/vnd.vegalite.v4+json:
+                                type: object
+                                additionalProperties: true
+                              image/gif:
+                                format: byte
+                                type: string
+                              image/jpeg:
+                                format: byte
+                                type: string
+                              image/png:
+                                format: byte
+                                type: string
+                              image/svg+xml:
+                                type: string
+                              text/html:
+                                type: string
+                              text/latex:
+                                type: string
+                              text/markdown:
+                                type: string
+                              text/plain:
+                                type: string
+                            type: object
+                          type:
+                            enum:
+                              - display_data
+                              - execute_result
+                            type: string
+                        required:
+                          - type
+                          - data
+                        title: DisplayorExecuteOutput
+                    title: InterpreterOutput
+                session_id:
+                  type: string
+                  description: Identifier of the current session. Used to make follow-up calls.
+                  example: ses_abcDEF123
+                  nullable: false
+        - title: FailedExecution
+          type: object
+          required: [data, errors]
+          properties:
+            data:
+              type: "null"
+            errors:
+              type: array
+              items:
+                title: Error
+                oneOf:
+                  - type: string
+                  - type: object
+                    additionalProperties: true
+
+    InterpreterOutput:
+      discriminator:
+        propertyName: type
+      oneOf:
+        - description: Outputs that were printed to stdout or stderr
+          properties:
+            data:
+              type: string
+            type:
+              enum:
+                - stdout
+                - stderr
+              type: string
+          required:
+            - type
+            - data
+          title: StreamOutput
+        - description: Errors and exceptions that occurred. If this output type is present, your code did not execute successfully.
+          properties:
+            data:
+              type: string
+            type:
+              enum:
+                - error
+              type: string
+          required:
+            - type
+            - data
+          title: ErrorOutput
+        - properties:
+            data:
+              properties:
+                application/geo+json:
+                  type: object
+                application/javascript:
+                  type: string
+                application/json:
+                  type: object
+                application/pdf:
+                  format: byte
+                  type: string
+                application/vnd.vega.v5+json:
+                  type: object
+                application/vnd.vegalite.v4+json:
+                  type: object
+                image/gif:
+                  format: byte
+                  type: string
+                image/jpeg:
+                  format: byte
+                  type: string
+                image/png:
+                  format: byte
+                  type: string
+                image/svg+xml:
+                  type: string
+                text/html:
+                  type: string
+                text/latex:
+                  type: string
+                text/markdown:
+                  type: string
+                text/plain:
+                  type: string
+              type: object
+            type:
+              enum:
+                - display_data
+                - execute_result
+              type: string
+          required:
+            - type
+            - data
+          title: DisplayorExecuteOutput
+      title: InterpreterOutput
+
+    Response:
+      properties:
+        errors:
+          items:
+            oneOf:
+              - type: string
+              - additionalProperties: true
+                type: object
+            title: Error
+          type: array
+      title: Response
+      type: object
+
+    SessionListResponse:
+      allOf:
+        - properties:
+            errors:
+              items:
+                oneOf:
+                  - type: string
+                  - additionalProperties: true
+                    type: object
+                title: Error
+              type: array
+          title: Response
+          type: object
+        - properties:
+            data:
+              properties:
+                sessions:
+                  items:
+                    properties:
+                      execute_count:
+                        type: integer
+                      expires_at:
+                        format: date-time
+                        type: string
+                      id:
+                        description: Session Identifier. Used to make follow-up calls.
+                        example: ses_abcDEF123
+                        type: string
+                      last_execute_at:
+                        format: date-time
+                        type: string
+                      started_at:
+                        format: date-time
+                        type: string
+                    required:
+                      - execute_count
+                      - expires_at
+                      - id
+                      - last_execute_at
+                      - started_at
+                    type: object
+                  type: array
+              required:
+                - sessions
+          type: object
+      title: SessionListResponse
+      type: object
+
+    StreamOutput:
+      description: Outputs that were printed to stdout or stderr
+      properties:
+        data:
+          type: string
+        type:
+          enum:
+            - stdout
+            - stderr
+          type: string
+      required:
+        - type
+        - data
+      title: StreamOutput
