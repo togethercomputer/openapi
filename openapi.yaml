@@ -704,15 +704,6 @@ paths:
                 wandb_name:
                   type: string
                   description: The Weights & Biases name for your run.
-                train_on_inputs:
-                  oneOf:
-                    - type: boolean
-                    - type: string
-                      enum:
-                        - auto
-                  type: boolean
-                  default: auto
-                  description: Whether to mask the user messages in conversational data or prompts in instruction data.
                 training_method:
                   type: object
                   oneOf:
@@ -2819,15 +2810,25 @@ components:
         - type
         - lora_r
         - lora_alpha
+
     TrainingMethodSFT:
       type: object
       properties:
         method:
           type: string
           enum: ["sft"]
+        train_on_inputs:
+          oneOf:
+            - type: boolean
+            - type: string
+              enum:
+                - auto
+          type: boolean
+          default: auto
+          description: Whether to mask the user messages in conversational data or prompts in instruction data.
       required:
         - method
-      
+        - train_on_inputs
     TrainingMethodDPO:
       type: object
       properties:
