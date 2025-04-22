@@ -3242,6 +3242,26 @@ components:
           description: 'Code snippet to execute. '
           example: "print('Hello, world!')"
           type: string
+        files:
+          description: Files to upload to the session. If present, files will be uploaded before executing the given code.
+          items:
+            properties:
+              content:
+                type: string
+              encoding:
+                description: Encoding of the file content. Use `string` for text files such as code, and `base64` for binary files, such as images.
+                enum:
+                  - string
+                  - base64
+                type: string
+              name:
+                type: string
+            required:
+              - name
+              - encoding
+              - content
+            type: object
+          type: array
         language:
           default: python
           description: Programming language for the code to execute. Currently only supports Python, but more will be added.
