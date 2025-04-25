@@ -1236,15 +1236,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ExecuteRequest'
+              $ref: "#/components/schemas/ExecuteRequest"
         description: Execute Request
         required: false
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExecuteResponse'
+                $ref: "#/components/schemas/ExecuteResponse"
           description: Execute Response
   /tci/sessions:
     get:
@@ -1255,11 +1255,11 @@ paths:
       operationId: sessions/list
       parameters: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SessionListResponse'
+                $ref: "#/components/schemas/SessionListResponse"
           description: List Response
 
 components:
@@ -1754,7 +1754,7 @@ components:
             properties:
               role:
                 type: string
-                description: "The role of the messages author. Choice between: system, user, or assistant."
+                description: "The role of the messages author. Choice between: system, user, assistant, or tool."
                 enum:
                   - system
                   - user
@@ -1913,14 +1913,13 @@ components:
           description: An object specifying the format that the model must output.
           properties:
             type:
-              type: string
               description: The type of the response format.
+              type: string
               example: json
             schema:
-              type: object
-              additionalProperties:
-                type: string
               description: The schema of the response format.
+              type: object
+              additionalProperties: true
         tools:
           type: array
           description: A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for.
@@ -2827,7 +2826,7 @@ components:
           enum: ["sft"]
       required:
         - method
-      
+
     TrainingMethodDPO:
       type: object
       properties:
@@ -2840,7 +2839,7 @@ components:
           default: 0.1
       required:
         - method
-          
+
     LRScheduler:
       type: object
       properties:
@@ -3239,7 +3238,7 @@ components:
         - code
       properties:
         code:
-          description: 'Code snippet to execute. '
+          description: "Code snippet to execute."
           example: "print('Hello, world!')"
           type: string
         language:
