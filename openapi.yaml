@@ -781,6 +781,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinetuneListEvents"
+  /fine-tunes/{id}/checkpoints:
+    get:
+      tags: ["Fine-tuning"]
+      summary: List checkpoints
+      description: List the checkpoints for a single fine-tuning job.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of fine-tune checkpoints
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinetuneListCheckpoints"
   /finetune/download:
     get:
       tags: ["Fine-tuning"]
@@ -2771,6 +2789,35 @@ components:
         training_offset:
           type: integer
         hash:
+          type: string
+    
+    FinetuneListCheckpoints:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/FineTuneCheckpoint"
+    FineTuneCheckpoint:
+      type: object
+      required:
+        - step
+        - path
+        - created_at
+        - is_deleted
+        - checkpoint_type
+      properties:
+        step:
+          type: integer
+        created_at:
+          type: string
+        path:
+          type: string
+        is_deleted:
+          type: boolean
+        checkpoint_type:
           type: string
 
     FinetuneDownloadResult:
