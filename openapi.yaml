@@ -2806,7 +2806,6 @@ components:
         - step
         - path
         - created_at
-        - is_deleted
         - checkpoint_type
       properties:
         step:
@@ -2815,8 +2814,6 @@ components:
           type: string
         path:
           type: string
-        is_deleted:
-          type: boolean
         checkpoint_type:
           type: string
 
