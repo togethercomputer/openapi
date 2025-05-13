@@ -232,8 +232,8 @@ paths:
       deprecated: false
     post:
       tags: ["Models"]
-      summary: Upload a custom model
-      description: Upload a custom model from Hugging Face or S3
+      summary: Upload a custom model or adapter
+      description: Upload a custom model or adapter from Hugging Face or S3
       operationId: uploadModel
       requestBody:
         required: true
@@ -253,6 +253,14 @@ paths:
                   type: string
                   description: The source location of the model (Hugging Face repo or S3 path)
                   example: "unsloth/Qwen2.5-72B-Instruct"
+                model_type:
+                  type: string
+                  description: Whether the model is a full model or an adapter
+                  default: "model"
+                  enum:
+                    - model
+                    - adapter
+                  example: "model"
                 hf_token:
                   type: string
                   description: Hugging Face token (if uploading from Hugging Face)
@@ -261,9 +269,17 @@ paths:
                   type: string
                   description: A description of your model
                   example: "Finetuned Qwen2.5-72B-Instruct by Unsloth"
+                base_model:
+                  type: string
+                  description: The base model to use for an adapter if setting it to run against a serverless pool.  Only used for model_type `adapter`.
+                  example: "Qwen/Qwen2.5-72B-Instruct"
+                lora_model:
+                  type: string
+                  description: The lora pool to use for an adapter if setting it to run against, say, a dedicated pool.  Only used for model_type `adapter`.
+                  example: "my_username/Qwen2.5-72B-Instruct-lora"
       responses:
         "200":
-          description: Model upload job created successfully
+          description: Model / adapter upload job created successfully
           content:
             application/json:
               schema:
