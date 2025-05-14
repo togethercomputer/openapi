@@ -1018,6 +1018,7 @@ paths:
                   object: "list"
                   data:
                     - object: "endpoint"
+                      id: "endpoint-5c0c20db-62fe-4f41-8ffc-d9e4ea1a264e"
                       name: "allenai/OLMo-7B"
                       model: "allenai/OLMo-7B"
                       type: "serverless"
