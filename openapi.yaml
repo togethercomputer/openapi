@@ -2100,7 +2100,7 @@ components:
         object:
           type: string
           enum:
-            - chat.completion.chunk
+            - completion.chunk
         created:
           type: integer
         system_fingerprint:
