@@ -1768,73 +1768,7 @@ components:
           type: array
           description: A list of messages comprising the conversation so far.
           items:
-            type: object
-            properties:
-              role:
-                type: string
-                description: "The role of the messages author. Choice between: system, user, assistant, or tool."
-                enum:
-                  - system
-                  - user
-                  - assistant
-                  - tool
-              content:
-                description: The content of the message, which can either be a simple string or a structured format.
-                type: string
-                oneOf:
-                  - type: string
-                    description: A plain text message.
-                  - type: array
-                    description: A structured message with mixed content types.
-                    items:
-                      type: object
-                      oneOf:
-                        - type: object
-                          properties:
-                            type:
-                              type: string
-                              enum:
-                                - text
-                            text:
-                              type: string
-                          required:
-                            - type
-                            - text
-                        - type: object
-                          properties:
-                            type:
-                              type: string
-                              enum:
-                                - image_url
-                            image_url:
-                              type: object
-                              properties:
-                                url:
-                                  type: string
-                                  description: The URL of the image
-                              required:
-                                - url
-                        - type: object
-                          title: Video
-                          properties:
-                            type:
-                              type: string
-                              enum:
-                                - video_url
-                            video_url:
-                              type: object
-                              properties:
-                                url:
-                                  type: string
-                                  description: The URL of the video
-                              required:
-                                - url
-                          required:
-                            - type
-                            - video_url
-            required:
-              - role
-              - content
+            $ref: "#/components/schemas/ChatCompletionMessageParam"
         model:
           description: >
             The name of the model to query.<br>
