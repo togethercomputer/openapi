@@ -1677,6 +1677,12 @@ components:
       properties:
         id:
           type: string
+        object:
+          type: string
+          enum:
+            - completion.chunk
+        created:
+          type: integer
         token:
           $ref: "#/components/schemas/CompletionToken"
         choices:
@@ -1695,12 +1701,44 @@ components:
             - $ref: "#/components/schemas/FinishReason"
             - nullable: true
 
+
     CompletionChoice:
       type: object
       required: [index]
       properties:
         text:
           type: string
+        index:
+          type: integer
+        delta:
+          title: CompletionChoiceDelta
+          type: object
+          required: [role]
+          properties:
+            token_id:
+              type: integer
+            role:
+              type: string
+              enum: ["system", "user", "assistant", "function", "tool"]
+            content:
+              type: string
+              nullable: true
+            tool_calls:
+              type: array
+              items:
+                $ref: "#/components/schemas/ToolChoice"
+            function_call:
+              type: object
+              deprecated: true
+              nullable: true
+              properties:
+                arguments:
+                  type: string
+                name:
+                  type: string
+              required:
+                - arguments
+                - name
 
     CompletionToken:
       type: object
