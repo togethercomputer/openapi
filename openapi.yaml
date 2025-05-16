@@ -1708,6 +1708,8 @@ components:
       properties:
         text:
           type: string
+        index:
+          type: integer
         delta:
           title: CompletionChoiceDelta
           type: object
