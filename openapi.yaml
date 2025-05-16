@@ -1681,6 +1681,8 @@ components:
           type: string
           enum:
             - completion.chunk
+        created:
+          type: integer
         token:
           $ref: "#/components/schemas/CompletionToken"
         choices:
