@@ -1700,6 +1700,14 @@ components:
           allOf:
             - $ref: "#/components/schemas/FinishReason"
             - nullable: true
+
+
+    CompletionChoice:
+      type: object
+      required: [index]
+      properties:
+        text:
+          type: string
         delta:
           title: CompletionChoiceDelta
           type: object
@@ -1729,14 +1737,6 @@ components:
               required:
                 - arguments
                 - name
-
-
-    CompletionChoice:
-      type: object
-      required: [index]
-      properties:
-        text:
-          type: string
 
     CompletionToken:
       type: object
