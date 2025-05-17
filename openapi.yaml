@@ -1674,6 +1674,12 @@ components:
           type: string
         token:
           $ref: '#/components/schemas/CompletionToken'
+        created:
+          type: integer
+        object:
+          type: string
+          enum:
+            - completion.chunk
         choices:
           title: CompletionChoices
           type: array
