@@ -2910,7 +2910,6 @@ components:
           default: auto
           description: Whether to mask the user messages in conversational data or prompts in instruction data.
       required:
-        - method
         - train_on_inputs
     TrainingMethodDPO:
       type: object
@@ -2922,8 +2921,6 @@ components:
           type: number
           format: float
           default: 0.1
-      required:
-        - method
 
     LRScheduler:
       type: object
