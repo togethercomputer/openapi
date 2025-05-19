@@ -1645,7 +1645,7 @@ components:
         object:
           type: string
           enum:
-            - text_completion
+            - text.completion
       required:
         - id
         - choices
