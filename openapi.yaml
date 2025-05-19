@@ -2873,14 +2873,14 @@ components:
         type:
           type: string
           enum: ['Full']
-          default: Full
+      required:
+        - type
     LoRATrainingType:
       type: object
       properties:
         type:
           type: string
           enum: ['Lora']
-          default: Lora
         lora_r:
           type: integer
         lora_alpha:
@@ -2893,6 +2893,7 @@ components:
           type: string
           default: 'all-linear'
       required:
+        - type
         - lora_r
         - lora_alpha
 
@@ -2902,7 +2903,6 @@ components:
         method:
           type: string
           enum: ['sft']
-          default: sft
         train_on_inputs:
           oneOf:
             - type: boolean
@@ -2913,6 +2913,7 @@ components:
           default: auto
           description: Whether to mask the user messages in conversational data or prompts in instruction data.
       required:
+        - method
         - train_on_inputs
     TrainingMethodDPO:
       type: object
@@ -2920,11 +2921,12 @@ components:
         method:
           type: string
           enum: ['dpo']
-          default: dpo
         dpo_beta:
           type: number
           format: float
           default: 0.1
+      required:
+        - method
 
     LRScheduler:
       type: object
