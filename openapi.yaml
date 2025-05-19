@@ -2873,12 +2873,14 @@ components:
         type:
           type: string
           enum: ['Full']
+          default: Full
     LoRATrainingType:
       type: object
       properties:
         type:
           type: string
           enum: ['Lora']
+          default: Lora
         lora_r:
           type: integer
         lora_alpha:
@@ -2900,6 +2902,7 @@ components:
         method:
           type: string
           enum: ['sft']
+          default: sft
         train_on_inputs:
           oneOf:
             - type: boolean
@@ -2917,6 +2920,7 @@ components:
         method:
           type: string
           enum: ['dpo']
+          default: dpo
         dpo_beta:
           type: number
           format: float
