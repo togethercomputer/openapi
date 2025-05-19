@@ -1965,85 +1965,64 @@ components:
       required: [content, role]
       properties:
         content:
-          $ref: '#/components/schemas/ChatCompletionMixedContent'
+          description: The content of the message, which can either be a simple string or a structured format.
+          oneOf:
+            - type: string
+              description: A plain text message.
+            - type: array
+              description: A structured message with mixed content types.
+              items:
+                type: object
+                oneOf:
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                          - text
+                      text:
+                        type: string
+                    required:
+                      - type
+                      - text
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                          - image_url
+                      image_url:
+                        type: object
+                        properties:
+                          url:
+                            type: string
+                            description: The URL of the image
+                        required:
+                          - url
+                  - type: object
+                    title: Video
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                          - video_url
+                      video_url:
+                        type: object
+                        properties:
+                          url:
+                            type: string
+                            description: The URL of the video
+                        required:
+                          - url
+                    required:
+                      - type
+                      - video_url
         role:
           type: string
           enum: ['user']
         name:
           type: string
-
-    ChatCompletionMixedContent:
-      description: The content of the message, which can either be a simple string or a structured format.
-      oneOf:
-        - $ref: '#/components/schemas/ChatCompletionContentText'
-        - $ref: '#/components/schemas/ChatCompletionContentArray'
-
-    ChatCompletionContentText:
-      type: string
-      description: A plain text message.
-
-    ChatCompletionContentArray:
-      type: array
-      description: A structured message with mixed content types.
-      items:
-        $ref: '#/components/schemas/ChatCompletionContentItem'
-
-    ChatCompletionContentItem:
-      type: object
-      oneOf:
-        - $ref: '#/components/schemas/ChatCompletionContentItemText'
-        - $ref: '#/components/schemas/ChatCompletionContentItemImageUrl'
-        - $ref: '#/components/schemas/ChatCompletionContentItemVideoUrl'
-
-    ChatCompletionContentItemText:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-            - text
-        text:
-          type: string
-      required:
-        - type
-        - text
-
-    ChatCompletionContentItemImageUrl:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-            - image_url
-        image_url:
-          type: object
-          properties:
-            url:
-              type: string
-              description: The URL of the image
-          required:
-            - url
-
-    ChatCompletionContentItemVideoUrl:
-      type: object
-      title: Video
-      properties:
-        type:
-          type: string
-          enum:
-            - video_url
-        video_url:
-          type: object
-          properties:
-            url:
-              type: string
-              description: The URL of the video
-          required:
-            - url
-      required:
-        - type
-        - video_url
-
+          
     ChatCompletionAssistantMessageParam:
       type: object
       required: [role]
