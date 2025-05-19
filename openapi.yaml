@@ -2873,8 +2873,6 @@ components:
         type:
           type: string
           enum: ['Full']
-      required:
-        - type
     LoRATrainingType:
       type: object
       properties:
@@ -2893,7 +2891,6 @@ components:
           type: string
           default: 'all-linear'
       required:
-        - type
         - lora_r
         - lora_alpha
 
