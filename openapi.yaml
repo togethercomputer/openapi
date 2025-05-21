@@ -2879,13 +2879,8 @@ components:
     FinetuneTruncatedList:
       type: object
       required:
-        - object
         - data
       properties:
-        object:
-          type: string
-          description: Type identifier for the returned object
-          example: "list"
         data:
           type: array
           items:
