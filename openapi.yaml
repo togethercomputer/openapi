@@ -2726,6 +2726,7 @@ components:
         token_count: 850000
         events: [] # FineTuneTruncated object has no events
         model: "meta-llama/Llama-2-7b-hf"
+        model_output_name: "mynamespace/meta-llama/Llama-2-7b-hf-32162631"
         n_epochs: 3
         training_file: "file-01234567890123456789"
         wandb_project_name: "my-finetune-project"
@@ -2770,6 +2771,8 @@ components:
         model:
           type: string
           description: Base model used for fine-tuning
+        model_output_name:
+          type: string
         suffix:
           type: string
           description: Suffix added to the fine-tuned model name
