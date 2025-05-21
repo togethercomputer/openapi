@@ -3578,6 +3578,11 @@ components:
                   description: Identifier of the current session. Used to make follow-up calls.
                   example: ses_abcDEF123
                   nullable: false
+                status:
+                  type: string
+                  enum:
+                    - success
+                  description: Status of the execution. Currently only supports success.
         - title: FailedExecution
           type: object
           required: [data, errors]
