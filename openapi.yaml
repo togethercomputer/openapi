@@ -2767,16 +2767,6 @@ components:
         validation_file:
           type: string
           description: File-ID of the validation file
-        training_files:
-          type: array
-          items:
-            type: string
-          description: Array of training file IDs
-        validation_files:
-          type: array
-          items:
-            type: string
-          description: Array of validation file IDs
         model:
           type: string
           description: Base model used for fine-tuning
