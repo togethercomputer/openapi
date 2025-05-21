@@ -640,7 +640,7 @@ paths:
     post:
       tags: ['Fine-tuning']
       summary: Create job
-      description: Use a model to create a fine-tuning job.
+      description: Create a fine-tuning job with the provided model and training data.
       requestBody:
         required: true
         content:
@@ -750,18 +750,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FinetuneResponse'
+                $ref: '#/components/schemas/FinetuneResponseTruncated'
     get:
       tags: ['Fine-tuning']
       summary: List all jobs
-      description: List the metadata for all fine-tuning jobs.
+      description: List the metadata for all fine-tuning jobs. Returns a list of FinetuneResponseTruncated objects.
       responses:
         '200':
           description: List of fine-tune jobs
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FinetuneList'
+                $ref: '#/components/schemas/FinetuneTruncatedList'
   /fine-tunes/{id}:
     get:
       tags: ['Fine-tuning']
@@ -863,7 +863,7 @@ paths:
     post:
       tags: ['Fine-tuning']
       summary: Cancel job
-      description: Cancel a currently running fine-tuning job.
+      description: Cancel a currently running fine-tuning job. Returns a FinetuneResponseTruncated object.
       parameters:
         - in: path
           name: id
@@ -877,7 +877,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FinetuneResponse'
+                $ref: '#/components/schemas/FinetuneResponseTruncated'
         '400':
           description: Invalid request parameters.
         '404':
@@ -1215,7 +1215,7 @@ paths:
       summary: List available hardware configurations
       description: >
         Returns a list of available hardware configurations for deploying models.
-        When a model parameter is provided, it returns only hardware configurations compatible 
+        When a model parameter is provided, it returns only hardware configurations compatible
         with that model, including their current availability status.
       operationId: listHardware
       parameters:
@@ -1225,7 +1225,7 @@ paths:
           schema:
             type: string
           description: >
-            Filter hardware configurations by model compatibility. When provided, 
+            Filter hardware configurations by model compatibility. When provided,
             the response includes availability status for each compatible configuration.
           example: meta-llama/Llama-3-70b-chat-hf
       responses:
@@ -2022,7 +2022,7 @@ components:
           enum: ['user']
         name:
           type: string
-          
+
     ChatCompletionAssistantMessageParam:
       type: object
       required: [role]
@@ -2707,6 +2707,123 @@ components:
         from_checkpoint:
           type: string
 
+    FinetuneResponseTruncated:
+      type: object
+      description: A truncated version of the fine-tune response, used for POST /fine-tunes, GET /fine-tunes and POST /fine-tunes/{id}/cancel endpoints
+      required:
+        - id
+        - status
+        - created_at
+        - updated_at
+      example:
+        id: ft-01234567890123456789
+        status: succeeded
+        created_at: "2023-05-17T17:35:45.123Z"
+        updated_at: "2023-05-17T18:46:23.456Z"
+        user_id: "user_01234567890123456789"
+        owner_address: "user@example.com"
+        total_price: 1500
+        token_count: 850000
+        events: [] # FineTuneTruncated object has no events
+        model: "meta-llama/Llama-2-7b-hf"
+        n_epochs: 3
+        training_file: "file-01234567890123456789"
+        wandb_project_name: "my-finetune-project"
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the fine-tune job
+        status:
+          $ref: '#/components/schemas/FinetuneJobStatus'
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp of the fine-tune job
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp of the fine-tune job
+        user_id:
+          type: string
+          description: Identifier for the user who created the job
+        owner_address:
+          type: string
+          description: Owner address information
+        total_price:
+          type: integer
+          description: Total price for the fine-tuning job
+        token_count:
+          type: integer
+          description: Count of tokens processed
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/FineTuneEvent'
+          description: Events related to this fine-tune job
+        # FineTuneUserParams fields
+        training_file:
+          type: string
+          description: File-ID of the training file
+        validation_file:
+          type: string
+          description: File-ID of the validation file
+        model:
+          type: string
+          description: Base model used for fine-tuning
+        suffix:
+          type: string
+          description: Suffix added to the fine-tuned model name
+        n_epochs:
+          type: integer
+          description: Number of training epochs
+        n_evals:
+          type: integer
+          description: Number of evaluations during training
+        n_checkpoints:
+          type: integer
+          description: Number of checkpoints saved during training
+        batch_size:
+          type: integer
+          description: Batch size used for training
+        training_type:
+          oneOf:
+            - $ref: '#/components/schemas/FullTrainingType'
+            - $ref: '#/components/schemas/LoRATrainingType'
+          description: Type of training used (full or LoRA)
+        training_method:
+          oneOf:
+            - $ref: '#/components/schemas/TrainingMethodSFT'
+            - $ref: '#/components/schemas/TrainingMethodDPO'
+          description: Method of training used
+        learning_rate:
+          type: number
+          format: float
+          description: Learning rate used for training
+        lr_scheduler:
+          $ref: '#/components/schemas/LRScheduler'
+          description: Learning rate scheduler configuration
+        warmup_ratio:
+          type: number
+          format: float
+          description: Ratio of warmup steps
+        max_grad_norm:
+          type: number
+          format: float
+          description: Maximum gradient norm for clipping
+        weight_decay:
+          type: number
+          format: float
+          description: Weight decay value used
+        wandb_project_name:
+          type: string
+          description: Weights & Biases project name
+        wandb_name:
+          type: string
+          description: Weights & Biases run name
+        from_checkpoint:
+          type: string
+          description: Checkpoint used to continue training
+
     FinetuneJobStatus:
       type: string
       enum:
@@ -2759,7 +2876,7 @@ components:
         - refund
         - warning
 
-    FinetuneList:
+    FinetuneTruncatedList:
       type: object
       required:
         - data
@@ -2767,7 +2884,7 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/FinetuneResponse'
+            $ref: '#/components/schemas/FinetuneResponseTruncated'
     FinetuneListEvents:
       type: object
       required:
