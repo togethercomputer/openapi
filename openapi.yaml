@@ -636,6 +636,71 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
+  /v1/files/upload:
+    post:
+      tags: ['Files']
+      summary: Upload a file
+      description: Upload a file with specified purpose, file name, and file type.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - purpose
+                - file_name
+                - file
+              properties:
+                purpose:
+                  type: string
+                  description: The purpose of the file being uploaded
+                  example: 'fine-tune'
+                  enum: ["fine-tune", "eval", "eval-sample", "eval-output", "eval-summary", "batch-generated", "batch-api"]
+                file_name:
+                  type: string
+                  description: The name of the file being uploaded
+                  example: 'dataset.csv'
+                file_type:
+                  type: string
+                  description: The type of the file being uploaded
+                  example: 'text/csv'
+                file_type:
+                  type: string
+                  description: The type of the file being uploaded
+                  default: 'jsonl'
+                  example: 'jsonl'
+                  enum: ['csv', 'jsonl']
+                file:
+                  type: string
+                  format: binary
+                  description: The content of the file being uploaded
+      responses:
+        '200':
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
   /fine-tunes:
     post:
       tags: ['Fine-tuning']
