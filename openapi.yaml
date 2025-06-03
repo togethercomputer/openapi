@@ -636,7 +636,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /v1/files/upload:
+  /files/upload:
     post:
       tags: ['Files']
       summary: Upload a file
