@@ -2654,7 +2654,7 @@ components:
           type: integer
     FilePurpose:
       type: string
-      description: The purpose of the file being uploaded
+      description: The purpose of the file
       example: 'fine-tune'
       enum:
         - fine-tune
@@ -2666,7 +2666,7 @@ components:
         - batch-api
     FileType:
       type: string
-      description: The type of the file being uploaded
+      description: The type of the file
       default: 'jsonl'
       example: 'jsonl'
       enum:
