@@ -240,77 +240,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - model_name
-                - model_source
-              properties:
-                model_name:
-                  type: string
-                  description: The name to give to your uploaded model
-                  example: 'Qwen2.5-72B-Instruct'
-                model_source:
-                  type: string
-                  description: The source location of the model (Hugging Face repo or S3 path)
-                  example: 'unsloth/Qwen2.5-72B-Instruct'
-                model_type:
-                  type: string
-                  description: Whether the model is a full model or an adapter
-                  default: 'model'
-                  enum:
-                    - model
-                    - adapter
-                  example: 'model'
-                hf_token:
-                  type: string
-                  description: Hugging Face token (if uploading from Hugging Face)
-                  example: 'hf_examplehuggingfacetoken'
-                description:
-                  type: string
-                  description: A description of your model
-                  example: 'Finetuned Qwen2.5-72B-Instruct by Unsloth'
-                base_model:
-                  type: string
-                  description: The base model to use for an adapter if setting it to run against a serverless pool.  Only used for model_type `adapter`.
-                  example: 'Qwen/Qwen2.5-72B-Instruct'
-                lora_model:
-                  type: string
-                  description: The lora pool to use for an adapter if setting it to run against, say, a dedicated pool.  Only used for model_type `adapter`.
-                  example: 'my_username/Qwen2.5-72B-Instruct-lora'
+              $ref: '#/components/schemas/ModelUploadRequest'
       responses:
         '200':
           description: Model / adapter upload job created successfully
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - data
-                  - message
-                properties:
-                  data:
-                    type: object
-                    required:
-                      - job_id
-                      - model_name
-                      - model_id
-                      - model_source
-                    properties:
-                      job_id:
-                        type: string
-                        example: 'job-a15dad11-8d8e-4007-97c5-a211304de284'
-                      model_name:
-                        type: string
-                        example: 'necolinehubner/Qwen2.5-72B-Instruct'
-                      model_id:
-                        type: string
-                        example: 'model-c0e32dfc-637e-47b2-bf4e-e9b2e58c9da7'
-                      model_source:
-                        type: string
-                        example: 'huggingface'
-                  message:
-                    type: string
-                    example: 'Processing model weights. Job created.'
+                $ref: '#/components/schemas/ModelUploadSuccessResponse'
 
   /jobs/{jobId}:
     get:
@@ -332,65 +269,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - type
-                  - job_id
-                  - status
-                  - status_updates
-                  - args
-                  - created_at
-                  - updated_at
-                properties:
-                  type:
-                    type: string
-                    example: 'model_upload'
-                  job_id:
-                    type: string
-                    example: 'job-a15dad11-8d8e-4007-97c5-a211304de284'
-                  status:
-                    type: string
-                    enum: ['Queued', 'Running', 'Complete', 'Failed']
-                    example: 'Complete'
-                  status_updates:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - status
-                        - message
-                        - timestamp
-                      properties:
-                        status:
-                          type: string
-                          example: 'Complete'
-                        message:
-                          type: string
-                          example: 'Job is Complete'
-                        timestamp:
-                          type: string
-                          format: date-time
-                          example: '2025-03-11T22:36:12Z'
-                  args:
-                    type: object
-                    properties:
-                      description:
-                        type: string
-                        example: 'Finetuned Qwen2.5-72B-Instruct by Unsloth'
-                      modelName:
-                        type: string
-                        example: 'necolinehubner/Qwen2.5-72B-Instruct'
-                      modelSource:
-                        type: string
-                        example: 'unsloth/Qwen2.5-72B-Instruct'
-                  created_at:
-                    type: string
-                    format: date-time
-                    example: '2025-03-11T22:05:43Z'
-                  updated_at:
-                    type: string
-                    format: date-time
-                    example: '2025-03-11T22:36:12Z'
+                $ref: '#/components/schemas/JobInfoSuccessResponse'
 
   /jobs:
     get:
@@ -404,72 +283,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - data
-                properties:
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - type
-                        - job_id
-                        - status
-                        - status_updates
-                        - args
-                        - created_at
-                        - updated_at
-                      properties:
-                        type:
-                          type: string
-                          example: 'model_upload'
-                        job_id:
-                          type: string
-                          example: 'job-a15dad11-8d8e-4007-97c5-a211304de284'
-                        status:
-                          type: string
-                          enum: ['Queued', 'Running', 'Complete', 'Failed']
-                          example: 'Complete'
-                        status_updates:
-                          type: array
-                          items:
-                            type: object
-                            required:
-                              - status
-                              - message
-                              - timestamp
-                            properties:
-                              status:
-                                type: string
-                                example: 'Complete'
-                              message:
-                                type: string
-                                example: 'Job is Complete'
-                              timestamp:
-                                type: string
-                                format: date-time
-                                example: '2025-03-11T22:36:12Z'
-                        args:
-                          type: object
-                          properties:
-                            description:
-                              type: string
-                              example: 'Finetuned Qwen2.5-72B-Instruct by Unsloth'
-                            modelName:
-                              type: string
-                              example: 'necolinehubner/Qwen2.5-72B-Instruct'
-                            modelSource:
-                              type: string
-                              example: 'unsloth/Qwen2.5-72B-Instruct'
-                        created_at:
-                          type: string
-                          format: date-time
-                          example: '2025-03-11T22:05:43Z'
-                        updated_at:
-                          type: string
-                          format: date-time
-                          example: '2025-03-11T22:36:12Z'
+                $ref: '#/components/schemas/JobsInfoSuccessResponse'
+
   /images/generations:
     post:
       tags: ['Images']
@@ -1580,7 +1395,6 @@ components:
           finish_reason:
             $ref: '#/components/schemas/FinishReason'
           logprobs:
-            type: object
             $ref: '#/components/schemas/LogprobsPart'
 
     CompletionRequest:
@@ -2019,63 +1833,72 @@ components:
       required: [content, role]
       properties:
         content:
-          description: The content of the message, which can either be a simple string or a structured format.
-          oneOf:
-            - type: string
-              description: A plain text message.
-            - type: array
-              description: A structured message with mixed content types.
-              items:
-                type: object
-                oneOf:
-                  - type: object
-                    properties:
-                      type:
-                        type: string
-                        enum:
-                          - text
-                      text:
-                        type: string
-                    required:
-                      - type
-                      - text
-                  - type: object
-                    properties:
-                      type:
-                        type: string
-                        enum:
-                          - image_url
-                      image_url:
-                        type: object
-                        properties:
-                          url:
-                            type: string
-                            description: The URL of the image
-                        required:
-                          - url
-                  - type: object
-                    title: Video
-                    properties:
-                      type:
-                        type: string
-                        enum:
-                          - video_url
-                      video_url:
-                        type: object
-                        properties:
-                          url:
-                            type: string
-                            description: The URL of the video
-                        required:
-                          - url
-                    required:
-                      - type
-                      - video_url
+          $ref: '#/components/schemas/ChatCompletionUserMessageContent'
         role:
           type: string
           enum: ['user']
         name:
           type: string
+
+    ChatCompletionUserMessageContentString:
+      type: string
+      description: A plain text message.
+
+    ChatCompletionUserMessageContentMultimodal:
+      type: array
+      description: A structured message with mixed content types.
+      items:
+        type: object
+        oneOf:
+          - type: object
+            properties:
+              type:
+                type: string
+                enum:
+                  - text
+              text:
+                type: string
+            required:
+              - type
+              - text
+          - type: object
+            properties:
+              type:
+                type: string
+                enum:
+                  - image_url
+              image_url:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: The URL of the image
+                required:
+                  - url
+          - type: object
+            title: Video
+            properties:
+              type:
+                type: string
+                enum:
+                  - video_url
+              video_url:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: The URL of the video
+                required:
+                  - url
+            required:
+              - type
+              - video_url
+
+    ChatCompletionUserMessageContent:
+      description: The content of the message, which can either be a simple string or a structured format.
+      oneOf:
+        - $ref: '#/components/schemas/ChatCompletionUserMessageContentString'
+        - $ref: '#/components/schemas/ChatCompletionUserMessageContentMultimodal'
 
     ChatCompletionAssistantMessageParam:
       type: object
@@ -2502,6 +2325,76 @@ components:
           example: 2048
         pricing:
           $ref: '#/components/schemas/Pricing'
+
+    ModelUploadRequest:
+      type: object
+      required:
+        - model_name
+        - model_source
+      properties:
+        model_name:
+          type: string
+          description: The name to give to your uploaded model
+          example: 'Qwen2.5-72B-Instruct'
+        model_source:
+          type: string
+          description: The source location of the model (Hugging Face repo or S3 path)
+          example: 'unsloth/Qwen2.5-72B-Instruct'
+        model_type:
+          type: string
+          description: Whether the model is a full model or an adapter
+          default: 'model'
+          enum:
+            - model
+            - adapter
+          example: 'model'
+        hf_token:
+          type: string
+          description: Hugging Face token (if uploading from Hugging Face)
+          example: 'hf_examplehuggingfacetoken'
+        description:
+          type: string
+          description: A description of your model
+          example: 'Finetuned Qwen2.5-72B-Instruct by Unsloth'
+        base_model:
+          type: string
+          description: The base model to use for an adapter if setting it to run against a serverless pool.  Only used for model_type `adapter`.
+          example: 'Qwen/Qwen2.5-72B-Instruct'
+        lora_model:
+          type: string
+          description: The lora pool to use for an adapter if setting it to run against, say, a dedicated pool.  Only used for model_type `adapter`.
+          example: 'my_username/Qwen2.5-72B-Instruct-lora'
+
+    ModelUploadSuccessResponse:
+      type: object
+      required:
+        - data
+        - message
+      properties:
+        data:
+          type: object
+          required:
+            - job_id
+            - model_name
+            - model_id
+            - model_source
+          properties:
+            job_id:
+              type: string
+              example: 'job-a15dad11-8d8e-4007-97c5-a211304de284'
+            model_name:
+              type: string
+              example: 'necolinehubner/Qwen2.5-72B-Instruct'
+            model_id:
+              type: string
+              example: 'model-c0e32dfc-637e-47b2-bf4e-e9b2e58c9da7'
+            model_source:
+              type: string
+              example: 'huggingface'
+        message:
+          type: string
+          example: 'Processing model weights. Job created.'    
+
     ImageResponse:
       type: object
       properties:
@@ -2536,6 +2429,78 @@ components:
         - model
         - object
         - data
+
+    JobInfoSuccessResponse:
+      type: object
+      required:
+        - type
+        - job_id
+        - status
+        - status_updates
+        - args
+        - created_at
+        - updated_at
+      properties:
+        type:
+          type: string
+          example: 'model_upload'
+        job_id:
+          type: string
+          example: 'job-a15dad11-8d8e-4007-97c5-a211304de284'
+        status:
+          type: string
+          enum: ['Queued', 'Running', 'Complete', 'Failed']
+          example: 'Complete'
+        status_updates:
+          type: array
+          items:
+            type: object
+            required:
+              - status
+              - message
+              - timestamp
+            properties:
+              status:
+                type: string
+                example: 'Complete'
+              message:
+                type: string
+                example: 'Job is Complete'
+              timestamp:
+                type: string
+                format: date-time
+                example: '2025-03-11T22:36:12Z'
+        args:
+          type: object
+          properties:
+            description:
+              type: string
+              example: 'Finetuned Qwen2.5-72B-Instruct by Unsloth'
+            modelName:
+              type: string
+              example: 'necolinehubner/Qwen2.5-72B-Instruct'
+            modelSource:
+              type: string
+              example: 'unsloth/Qwen2.5-72B-Instruct'
+        created_at:
+          type: string
+          format: date-time
+          example: '2025-03-11T22:05:43Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2025-03-11T22:36:12Z'
+
+    JobsInfoSuccessResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobInfoSuccessResponse'
+
     Pricing:
       type: object
       required: [hourly, input, output, base, finetune]
