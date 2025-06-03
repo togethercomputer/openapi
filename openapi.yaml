@@ -653,24 +653,13 @@ paths:
                 - file
               properties:
                 purpose:
-                  type: string
-                  description: The purpose of the file being uploaded
-                  example: 'fine-tune'
-                  enum: ["fine-tune", "eval", "eval-sample", "eval-output", "eval-summary", "batch-generated", "batch-api"]
+                  $ref: '#/components/schemas/FilePurpose'
                 file_name:
                   type: string
                   description: The name of the file being uploaded
                   example: 'dataset.csv'
                 file_type:
-                  type: string
-                  description: The type of the file being uploaded
-                  example: 'text/csv'
-                file_type:
-                  type: string
-                  description: The type of the file being uploaded
-                  default: 'jsonl'
-                  example: 'jsonl'
-                  enum: ['csv', 'jsonl']
+                  $ref: '#/components/schemas/FileType'
                 file:
                   type: string
                   format: binary
@@ -2636,16 +2625,11 @@ components:
           type: integer
           example: 2664
         purpose:
-          enum:
-            - fine-tune
-          example: 'fine-tune'
+          $ref: '#/components/schemas/FilePurpose'
         Processed:
           type: boolean
         FileType:
-          enum:
-            - jsonl
-            - parquet
-          example: 'jsonl'
+          $ref: '#/components/schemas/FileType'
         LineCount:
           type: integer
     FileList:
@@ -2668,6 +2652,26 @@ components:
           type: string
         size:
           type: integer
+    FilePurpose:
+      type: string
+      description: The purpose of the file being uploaded
+      example: 'fine-tune'
+      enum:
+        - fine-tune
+        - eval
+        - eval-sample
+        - eval-output
+        - eval-summary
+        - batch-generated
+        - batch-api
+    FileType:
+      type: string
+      description: The type of the file being uploaded
+      default: 'jsonl'
+      example: 'jsonl'
+      enum:
+        - 'csv'
+        - 'jsonl'
     FileDeleteResponse:
       type: object
       properties:
