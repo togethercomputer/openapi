@@ -2672,6 +2672,7 @@ components:
       enum:
         - 'csv'
         - 'jsonl'
+        - 'parquet'
     FileDeleteResponse:
       type: object
       properties:
