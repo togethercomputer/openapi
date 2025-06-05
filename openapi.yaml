@@ -1166,6 +1166,129 @@ paths:
               schema:
                 $ref: '#/components/schemas/SessionListResponse'
           description: List Response
+  /batches:
+    get:
+      tags: ['batches']
+      summary: List batch jobs
+      description: List all batch jobs for the authenticated user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Job'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: ['batches']
+      summary: Create a batch job
+      description: Create a new batch job with the given input file and endpoint
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBatchRequest'
+      responses:
+        '201':
+          description: Job created (potentially with warnings)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobWithWarning'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /batches/{id}:
+    get:
+      tags: ['batches']
+      summary: Get a batch job
+      description: Get details of a batch job by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Job ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
 components:
   securitySchemes:
@@ -3787,3 +3910,88 @@ components:
         - type
         - data
       title: StreamOutput
+
+    CreateBatchRequest:
+      type: object
+      required: [endpoint, input_file_id]
+      properties:
+        endpoint:
+          type: string
+        input_file_id:
+          type: string
+        completion_window:
+          type: string
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+    JobWithWarning:
+      type: object
+      properties:
+        job:
+          $ref: '#/components/schemas/Job'
+        warning:
+          type: string
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        endpoint:
+          type: string
+        input_file_id:
+          type: string
+        output_file_id:
+          type: string
+        error_file_id:
+          type: string
+        status:
+          $ref: '#/components/schemas/JobStatus'
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        completed_at:
+          type: string
+        heartbeat_at:
+          type: string
+        job_deadline:
+          type: string
+        tokens_reserved_at:
+          type: string
+        tokens_released_at:
+          type: string
+        priority:
+          type: integer
+        file_size_bytes:
+          type: integer
+        total_chunks:
+          type: integer
+        total_tokens:
+          type: integer
+        request_count:
+          type: integer
+        retry_count:
+          type: integer
+        model_id:
+          type: string
+        progress:
+          type: number
+        error:
+          type: string
+    JobStatus:
+      type: string
+      enum:
+        - VALIDATING
+        - QUEUED
+        - CHUNKING
+        - CHUNKS_QUEUED
+        - AGGREGATION_QUEUED
+        - AGGREGATING
+        - COMPLETED
+        - FAILED
+        - EXPIRED
+        - CANCELLED
