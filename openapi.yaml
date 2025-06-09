@@ -1181,19 +1181,19 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Job'
+                  $ref: '#/components/schemas/BatchJob'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/BatchErrorResponse'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/BatchErrorResponse'
     post:
       tags: ['batches']
       summary: Create a batch job
@@ -1212,31 +1212,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JobWithWarning'
+                $ref: '#/components/schemas/BatchJobWithWarning'
         '400':
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/BatchErrorResponse'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/BatchErrorResponse'
         '429':
           description: Too Many Requests
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/BatchErrorResponse'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/BatchErrorResponse'
 
   /batches/{id}:
     get:
@@ -1252,43 +1252,44 @@ paths:
           description: Job ID
           schema:
             type: string
+          example: "batch_job_abc123def456"
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Job'
+                $ref: '#/components/schemas/BatchJob'
         '400':
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/BatchErrorResponse'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/BatchErrorResponse'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/BatchErrorResponse'
         '404':
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/BatchErrorResponse'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/BatchErrorResponse'
 
 components:
   securitySchemes:
@@ -3917,72 +3918,115 @@ components:
       properties:
         endpoint:
           type: string
+          description: The endpoint to use for batch processing
+          example: "/v1/chat/completions"
         input_file_id:
           type: string
+          description: ID of the uploaded input file containing batch requests
+          example: "file-abc123def456ghi789"
         completion_window:
           type: string
-    ErrorResponse:
+          description: Time window for batch completion (optional)
+          example: "24h"
+        priority:
+          type: integer
+          description: Priority for batch processing (optional)
+          example: 1
+        model_id:
+          type: string
+          description: "Model to use for processing batch requests"
+          example: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+    BatchErrorResponse:
       type: object
       properties:
         error:
           type: string
-    JobWithWarning:
+    BatchJobWithWarning:
       type: object
       properties:
         job:
-          $ref: '#/components/schemas/Job'
+          $ref: '#/components/schemas/BatchJob'
         warning:
           type: string
-    Job:
+    BatchJob:
       type: object
       properties:
         id:
           type: string
+          example: "batch_job_abc123def456"
         user_id:
           type: string
+          example: "user_789xyz012"
         endpoint:
           type: string
+          example: "/v1/chat/completions"
         input_file_id:
           type: string
+          example: "file-input123abc456def"
         output_file_id:
           type: string
+          example: "file-output789xyz012ghi"
         error_file_id:
           type: string
+          example: "file-errors456def789jkl"
         status:
-          $ref: '#/components/schemas/JobStatus'
+          $ref: '#/components/schemas/BatchJobStatus'
         created_at:
           type: string
+          example: "2024-01-15T14:30:00Z"
         updated_at:
           type: string
+          example: "2024-01-15T14:35:22Z"
         completed_at:
           type: string
+          example: "2024-01-15T15:45:30Z"
         heartbeat_at:
           type: string
+          example: "2024-01-15T14:35:00Z"
         job_deadline:
           type: string
+          example: "2024-01-15T14:35:00Z"
         tokens_reserved_at:
           type: string
+          example: "2024-01-15T14:35:00Z"
         tokens_released_at:
           type: string
+          example: "2024-01-15T14:35:00Z"
         priority:
           type: integer
+          example: 1
+          description: "Job priority (1 = highest, 5 = lowest)"
         file_size_bytes:
           type: integer
+          example: 1048576
+          description: "Size of input file in bytes"
         total_chunks:
           type: integer
+          example: 250
+          description: "Total number of requests in the batch"
         total_tokens:
           type: integer
+          example: 125000
+          description: "Estimated total tokens for all requests"
         request_count:
           type: integer
+          example: 1000
+          description: "Total number of requests in the batch"
         retry_count:
           type: integer
+          example: 0
+          description: "Number of retries attempted"
         model_id:
           type: string
+          example: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+          description: "Model used for processing requests"
         progress:
           type: number
+          example: 0.75
+          description: "Completion progress as a decimal (0.0 to 1.0)"
         error:
           type: string
-    JobStatus:
+    BatchJobStatus:
       type: string
       enum:
         - VALIDATING
@@ -3995,3 +4039,5 @@ components:
         - FAILED
         - EXPIRED
         - CANCELLED
+      example: "QUEUED"
+      description: "Current status of the batch job"
