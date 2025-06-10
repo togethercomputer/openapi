@@ -2156,6 +2156,7 @@ components:
         b64:
           type: string
           description: base64 encoded audio stream
+          
     StreamSentinel:
       type: object
       required: [data]
@@ -2409,26 +2410,34 @@ components:
         data:
           type: array
           items:
-            type: object
-            properties:
-              index:
-                type: integer
-              b64_json:
-                type: string
-              url:
-                type: string
-            required:
-              - index
             oneOf:
-              - required:
-                  - b64_json
-              - required:
-                  - url
+              - $ref: '#/components/schemas/ImageResponseDataB64'
+              - $ref: '#/components/schemas/ImageResponseDataUrl'
       required:
         - id
         - model
         - object
         - data
+
+    ImageResponseDataB64:
+      type: object
+      required: [index, b64_json]
+      properties:
+        index:
+          type: integer
+        b64_json:
+          type: string
+
+
+    ImageResponseDataUrl:
+      type: object
+      required: [index, url]
+      properties:
+        index:
+          type: integer
+        url:
+          type: string
+
 
     JobInfoSuccessResponse:
       type: object
@@ -3110,6 +3119,9 @@ components:
           format: float
           default: 0.5
           description: Number or fraction of cycles for the cosine learning rate scheduler
+      required:
+        - min_lr_ratio
+        - num_cycles
     LinearLRSchedulerArgs:
       type: object
       properties:
