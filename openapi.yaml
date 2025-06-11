@@ -1168,7 +1168,7 @@ paths:
           description: List Response
   /batches:
     get:
-      tags: ['batches']
+      tags: ['Batches']
       summary: List batch jobs
       description: List all batch jobs for the authenticated user
       security:
@@ -1195,7 +1195,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BatchErrorResponse'
     post:
-      tags: ['batches']
+      tags: ['Batches']
       summary: Create a batch job
       description: Create a new batch job with the given input file and endpoint
       security:
@@ -1240,7 +1240,7 @@ paths:
 
   /batches/{id}:
     get:
-      tags: ['batches']
+      tags: ['Batches']
       summary: Get a batch job
       description: Get details of a batch job by ID
       security:
