@@ -3953,91 +3953,61 @@ components:
       properties:
         id:
           type: string
-          example: "batch_job_abc123def456"
+          format: uuid
+          example: "01234567-8901-2345-6789-012345678901"
         user_id:
           type: string
           example: "user_789xyz012"
-        endpoint:
-          type: string
-          example: "/v1/chat/completions"
         input_file_id:
           type: string
           example: "file-input123abc456def"
+        file_size_bytes:
+          type: integer
+          format: int64
+          example: 1048576
+          description: "Size of input file in bytes"
+        status:
+          $ref: '#/components/schemas/BatchJobStatus'
+        job_deadline:
+          type: string
+          format: date-time
+          example: "2024-01-15T15:30:00Z"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T14:30:00Z"
+        endpoint:
+          type: string
+          example: "/v1/chat/completions"
+        progress:
+          type: number
+          format: float64
+          example: 75.0
+          description: "Completion progress (0.0 to 100)"
+        model_id:
+          type: string
+          example: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+          description: "Model used for processing requests"
         output_file_id:
           type: string
           example: "file-output789xyz012ghi"
         error_file_id:
           type: string
           example: "file-errors456def789jkl"
-        status:
-          $ref: '#/components/schemas/BatchJobStatus'
-        created_at:
-          type: string
-          example: "2024-01-15T14:30:00Z"
-        updated_at:
-          type: string
-          example: "2024-01-15T14:35:22Z"
-        completed_at:
-          type: string
-          example: "2024-01-15T15:45:30Z"
-        heartbeat_at:
-          type: string
-          example: "2024-01-15T14:35:00Z"
-        job_deadline:
-          type: string
-          example: "2024-01-15T14:35:00Z"
-        tokens_reserved_at:
-          type: string
-          example: "2024-01-15T14:35:00Z"
-        tokens_released_at:
-          type: string
-          example: "2024-01-15T14:35:00Z"
-        priority:
-          type: integer
-          example: 1
-          description: "Job priority (1 = highest, 5 = lowest)"
-        file_size_bytes:
-          type: integer
-          example: 1048576
-          description: "Size of input file in bytes"
-        total_chunks:
-          type: integer
-          example: 250
-          description: "Total number of requests in the batch"
-        total_tokens:
-          type: integer
-          example: 125000
-          description: "Estimated total tokens for all requests"
-        request_count:
-          type: integer
-          example: 1000
-          description: "Total number of requests in the batch"
-        retry_count:
-          type: integer
-          example: 0
-          description: "Number of retries attempted"
-        model_id:
-          type: string
-          example: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
-          description: "Model used for processing requests"
-        progress:
-          type: number
-          example: 0.75
-          description: "Completion progress as a decimal (0.0 to 1.0)"
         error:
           type: string
+        completed_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T15:45:30Z"
     BatchJobStatus:
       type: string
       enum:
         - VALIDATING
-        - QUEUED
-        - CHUNKING
-        - CHUNKS_QUEUED
-        - AGGREGATION_QUEUED
-        - AGGREGATING
+        - IN_PROGRESS
         - COMPLETED
         - FAILED
         - EXPIRED
         - CANCELLED
-      example: "QUEUED"
+      example: "IN_PROGRESS"
       description: "Current status of the batch job"
