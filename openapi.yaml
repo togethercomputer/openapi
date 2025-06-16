@@ -3213,6 +3213,20 @@ components:
           type: number
           format: float
           default: 0.1
+        rpo_alpha:
+          type: number
+          format: float
+          default: 0.0
+        dpo_normalize_logratios_by_length:
+          type: boolean
+          default: false
+        dpo_reference_free:
+          type: boolean
+          default: false
+        simpo_gamma:
+          type: number
+          format: float
+          default: 0.0
       required:
         - method
 
