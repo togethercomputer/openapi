@@ -1576,8 +1576,8 @@ components:
         logprobs:
           type: integer
           minimum: 0
-          maximum: 1
-          description: Integer (0 or 1) that controls whether log probabilities of generated tokens are returned. Log probabilities help assess model confidence in token predictions.
+          maximum: 20
+          description: An integer between 0 and 20 of the top k tokens to return log probabilities for at each generation step, instead of just the sampled token. Log probabilities help assess model confidence in token predictions.
         echo:
           type: boolean
           description: If true, the response will contain the prompt. Can be used with `logprobs` to return prompt logprobs.
@@ -1860,8 +1860,8 @@ components:
         logprobs:
           type: integer
           minimum: 0
-          maximum: 1
-          description: Integer (0 or 1) that controls whether log probabilities of generated tokens are returned. Log probabilities help assess model confidence in token predictions.
+          maximum: 20
+          description: An integer between 0 and 20 of the top k tokens to return log probabilities for at each generation step, instead of just the sampled token. Log probabilities help assess model confidence in token predictions.
         echo:
           type: boolean
           description: If true, the response will contain the prompt. Can be used with `logprobs` to return prompt logprobs.
