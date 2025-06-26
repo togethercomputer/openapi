@@ -2017,6 +2017,48 @@ components:
             required:
               - type
               - video_url
+          - type: object
+            title: Audio
+            properties:
+              type:
+                type: string
+                enum:
+                  - audio_url
+              audio_url:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: The URL of the audio
+                required:
+                  - url
+            required:
+              - type
+              - audio_url
+          - type: object
+            title: Input Audio
+            properties:
+              type:
+                type: string
+                enum:
+                  - input_audio
+              input_audio:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    description: The base64 encoded audio data
+                  format:
+                    type: string
+                    description: The format of the audio data
+                    enum:
+                      - wav
+                required:
+                  - data
+                  - format
+            required:
+              - type
+              - input_audio
 
     ChatCompletionUserMessageContent:
       description: The content of the message, which can either be a simple string or a structured format.
