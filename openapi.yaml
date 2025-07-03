@@ -2587,6 +2587,8 @@ components:
             oneOf:
               - $ref: '#/components/schemas/ImageResponseDataB64'
               - $ref: '#/components/schemas/ImageResponseDataUrl'
+            discriminator:
+              propertyName: type
       required:
         - id
         - model
@@ -2595,21 +2597,27 @@ components:
 
     ImageResponseDataB64:
       type: object
-      required: [index, b64_json]
+      required: [index, b64_json, type]
       properties:
         index:
           type: integer
         b64_json:
           type: string
+        type:
+          type: string
+          enum: [b64_json]
 
     ImageResponseDataUrl:
       type: object
-      required: [index, url]
+      required: [index, url, type]
       properties:
         index:
           type: integer
         url:
           type: string
+        type:
+          type: string
+          enum: [url]
 
     JobInfoSuccessResponse:
       type: object
