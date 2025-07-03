@@ -373,6 +373,9 @@ paths:
                       scale:
                         type: number
                         description: The strength of the LoRA's influence. Most LoRA's recommend a value of 1.
+                disable_safety_checker:
+                  type: boolean
+                  description: If true, disables the safety checker for image generation.
       responses:
         '200':
           description: Image generated successfully
@@ -1252,7 +1255,7 @@ paths:
           description: Job ID
           schema:
             type: string
-          example: "batch_job_abc123def456"
+          example: 'batch_job_abc123def456'
       responses:
         '200':
           description: OK
@@ -1424,7 +1427,12 @@ components:
               }
         usage:
           $ref: '#/components/schemas/UsageData'
-          example: { 'prompt_tokens': 1837, 'completion_tokens': 0, 'total_tokens': 1837 }
+          example:
+            {
+              'prompt_tokens': 1837,
+              'completion_tokens': 0,
+              'total_tokens': 1837,
+            }
 
     ErrorData:
       type: object
@@ -2322,7 +2330,7 @@ components:
         b64:
           type: string
           description: base64 encoded audio stream
-          
+
     StreamSentinel:
       type: object
       required: [data]
@@ -2560,7 +2568,7 @@ components:
               example: 'huggingface'
         message:
           type: string
-          example: 'Processing model weights. Job created.'    
+          example: 'Processing model weights. Job created.'
 
     ImageResponse:
       type: object
@@ -2594,7 +2602,6 @@ components:
         b64_json:
           type: string
 
-
     ImageResponseDataUrl:
       type: object
       required: [index, url]
@@ -2603,7 +2610,6 @@ components:
           type: integer
         url:
           type: string
-
 
     JobInfoSuccessResponse:
       type: object
@@ -2928,18 +2934,18 @@ components:
       example:
         id: ft-01234567890123456789
         status: completed
-        created_at: "2023-05-17T17:35:45.123Z"
-        updated_at: "2023-05-17T18:46:23.456Z"
-        user_id: "user_01234567890123456789"
-        owner_address: "user@example.com"
+        created_at: '2023-05-17T17:35:45.123Z'
+        updated_at: '2023-05-17T18:46:23.456Z'
+        user_id: 'user_01234567890123456789'
+        owner_address: 'user@example.com'
         total_price: 1500
         token_count: 850000
         events: [] # FineTuneTruncated object has no events
-        model: "meta-llama/Llama-2-7b-hf"
-        model_output_name: "mynamespace/meta-llama/Llama-2-7b-hf-32162631"
+        model: 'meta-llama/Llama-2-7b-hf'
+        model_output_name: 'mynamespace/meta-llama/Llama-2-7b-hf-32162631'
         n_epochs: 3
-        training_file: "file-01234567890123456789"
-        wandb_project_name: "my-finetune-project"
+        training_file: 'file-01234567890123456789'
+        wandb_project_name: 'my-finetune-project'
       properties:
         id:
           type: string
@@ -3987,23 +3993,23 @@ components:
         endpoint:
           type: string
           description: The endpoint to use for batch processing
-          example: "/v1/chat/completions"
+          example: '/v1/chat/completions'
         input_file_id:
           type: string
           description: ID of the uploaded input file containing batch requests
-          example: "file-abc123def456ghi789"
+          example: 'file-abc123def456ghi789'
         completion_window:
           type: string
           description: Time window for batch completion (optional)
-          example: "24h"
+          example: '24h'
         priority:
           type: integer
           description: Priority for batch processing (optional)
           example: 1
         model_id:
           type: string
-          description: "Model to use for processing batch requests"
-          example: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+          description: 'Model to use for processing batch requests'
+          example: 'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo'
     BatchErrorResponse:
       type: object
       properties:
@@ -4022,52 +4028,52 @@ components:
         id:
           type: string
           format: uuid
-          example: "01234567-8901-2345-6789-012345678901"
+          example: '01234567-8901-2345-6789-012345678901'
         user_id:
           type: string
-          example: "user_789xyz012"
+          example: 'user_789xyz012'
         input_file_id:
           type: string
-          example: "file-input123abc456def"
+          example: 'file-input123abc456def'
         file_size_bytes:
           type: integer
           format: int64
           example: 1048576
-          description: "Size of input file in bytes"
+          description: 'Size of input file in bytes'
         status:
           $ref: '#/components/schemas/BatchJobStatus'
         job_deadline:
           type: string
           format: date-time
-          example: "2024-01-15T15:30:00Z"
+          example: '2024-01-15T15:30:00Z'
         created_at:
           type: string
           format: date-time
-          example: "2024-01-15T14:30:00Z"
+          example: '2024-01-15T14:30:00Z'
         endpoint:
           type: string
-          example: "/v1/chat/completions"
+          example: '/v1/chat/completions'
         progress:
           type: number
           format: float64
           example: 75.0
-          description: "Completion progress (0.0 to 100)"
+          description: 'Completion progress (0.0 to 100)'
         model_id:
           type: string
-          example: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
-          description: "Model used for processing requests"
+          example: 'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo'
+          description: 'Model used for processing requests'
         output_file_id:
           type: string
-          example: "file-output789xyz012ghi"
+          example: 'file-output789xyz012ghi'
         error_file_id:
           type: string
-          example: "file-errors456def789jkl"
+          example: 'file-errors456def789jkl'
         error:
           type: string
         completed_at:
           type: string
           format: date-time
-          example: "2024-01-15T15:45:30Z"
+          example: '2024-01-15T15:45:30Z'
     BatchJobStatus:
       type: string
       enum:
@@ -4077,5 +4083,5 @@ components:
         - FAILED
         - EXPIRED
         - CANCELLED
-      example: "IN_PROGRESS"
-      description: "Current status of the batch job"
+      example: 'IN_PROGRESS'
+      description: 'Current status of the batch job'
