@@ -616,6 +616,12 @@ paths:
                 from_checkpoint:
                   type: string
                   description: The checkpoint identifier to continue training from a previous fine-tuning job. Format is `{$JOB_ID}` or `{$OUTPUT_MODEL_NAME}` or `{$JOB_ID}:{$STEP}` or `{$OUTPUT_MODEL_NAME}:{$STEP}`. The step value is optional; without it, the final checkpoint will be used.
+                hf_api_token:
+                  type: string
+                  description: The API token for the Hugging Face Hub.
+                hf_output_repo_name:
+                  type: string
+                  description: The name of the Hugging Face repository to upload the fine-tuned model to.
       responses:
         '200':
           description: Fine-tuning job initiated successfully
