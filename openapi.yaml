@@ -2406,7 +2406,8 @@ components:
             - openai/whisper-large-v3
         language:
           type: string
-          description: Optional ISO 639-1 language code. If omitted, language is auto-detected.
+          description: Optional ISO 639-1 language code. If `auto` is provided, language is auto-detected.
+          default: en
           example: en
         prompt:
           type: string
