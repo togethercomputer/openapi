@@ -857,6 +857,80 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
+  /audio/transcriptions:
+    post:
+      tags: ['Audio', 'Transcribe']
+      summary: Create audio transcription request
+      description: Transcribes audio into text
+      operationId: audio-transcriptions
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AudioTranscriptionRequest'
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioTranscriptionResponse'
+        '400':
+          description: 'BadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '429':
+          description: 'RateLimit'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+  /audio/translations:
+    post:
+      tags: ['Audio', 'Translate']
+      summary: Create audio translation request
+      description: Translates audio into English
+      operationId: audio-translations
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AudioTranslationRequest'
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioTranslationResponse'
+        '400':
+          description: 'BadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '429':
+          description: 'RateLimit'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
   /endpoints:
     get:
       tags: ['Endpoints']
@@ -2309,6 +2383,270 @@ components:
           type: boolean
           default: false
           description: 'If true, output is streamed for several characters at a time instead of waiting for the full response. The stream terminates with `data: [DONE]`. If false, return the encoded audio as octet stream'
+
+    AudioTranscriptionRequest:
+      type: object
+      required:
+        - file
+      properties:
+        file:
+          oneOf:
+            - type: string
+              format: binary
+              description: Audio file to transcribe
+            - type: string
+              format: uri
+              description: Public HTTP/HTTPS URL to audio file
+          description: Audio file upload or public HTTP/HTTPS URL. Supported formats .wav, .mp3, .m4a, .webm, .flac.
+        model:
+          type: string
+          description: Model to use for transcription
+          default: openai/whisper-large-v3
+          enum:
+            - openai/whisper-large-v3
+        language:
+          type: string
+          description: Optional ISO 639-1 language code. If omitted, language is auto-detected.
+          example: en
+        prompt:
+          type: string
+          description: Optional text to bias decoding.
+        response_format:
+          type: string
+          description: The format of the response
+          default: json
+          enum:
+            - json
+            - verbose_json
+        temperature:
+          type: number
+          format: float
+          description: Sampling temperature between 0.0 and 1.0
+          default: 0.0
+          minimum: 0.0
+          maximum: 1.0
+        timestamp_granularities:
+          type: string
+          description: Controls level of timestamp detail in verbose_json. Only used when response_format is verbose_json.
+          default: segment
+          enum:
+            - segment
+            - word
+
+    AudioTranscriptionResponse:
+      oneOf:
+        - $ref: '#/components/schemas/AudioTranscriptionJsonResponse'
+        - $ref: '#/components/schemas/AudioTranscriptionVerboseJsonResponse'
+
+    AudioTranscriptionJsonResponse:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          description: The transcribed text
+          example: Hello, world!
+
+    AudioTranscriptionVerboseJsonResponse:
+      type: object
+      required:
+        - task
+        - language
+        - duration
+        - text
+        - segments
+      properties:
+        task:
+          type: string
+          description: The task performed
+          enum:
+            - transcribe
+            - translate
+          example: transcribe
+        language:
+          type: string
+          description: The language of the audio
+          example: english
+        duration:
+          type: number
+          format: float
+          description: The duration of the audio in seconds
+          example: 3.5
+        text:
+          type: string
+          description: The transcribed text
+          example: Hello, world!
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AudioTranscriptionSegment'
+          description: Array of transcription segments
+        words:
+          type: array
+          items:
+            $ref: '#/components/schemas/AudioTranscriptionWord'
+          description: Array of transcription words (only when timestamp_granularities includes 'word')
+
+    AudioTranscriptionSegment:
+      type: object
+      required:
+        - id
+        - start
+        - end
+        - text
+        - tokens
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the segment
+          example: 0
+        start:
+          type: number
+          format: float
+          description: Start time of the segment in seconds
+          example: 0.0
+        end:
+          type: number
+          format: float
+          description: End time of the segment in seconds
+          example: 3.5
+        text:
+          type: string
+          description: The text content of the segment
+          example: Hello, world!
+        tokens:
+          type: array
+          items:
+            type: integer
+          description: Array of token IDs for the segment
+
+    AudioTranscriptionWord:
+      type: object
+      required:
+        - word
+        - start
+        - end
+      properties:
+        word:
+          type: string
+          description: The word
+          example: Hello
+        start:
+          type: number
+          format: float
+          description: Start time of the word in seconds
+          example: 0.0
+        end:
+          type: number
+          format: float
+          description: End time of the word in seconds
+          example: 0.5
+
+    AudioTranslationRequest:
+      type: object
+      required:
+        - file
+      properties:
+        file:
+          oneOf:
+            - type: string
+              format: binary
+              description: Audio file to translate
+            - type: string
+              format: uri
+              description: Public HTTP/HTTPS URL to audio file
+          description: Audio file upload or public HTTP/HTTPS URL. Supported formats .wav, .mp3, .m4a, .webm, .flac.
+        model:
+          type: string
+          description: Model to use for translation
+          default: openai/whisper-large-v3
+          enum:
+            - openai/whisper-large-v3
+        language:
+          type: string
+          description: Target output language. Optional ISO 639-1 language code. If omitted, language is set to English.
+          default: en
+          example: en
+        prompt:
+          type: string
+          description: Optional text to bias decoding.
+        response_format:
+          type: string
+          description: The format of the response
+          default: json
+          enum:
+            - json
+            - verbose_json
+        temperature:
+          type: number
+          format: float
+          description: Sampling temperature between 0.0 and 1.0
+          default: 0.0
+          minimum: 0.0
+          maximum: 1.0
+        timestamp_granularities:
+          type: string
+          description: Controls level of timestamp detail in verbose_json. Only used when response_format is verbose_json.
+          default: segment
+          enum:
+            - segment
+            - word
+
+    AudioTranslationResponse:
+      oneOf:
+        - $ref: '#/components/schemas/AudioTranslationJsonResponse'
+        - $ref: '#/components/schemas/AudioTranslationVerboseJsonResponse'
+
+    AudioTranslationJsonResponse:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          description: The translated text
+          example: Hello, world!
+
+    AudioTranslationVerboseJsonResponse:
+      type: object
+      required:
+        - task
+        - language
+        - duration
+        - text
+        - segments
+      properties:
+        task:
+          type: string
+          description: The task performed
+          enum:
+            - transcribe
+            - translate
+          example: translate
+        language:
+          type: string
+          description: The target language of the translation
+          example: english
+        duration:
+          type: number
+          format: float
+          description: The duration of the audio in seconds
+          example: 3.5
+        text:
+          type: string
+          description: The translated text
+          example: Hello, world!
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AudioTranscriptionSegment'
+          description: Array of translation segments
+        words:
+          type: array
+          items:
+            $ref: '#/components/schemas/AudioTranscriptionWord'
+          description: Array of translation words (only when timestamp_granularities includes 'word')
 
     AudioSpeechStreamResponse:
       oneOf:
