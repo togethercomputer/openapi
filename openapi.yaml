@@ -859,7 +859,7 @@ paths:
                 $ref: '#/components/schemas/ErrorData'
   /audio/transcriptions:
     post:
-      tags: ['Audio', 'Transcribe']
+      tags: ['Audio']
       summary: Create audio transcription request
       description: Transcribes audio into text
       operationId: audio-transcriptions
@@ -896,7 +896,7 @@ paths:
                 $ref: '#/components/schemas/ErrorData'
   /audio/translations:
     post:
-      tags: ['Audio', 'Translate']
+      tags: ['Audio']
       summary: Create audio translation request
       description: Translates audio into English
       operationId: audio-translations
