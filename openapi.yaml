@@ -20,6 +20,58 @@ paths:
       tags: ['Chat']
       summary: Create chat completion
       description: Query a chat model.
+      x-codeSamples:
+        - lang: Python
+          label: OpenAI SDK (Python)
+          source: |
+            import openai
+            import os
+
+            client = openai.OpenAI(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+                base_url="https://api.together.xyz/v1",
+            )
+
+            response = client.chat.completions.create(
+                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": "What are some fun things to do in New York?"},
+                ]
+            )
+            print(response.choices[0].message.content)
+        - lang: TypeScript
+          label: OpenAI SDK (TypeScript)
+          source: |
+            import OpenAI from "openai";
+
+            const client = new OpenAI({
+              apiKey: process.env.TOGETHER_API_KEY,
+              baseURL: "https://api.together.xyz/v1",
+            });
+
+            const response = await client.chat.completions.create({
+              model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+              messages: [
+                { role: "system", content: "You are a helpful assistant." },
+                { role: "user", "content": "What are some fun things to do in New York?" },
+              ],
+            });
+
+            console.log(response.choices[0].message.content);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/chat/completions" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                   "model": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                   "messages": [
+                     {"role": "system", "content": "You are a helpful assistant."},
+                     {"role": "user", "content": "What are some fun things to do in New York?"}
+                   ]
+                 }'
       operationId: chat-completions
       requestBody:
         content:
