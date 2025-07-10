@@ -2495,7 +2495,6 @@ components:
         - start
         - end
         - text
-        - tokens
       properties:
         id:
           type: integer
@@ -2515,11 +2514,6 @@ components:
           type: string
           description: The text content of the segment
           example: Hello, world!
-        tokens:
-          type: array
-          items:
-            type: integer
-          description: Array of token IDs for the segment
 
     AudioTranscriptionWord:
       type: object
