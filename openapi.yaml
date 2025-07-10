@@ -2223,6 +2223,13 @@ components:
           type: string
           enum:
             - chat.completion
+        warnings:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
       required: [choices, id, created, model, object]
 
     ChatCompletionStream:
@@ -2305,7 +2312,13 @@ components:
           allOf:
             - $ref: '#/components/schemas/UsageData'
             - nullable: true
-
+        warnings:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
     AudioSpeechRequest:
       type: object
       required:
