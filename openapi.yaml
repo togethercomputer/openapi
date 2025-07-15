@@ -2439,12 +2439,23 @@ components:
           minimum: 0.0
           maximum: 1.0
         timestamp_granularities:
-          type: string
-          description: Controls level of timestamp detail in verbose_json. Only used when response_format is verbose_json.
+          oneOf:
+            - type: string
+              enum:
+                - segment
+                - word
+            - type: array
+              items:
+                type: string
+                enum:
+                  - segment
+                  - word
+              uniqueItems: true
+              minItems: 1
+              maxItems: 2
+          description: Controls level of timestamp detail in verbose_json. Only used when response_format is verbose_json. Can be a single granularity or an array to get multiple levels.
           default: segment
-          enum:
-            - segment
-            - word
+          example: ["word", "segment"]
 
     AudioTranscriptionResponse:
       oneOf:
@@ -2593,12 +2604,23 @@ components:
           minimum: 0.0
           maximum: 1.0
         timestamp_granularities:
-          type: string
-          description: Controls level of timestamp detail in verbose_json. Only used when response_format is verbose_json.
+          oneOf:
+            - type: string
+              enum:
+                - segment
+                - word
+            - type: array
+              items:
+                type: string
+                enum:
+                  - segment
+                  - word
+              uniqueItems: true
+              minItems: 1
+              maxItems: 2
+          description: Controls level of timestamp detail in verbose_json. Only used when response_format is verbose_json. Can be a single granularity or an array to get multiple levels.
           default: segment
-          enum:
-            - segment
-            - word
+          example: ["word", "segment"]
 
     AudioTranslationResponse:
       oneOf:
