@@ -22,14 +22,13 @@ paths:
       description: Query a chat model.
       x-codeSamples:
         - lang: Python
-          label: OpenAI SDK (Python)
+          label: Together AI SDK (Python)
           source: |
-            import openai
+            from together import Together
             import os
 
-            client = openai.OpenAI(
+            client = Together(
                 api_key=os.environ.get("TOGETHER_API_KEY"),
-                base_url="https://api.together.xyz/v1",
             )
 
             response = client.chat.completions.create(
@@ -39,15 +38,15 @@ paths:
                     {"role": "user", "content": "What are some fun things to do in New York?"},
                 ]
             )
+
             print(response.choices[0].message.content)
         - lang: TypeScript
-          label: OpenAI SDK (TypeScript)
+          label: Together AI SDK (TypeScript)
           source: |
-            import OpenAI from "openai";
+            import Together from "together-ai";
 
-            const client = new OpenAI({
+            const client = new Together({
               apiKey: process.env.TOGETHER_API_KEY,
-              baseURL: "https://api.together.xyz/v1",
             });
 
             const response = await client.chat.completions.create({
@@ -58,7 +57,25 @@ paths:
               ],
             });
 
-            console.log(response.choices[0].message.content);
+            console.log(response.choices[0].message?.content);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.chat.completions.create({
+              model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+              messages: [
+                { role: "system", content: "You are a helpful assistant." },
+                { role: "user", "content": "What are some fun things to do in New York?" },
+              ],
+            });
+
+            console.log(response.choices[0].message?.content);
         - lang: Shell
           label: cURL
           source: |
@@ -130,6 +147,63 @@ paths:
       tags: ['Completion']
       summary: Create completion
       description: Query a language, code, or image model.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.completions.create(
+                model="meta-llama/Llama-2-70b-hf",
+                prompt="The largest city in France is",
+            )
+
+            print(response.choices[0].text)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.completions.create({
+              model: "meta-llama/Llama-2-70b-hf",
+              prompt: "The largest city in France is",
+            });
+
+            console.log(response.choices[0].text);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.completions.create({
+              model: "meta-llama/Llama-2-70b-hf",
+              prompt: "The largest city in France is",
+            });
+
+            console.log(response.choices[0].text);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/completions" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                   "model": "meta-llama/Llama-2-70b-hf",
+                   "prompt": "The largest city in France is"
+                 }'
       operationId: completions
       requestBody:
         content:
@@ -188,6 +262,63 @@ paths:
       tags: ['Embeddings']
       summary: Create embedding
       description: Query an embedding model for a given string of text.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.embeddings.create(
+                model="BAAI/bge-large-en-v1.5",
+                input="New York City",
+            )
+
+            print(response.data[0].embedding)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.embeddings.create({
+              model: "BAAI/bge-large-en-v1.5",
+              input: "New York City",
+            });
+
+            console.log(response.data[0].embedding);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.embeddings.create({
+              model: "BAAI/bge-large-en-v1.5",
+              input: "New York City",
+            });
+
+            console.log(response.data[0].embedding);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/embeddings" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                   "model": "BAAI/bge-large-en-v1.5",
+                   "input": "New York City"
+                 }'
       operationId: embeddings
       requestBody:
         content:
@@ -243,6 +374,55 @@ paths:
       tags: ['Models']
       summary: List all models
       description: Lists all of Together's open-source models
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.models.list()
+
+            for model in response:
+                print(model.id)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.models.list();
+
+            for (const model of response) {
+              console.log(model.id);
+            }
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.models.list();
+
+            for (const model of response) {
+              console.log(model.id);
+            }
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/models" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       operationId: models
       responses:
         '200':
@@ -286,6 +466,47 @@ paths:
       tags: ['Models']
       summary: Upload a custom model or adapter
       description: Upload a custom model or adapter from Hugging Face or S3
+      x-codeSamples:
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.models.upload({
+              model_name: "My-Fine-Tuned-Model",
+              model_source: "https://ml-models.s3.us-west-2.amazonaws.com/models/my-fine-tuned-model.tar.gz",
+            })
+
+            console.log(response);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.models.upload({
+              model_name: "My-Fine-Tuned-Model",
+              model_source: "https://ml-models.s3.us-west-2.amazonaws.com/models/my-fine-tuned-model.tar.gz",
+            })
+
+            console.log(response);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/models" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                    "model_name": "My-Fine-Tuned-Model",
+                    "model_source": "https://ml-models.s3.us-west-2.amazonaws.com/models/my-fine-tuned-model.tar.gz"
+                  }'
       operationId: uploadModel
       requestBody:
         required: true
@@ -342,6 +563,64 @@ paths:
       tags: ['Images']
       summary: Create image
       description: Use an image model to generate an image for a given prompt.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.images.generate(
+                model="black-forest-labs/FLUX.1-schnell",
+                steps=4,
+                prompt="A cartoon of an astronaut riding a horse on the moon",
+            )
+
+            print(response.data[0].url)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.images.create({
+              model: "black-forest-labs/FLUX.1-schnell",
+              prompt: "A cartoon of an astronaut riding a horse on the moon",
+            });
+
+            console.log(response.data[0].url);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.images.create({
+              model: "black-forest-labs/FLUX.1-schnell",
+              prompt: "A cartoon of an astronaut riding a horse on the moon",
+            });
+
+            console.log(response.data[0].url);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/images/generations" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                   "model": "black-forest-labs/FLUX.1-schnell",
+                   "prompt": "A cartoon of an astronaut riding a horse on the moon"
+                 }'
       requestBody:
         required: true
         content:
@@ -440,6 +719,55 @@ paths:
       tags: ['Files']
       summary: List all files
       description: List the metadata for all uploaded data files.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.files.list()
+
+            for file in response.data:
+                print(file.id)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.files.list();
+
+            for (const file of response.data) {
+              console.log(file.id);
+            }
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.files.list();
+
+            for (const file of response.data) {
+              console.log(file.id);
+            }
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/files" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       responses:
         '200':
           description: List of files
@@ -452,6 +780,50 @@ paths:
       tags: ['Files']
       summary: List file
       description: List the metadata for a single uploaded data file.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            file = client.files.retrieve(id="file-id")
+
+            print(file)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const file = await client.files.retrieve("file-id");
+
+            console.log(file);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const file = await client.files.retrieve("file-id");
+
+            console.log(file);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/files/ID" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       parameters:
         - name: id
           in: path
@@ -469,6 +841,49 @@ paths:
       tags: ['Files']
       summary: Delete a file
       description: Delete a previously uploaded data file.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.files.delete(id="file-id")
+
+            print(response)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.files.delete("file-id");
+
+            console.log(response);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.files.delete("file-id");
+
+            console.log(response);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X "DELETE" "https://api.together.xyz/v1/files/file-id" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY"
       parameters:
         - name: id
           in: path
@@ -487,6 +902,52 @@ paths:
       tags: ['Files']
       summary: Get file contents
       description: Get the contents of a single uploaded data file.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            file = client.files.retrieve_content(id="file-id")
+
+            print(file.filename)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.files.content("file-id");
+            const content = await response.text();
+
+            console.log(content);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.files.content("file-id");
+            const content = await response.text();
+
+            console.log(content);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/files/file-id/content" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       parameters:
         - name: id
           in: path
@@ -511,6 +972,56 @@ paths:
       tags: ['Files']
       summary: Upload a file
       description: Upload a file with specified purpose, file name, and file type.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            file_path = os.path.join(current_dir, "data.jsonl")
+            file = client.files.upload(file=file_path)
+
+            print(file.id)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import { upload } from "together-ai/lib/upload"
+            import path from "path";
+            import { fileURLToPath } from "url";
+
+            const __filename = fileURLToPath(import.meta.url);
+            const __dirname = path.dirname(__filename);
+            const filepath = path.join(__dirname, "data.jsonl");
+            const file = await upload(filepath);
+
+            console.log(file.id);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import { upload } from "together-ai/lib/upload"
+            import path from "path";
+            import { fileURLToPath } from "url";
+
+            const __filename = fileURLToPath(import.meta.url);
+            const __dirname = path.dirname(__filename);
+            const filepath = path.join(__dirname, "data.jsonl");
+            const file = await upload(filepath);
+
+            console.log(file.id);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/files/upload" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -F "file=@/path/to/data.jsonl" \
+                 -F "file_name=data.jsonl" \
+                 -F "purpose=fine-tune"
       requestBody:
         required: true
         content:
@@ -565,6 +1076,63 @@ paths:
       tags: ['Fine-tuning']
       summary: Create job
       description: Create a fine-tuning job with the provided model and training data.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.fine_tuning.create(
+                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Reference",
+                training_file="file-id"
+            )
+
+            print(response)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.fineTune.create({
+              model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Reference",
+              training_file: "file-id",
+            });
+
+            console.log(response);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.fineTune.create({
+              model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Reference",
+              training_file: "file-id",
+            });
+
+            console.log(response);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/fine-tunes" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                   "model": "meta-llama/Meta-Llama-3.1-8B-Instruct-Reference",
+                   "training_file": "file-id"
+                 }'
       requestBody:
         required: true
         content:
@@ -685,6 +1253,55 @@ paths:
       tags: ['Fine-tuning']
       summary: List all jobs
       description: List the metadata for all fine-tuning jobs. Returns a list of FinetuneResponseTruncated objects.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.fine_tuning.list()
+
+            for fine_tune in response.data:
+                print(f"ID: {fine_tune.id}, Status: {fine_tune.status}")
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.fineTune.list();
+
+            for (const fineTune of response.data) {
+              console.log(fineTune.id, fineTune.status);
+            }
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.fineTune.list();
+
+            for (const fineTune of response.data) {
+              console.log(fineTune.id, fineTune.status);
+            }
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/fine-tunes" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       responses:
         '200':
           description: List of fine-tune jobs
@@ -697,6 +1314,50 @@ paths:
       tags: ['Fine-tuning']
       summary: List job
       description: List the metadata for a single fine-tuning job.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            fine_tune = client.fine_tuning.retrieve(id="ft-id")
+
+            print(fine_tune)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const fineTune = await client.fineTune.retrieve("ft-id");
+
+            console.log(fineTune);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const fineTune = await client.fineTune.retrieve("ft-id");
+
+            console.log(fineTune);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/fine-tunes/ft-id" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       parameters:
         - name: id
           in: path
@@ -715,6 +1376,50 @@ paths:
       tags: ['Fine-tuning']
       summary: List job events
       description: List the events for a single fine-tuning job.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            events = client.fine_tuning.list_events(id="ft-id")
+
+            print(events)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const events = await client.fineTune.listEvents("ft-id");
+
+            console.log(events);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const events = await client.fineTune.listEvents("ft-id");
+
+            console.log(events);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/fine-tunes/ft-id/events" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       parameters:
         - name: id
           in: path
@@ -733,6 +1438,50 @@ paths:
       tags: ['Fine-tuning']
       summary: List checkpoints
       description: List the checkpoints for a single fine-tuning job.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            checkpoints = client.fine_tuning.list_checkpoints(id="ft-id")
+
+            print(checkpoints)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const checkpoints = await client.fineTune.retrieveCheckpoints("ft-id");
+
+            console.log(checkpoints);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const checkpoints = await client.fineTune.retrieveCheckpoints("ft-id");
+
+            console.log(checkpoints);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/fine-tunes/ft-id/checkpoints" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       parameters:
         - name: id
           in: path
@@ -751,6 +1500,56 @@ paths:
       tags: ['Fine-tuning']
       summary: Download model
       description: Download a compressed fine-tuned model or checkpoint to local disk.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.fine_tuning.download(id="ft-id")
+
+            print(response)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.fineTune.download({
+              ft_id: "ft-id",
+              checkpoint: "merged",
+            });
+
+            console.log(response);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.fineTune.download({
+              ft_id: "ft-id",
+              checkpoint: "merged",
+            });
+
+            console.log(response);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/finetune/download?ft_id=ft-id&checkpoint=merged"
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       parameters:
         - in: query
           name: ft_id
@@ -794,6 +1593,50 @@ paths:
       tags: ['Fine-tuning']
       summary: Cancel job
       description: Cancel a currently running fine-tuning job. Returns a FinetuneResponseTruncated object.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.fine_tuning.cancel(id="ft-id")
+
+            print(response)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.fineTune.cancel("ft-id");
+
+            console.log(response);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.fineTune.cancel("ft-id");
+
+            console.log(response);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/fine-tunes/ft-id/cancel" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       parameters:
         - in: path
           name: id
@@ -817,6 +1660,146 @@ paths:
       tags: ['Rerank']
       summary: Create a rerank request
       description: Query a reranker model
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            documents = [
+                {
+                    "title": "Llama",
+                    "text": "The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era."
+                },
+                {
+                    "title": "Panda",
+                    "text": "The giant panda (Ailuropoda melanoleuca), also known as the panda bear or simply panda, is a bear species endemic to China."
+                },
+                {
+                    "title": "Guanaco",
+                    "text": "The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations."
+                },
+                {
+                    "title": "Wild Bactrian camel",
+                    "text": "The wild Bactrian camel (Camelus ferus) is an endangered species of camel endemic to Northwest China and southwestern Mongolia."
+                }
+            ]
+
+            response = client.rerank.create(
+                model="Salesforce/Llama-Rank-v1",
+                query="What animals can I find near Peru?",
+                documents=documents,
+            )
+
+            for result in response.results:
+                print(f"Rank: {result.index + 1}")
+                print(f"Title: {documents[result.index]['title']}")
+                print(f"Text: {documents[result.index]['text']}")
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const documents = [{
+              "title": "Llama",
+              "text": "The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era."
+            },
+            {
+              "title": "Panda",
+              "text": "The giant panda (Ailuropoda melanoleuca), also known as the panda bear or simply panda, is a bear species endemic to China."
+            },
+            {
+              "title": "Guanaco",
+              "text": "The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations."
+            },
+            {
+              "title": "Wild Bactrian camel",
+              "text": "The wild Bactrian camel (Camelus ferus) is an endangered species of camel endemic to Northwest China and southwestern Mongolia."
+            }];
+
+            const response = await client.rerank({
+              model: "Salesforce/Llama-Rank-v1",
+              query: "What animals can I find near Peru?",
+              documents,
+            });
+
+            for (const result of response.results) {
+              console.log(`Rank: ${result.index + 1}`);
+              console.log(`Title: ${documents[result.index].title}`);
+              console.log(`Text: ${documents[result.index].text}`);
+            }
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const documents = [{
+              "title": "Llama",
+              "text": "The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era."
+            },
+            {
+              "title": "Panda",
+              "text": "The giant panda (Ailuropoda melanoleuca), also known as the panda bear or simply panda, is a bear species endemic to China."
+            },
+            {
+              "title": "Guanaco",
+              "text": "The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations."
+            },
+            {
+              "title": "Wild Bactrian camel",
+              "text": "The wild Bactrian camel (Camelus ferus) is an endangered species of camel endemic to Northwest China and southwestern Mongolia."
+            }];
+
+            const response = await client.rerank({
+              model: "Salesforce/Llama-Rank-v1",
+              query: "What animals can I find near Peru?",
+              documents,
+            });
+
+            for (const result of response.results) {
+              console.log(`Rank: ${result.index + 1}`);
+              console.log(`Title: ${documents[result.index].title}`);
+              console.log(`Text: ${documents[result.index].text}`);
+            }
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/rerank" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                   "model": "Salesforce/Llama-Rank-v1",
+                   "query": "What animals can I find near Peru?",
+                   "documents": [{
+                      "title": "Llama",
+                      "text": "The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era."
+                    },
+                    {
+                      "title": "Panda",
+                      "text": "The giant panda (Ailuropoda melanoleuca), also known as the panda bear or simply panda, is a bear species endemic to China."
+                    },
+                    {
+                      "title": "Guanaco",
+                      "text": "The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations."
+                    },
+                    {
+                      "title": "Wild Bactrian camel",
+                      "text": "The wild Bactrian camel (Camelus ferus) is an endangered species of camel endemic to Northwest China and southwestern Mongolia."
+                    }]
+                 }'
       operationId: rerank
       requestBody:
         content:
@@ -872,6 +1855,84 @@ paths:
       tags: ['Audio']
       summary: Create audio generation request
       description: Generate audio from input text
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.audio.speech.create(
+                model="cartesia/sonic-2",
+                input="The quick brown fox jumps over the lazy dog.",
+                voice="laidback woman",
+            )
+
+            response.stream_to_file("audio.wav")
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            import { createWriteStream } from "fs";
+            import { join } from "path";
+            import { pipeline } from "stream/promises";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.audio.create({
+              model: "cartesia/sonic-2",
+              input: "The quick brown fox jumps over the lazy dog.",
+              voice: "laidback woman",
+            });
+
+            const filepath = join(process.cwd(), "audio.wav");
+            const writeStream = createWriteStream(filepath);
+
+            if (response.body) {
+              await pipeline(response.body, writeStream);
+            }
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            import { createWriteStream } from "fs";
+            import { join } from "path";
+            import { pipeline } from "stream/promises";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.audio.create({
+              model: "cartesia/sonic-2",
+              input: "The quick brown fox jumps over the lazy dog.",
+              voice: "laidback woman",
+            });
+
+            const filepath = join(process.cwd(), "audio.wav");
+            const writeStream = createWriteStream(filepath);
+
+            if (response.body) {
+              await pipeline(response.body, writeStream);
+            }
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/audio/speech" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                   "model": "cartesia/sonic-2",
+                   "input": "The quick brown fox jumps over the lazy dog.",
+                   "voice": "laidback woman"
+                 }' \
+                 --output audio.wav
       operationId: audio-speech
       requestBody:
         content:
@@ -914,6 +1975,74 @@ paths:
       tags: ['Audio']
       summary: Create audio transcription request
       description: Transcribes audio into text
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            file = open("audio.wav", "rb")
+
+            response = client.audio.transcriptions.create(
+                model="openai/whisper-large-v3",
+                file=file,
+            )
+
+            print(response.text)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            import { readFileSync } from "fs";
+            import { join } from "path";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const audioFilePath = join(process.cwd(), "audio.wav");
+            const audioBuffer = readFileSync(audioFilePath);
+            const audioFile = new File([audioBuffer], "audio.wav", { type: "audio/wav" });
+
+            const response = await client.audio.transcriptions.create({
+              model: "openai/whisper-large-v3",
+              file: audioFile,
+            });
+
+            console.log(response.text);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            import { readFileSync } from "fs";
+            import { join } from "path";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const audioFilePath = join(process.cwd(), "audio.wav");
+            const audioBuffer = readFileSync(audioFilePath);
+            const audioFile = new File([audioBuffer], "audio.wav", { type: "audio/wav" });
+
+            const response = await client.audio.transcriptions.create({
+              model: "openai/whisper-large-v3",
+              file: audioFile,
+            });
+
+            console.log(response.text);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/audio/transcriptions" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -F "file=@audio.wav" \
+                 -F "model=openai/whisper-large-v3"
       operationId: audio-transcriptions
       requestBody:
         required: true
@@ -951,6 +2080,78 @@ paths:
       tags: ['Audio']
       summary: Create audio translation request
       description: Translates audio into English
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            file = open("audio.wav", "rb")
+
+            response = client.audio.translations.create(
+                model="openai/whisper-large-v3",
+                file=file,
+                language="es",
+            )
+
+            print(response.text)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            import { readFileSync } from "fs";
+            import { join } from "path";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const audioFilePath = join(process.cwd(), "audio.wav");
+            const audioBuffer = readFileSync(audioFilePath);
+            const audioFile = new File([audioBuffer], "audio.wav", { type: "audio/wav" });
+
+            const response = await client.audio.translations.create({
+              model: "openai/whisper-large-v3",
+              file: audioFile,
+              language: "es"
+            });
+
+            console.log(response.text);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            import { readFileSync } from "fs";
+            import { join } from "path";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const audioFilePath = join(process.cwd(), "audio.wav");
+            const audioBuffer = readFileSync(audioFilePath);
+            const audioFile = new File([audioBuffer], "audio.wav", { type: "audio/wav" });
+
+            const response = await client.audio.translations.create({
+              model: "openai/whisper-large-v3",
+              file: audioFile,
+              language: "es"
+            });
+
+            console.log(response.text);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/audio/transcriptions" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -F "file=@audio.wav" \
+                 -F "model=openai/whisper-large-v3" \
+                 -F "language=es"
       operationId: audio-translations
       requestBody:
         required: true
@@ -988,6 +2189,55 @@ paths:
       tags: ['Endpoints']
       summary: List all endpoints, can be filtered by type
       description: Returns a list of all endpoints associated with your account. You can filter the results by type (dedicated or serverless).
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            endpoints = client.endpoints.list()
+
+            for endpoint in endpoints:
+                print(endpoint.id)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const endpoints = await client.endpoints.list();
+
+            for (const endpoint of endpoints.data) {
+              console.log(endpoint);
+            }
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const endpoints = await client.endpoints.list();
+
+            for (const endpoint of endpoints.data) {
+              console.log(endpoint);
+            }
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/endpoints" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       operationId: listEndpoints
       parameters:
         - name: type
@@ -1046,6 +2296,77 @@ paths:
       tags: ['Endpoints']
       summary: Create a dedicated endpoint, it will start automatically
       description: Creates a new dedicated endpoint for serving models. The endpoint will automatically start after creation. You can deploy any supported model on hardware configurations that meet the model's requirements.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            endpoint = client.endpoints.create(
+                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                hardware="1x_nvidia_a100_80gb_sxm",
+                min_replicas=2,
+                max_replicas=5,
+            )
+
+            print(endpoint.id)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const endpoint = await client.endpoints.create({
+              model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+              hardware: "1x_nvidia_a100_80gb_sxm",
+              autoscaling: {
+                max_replicas: 5,
+                min_replicas: 2,
+              }
+            });
+
+            console.log(endpoint.id);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const endpoint = await client.endpoints.create({
+              model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+              hardware: "1x_nvidia_a100_80gb_sxm",
+              autoscaling: {
+                max_replicas: 5,
+                min_replicas: 2,
+              }
+            });
+
+            console.log(endpoint.id);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/endpoints" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                   "model": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                   "hardware": "1x_nvidia_a100_80gb_sxm",
+                   "autoscaling": {
+                     "max_replicas": 5,
+                     "min_replicas": 2
+                   }
+                 }'
       operationId: createEndpoint
       requestBody:
         required: true
@@ -1078,6 +2399,37 @@ paths:
       tags: ['Endpoints']
       summary: Get endpoint by ID
       description: Retrieves details about a specific endpoint, including its current state, configuration, and scaling settings.
+      x-codeSamples:
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const endpoint = await client.endpoints.retrieve("endpoint-id");
+
+            console.log(endpoint);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const endpoint = await client.endpoints.retrieve("endpoint-id");
+
+            console.log(endpoint);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/endpoints/endpoint-id" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       operationId: getEndpoint
       parameters:
         - name: endpointId
@@ -1117,6 +2469,60 @@ paths:
       tags: ['Endpoints']
       summary: Update endpoint, this can also be used to start or stop a dedicated endpoint
       description: Updates an existing endpoint's configuration. You can modify the display name, autoscaling settings, or change the endpoint's state (start/stop).
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            endpoint = client.endpoints.update(
+                endpoint_id="endpoint-id",
+                state="STOPPED"
+            )
+
+            print(endpoint)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const endpoint = await client.endpoints.update("endpoint-id", {
+              state: "STOPPED"
+            });
+
+            console.log(endpoint);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const endpoint = await client.endpoints.update("endpoint-id", {
+              state: "STOPPED"
+            });
+
+            console.log(endpoint);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X PATCH "https://api.together.xyz/v1/endpoints/endpoint-id" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                   "state": "STOPPED"
+                 }'
       operationId: updateEndpoint
       parameters:
         - name: endpointId
@@ -1182,6 +2588,51 @@ paths:
       tags: ['Endpoints']
       summary: Delete endpoint
       description: Permanently deletes an endpoint. This action cannot be undone.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            endpoint = client.endpoints.delete(
+                endpoint_id="endpoint-id",
+            )
+
+            print(endpoint)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const endpoint = await client.endpoints.delete("endpoint-id");
+
+            console.log(endpoint);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const endpoint = await client.endpoints.delete("endpoint-id");
+
+            console.log(endpoint);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X "DELETE" "https://api.together.xyz/v1/endpoints/endpoint-id" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY"
       operationId: deleteEndpoint
       parameters:
         - name: endpointId
@@ -1221,6 +2672,37 @@ paths:
         Returns a list of available hardware configurations for deploying models.
         When a model parameter is provided, it returns only hardware configurations compatible
         with that model, including their current availability status.
+      x-codeSamples:
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const hardware = await client.hardware.list();
+
+            console.log(hardware);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const hardware = await client.hardware.list();
+
+            console.log(hardware);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/hardware" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       operationId: listHardware
       parameters:
         - name: model
@@ -1270,6 +2752,63 @@ paths:
       description: |
         Executes the given code snippet and returns the output. Without a session_id, a new session will be created to run the code. If you do pass in a valid session_id, the code will be run in that session. This is useful for running multiple code snippets in the same environment, because dependencies and similar things are persisted
         between calls to the same session.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.code_interpreter.run(
+                code="print('Hello world!')",
+                language="python",
+            )
+
+            print(response.data.outputs[0].data);
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.codeInterpreter.execute({
+              code: "print('Hello world!')",
+              language: "python"
+            });
+
+            console.log(response.data?.outputs?.[0]?.data);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.codeInterpreter.execute({
+              code: "print('Hello world!')",
+              language: "python"
+            });
+
+            console.log(response.data?.outputs?.[0]?.data);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/tci/execute" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                   "code": "print(\'Hello world!\')",
+                   "language": "python"
+                 }'
       operationId: tci/execute
       parameters: []
       requestBody:
@@ -1292,6 +2831,41 @@ paths:
       callbacks: {}
       description: |
         Lists all your currently active sessions.
+      x-codeSamples:
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.codeInterpreter.sessions.list();
+
+            for (const session of response.data?.sessions) {
+              console.log(session.id);
+            }
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.codeInterpreter.sessions.list();
+
+            for (const session of response.data?.sessions) {
+              console.log(session.id);
+            }
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/tci/sessions" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       operationId: sessions/list
       parameters: []
       responses:
@@ -1306,6 +2880,51 @@ paths:
       tags: ['Batches']
       summary: List batch jobs
       description: List all batch jobs for the authenticated user
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            batches = client.batches.list_batches()
+
+            for batch in batches:
+                print(batch.id)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const batches = await client.batches.list();
+
+            console.log(batches);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const batches = await client.batches.list();
+
+            console.log(batches);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/batches" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       security:
         - bearerAuth: []
       responses:
@@ -1333,6 +2952,60 @@ paths:
       tags: ['Batches']
       summary: Create a batch job
       description: Create a new batch job with the given input file and endpoint
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            batch = client.batches.create_batch("file_id", endpoint="/v1/chat/completions")
+
+            print(batch.id)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const batch = await client.batches.create({
+              endpoint: "/v1/chat/completions",
+              input_file_id: "file-id",
+            });
+
+            console.log(batch);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const batch = await client.batches.create({
+              endpoint: "/v1/chat/completions",
+              input_file_id: "file-id",
+            });
+
+            console.log(batch);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/batches" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                   "endpoint": "/v1/chat/completions",
+                   "input_file_id": "file-id"
+                 }'
       security:
         - bearerAuth: []
       requestBody:
@@ -1378,6 +3051,50 @@ paths:
       tags: ['Batches']
       summary: Get a batch job
       description: Get details of a batch job by ID
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            batch = client.batches.get_batch("batch_id")
+
+            print(batch)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const batch = await client.batches.retrieve("batch-id");
+
+            console.log(batch);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const batch = await client.batches.retrieve("batch-id");
+
+            console.log(batch);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/batches/ID" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
       security:
         - bearerAuth: []
       parameters:
