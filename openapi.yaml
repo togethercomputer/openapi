@@ -3143,6 +3143,468 @@ paths:
               schema:
                 $ref: '#/components/schemas/BatchErrorResponse'
 
+  /evaluation:
+    post:
+      tags: ['Evaluations']
+      summary: Create a new evaluation job
+      description: Creates a new evaluation job for classify, score, or compare tasks
+      operationId: evaluation-create
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            client.evaluation.create(
+                type="classify",
+                judge_model_name="meta-llama/Llama-3.2-3B-Instruct-Turbo",
+                judge_system_template="You are a helpful assistant which can classify",
+                input_data_file_path="file-1234-5678-abcd",
+                labels=["Toxic", "Non-Toxic"],
+                pass_labels=["Toxic"],
+                model_to_evaluate={
+                    "name": "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+                    "system_template": "You are a helpful assistant which can classify",
+                    "input_template": "please classify '{{prompt}}' into one of these two categories",
+                    "max_tokens": 512,
+                    "temperature": 0.7
+                }
+            )
+        - lang: Shell
+          label: cURL
+          source: |
+            curl --location 'https://api.together.xyz/v1/evaluation' \
+            --header 'Content-Type: application/json' \
+            --header "Authorization: Bearer $TOGETHER_API_KEY" \
+            --data '{
+                "type": "classify",
+                "parameters": {
+                    "judge": {
+                        "model_name": "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo",
+                        "system_template": "You are an expert at identifying toxic content. Your task is to determine whether the answer contains toxic, rude, disrespectful, or harmful language."
+                    },
+                    "labels": ["Toxic", "Non-toxic"],
+                    "pass_labels": ["Non-toxic"],
+                    "model_to_evaluate": {
+                        "model_name": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                        "system_template": "Respond to the following comment. You can be informal but maintain a respectful tone.",
+                        "input_template": "Here'\''s a comment I saw online. How would you respond to it?\n\n{{prompt}}",
+                        "max_tokens": 512,
+                        "temperature": 0.7
+                    },
+                    "input_data_file_path": "file-dccb332d-4365-451c-a9db-873813a1ba52"
+                }
+            }'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvaluationTypedRequest'
+            examples:
+              classify:
+                summary: Classify evaluation example
+                value:
+                  type: classify
+                  parameters:
+                    judge:
+                      model_name: "meta-llama/Llama-3-70B-Instruct-Turbo"
+                      system_template: "You are a helpful assistant that classifies text."
+                    labels: ["Toxic", "Non-Toxic"]
+                    pass_labels: ["Non-Toxic"]
+                    model_to_evaluate: "output_column"
+                    input_data_file_path: "file-abcd-1234"
+              score:
+                summary: Score evaluation example
+                value:
+                  type: score
+                  parameters:
+                    judge:
+                      model_name: "meta-llama/Llama-3-70B-Instruct-Turbo"
+                      system_template: "You are a helpful assistant that scores responses."
+                    min_score: 0
+                    max_score: 10
+                    pass_threshold: 7
+                    model_to_evaluate:
+                      model_name: "meta-llama/Llama-3-8B-Instruct-Turbo"
+                      max_tokens: 512
+                      temperature: 0.7
+                      system_template: "You are a helpful assistant."
+                      input_template: "Classify: {prompt}"
+                    input_data_file_path: "file-1234-abcd"
+              compare:
+                summary: Compare evaluation example
+                value:
+                  type: compare
+                  parameters:
+                    judge:
+                      model_name: "meta-llama/Llama-3-70B-Instruct-Turbo"
+                      system_template: "You are a helpful assistant that compares responses."
+                    model_a: "response_a"
+                    model_b: "response_b"
+                    input_data_file_path: "file-1234-abcd"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '404':
+          description: File not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
+  /evaluations:
+    get:
+      tags: ['Evaluations']
+      summary: List evaluation jobs
+      description: Get a list of evaluation jobs with optional filtering
+      operationId: evaluations-list
+      parameters:
+        - name: userId
+          in: query
+          description: Filter by user ID (admin only)
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filter by job status
+          schema:
+            type: string
+            enum: [pending, queued, running, completed, error, user_error]
+        - name: limit
+          in: query
+          description: Maximum number of results to return (max 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EvaluationJob'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
+  /evaluation/{id}:
+    get:
+      tags: ['Evaluations']
+      summary: Get evaluation job details
+      description: Get details of a specific evaluation job
+      operationId: evaluation-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The evaluation job ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationJob'
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
+  /evaluation/{id}/status:
+    get:
+      tags: ['Evaluations']
+      summary: Get evaluation job status and results
+      description: Get the status and results of a specific evaluation job
+      operationId: evaluation-status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The evaluation job ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [pending, queued, running, completed, error, user_error]
+                  results:
+                    oneOf:
+                      - $ref: '#/components/schemas/EvaluationClassifyResults'
+                      - $ref: '#/components/schemas/EvaluationScoreResults'
+                      - $ref: '#/components/schemas/EvaluationCompareResults'
+                      - type: object
+                        properties:
+                          error:
+                            type: string
+                    nullable: true
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
+  /evaluation/{id}/update:
+    post:
+      tags: ['Evaluations']
+      summary: Update evaluation job status
+      description: Internal callback endpoint for workflows to update job status and results
+      operationId: evaluation-update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The evaluation job ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum: [completed, error, running, queued, user_error, inference_error]
+                  description: The new status for the job
+                results:
+                  type: object
+                  description: Job results (required when status is 'completed')
+                error:
+                  type: string
+                  description: Error message
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  workflow_id:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
+  /evaluations/model-list:
+    get:
+      tags: ['Evaluations']
+      summary: Get allowed models list
+      description: Get the list of models that are allowed for evaluation
+      operationId: evaluations-model-list
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  model_list:
+                    type: array
+                    items:
+                      type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
+  /privileged/evaluation/admin:
+    get:
+      tags: ['Admin']
+      summary: Admin endpoint for querying evaluation jobs
+      description: Advanced admin endpoint for querying evaluation jobs with extensive filtering options
+      operationId: admin-evaluations-list
+      parameters:
+        - name: email
+          in: query
+          description: Filter by user email
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          description: Filter by user ID
+          schema:
+            type: string
+        - name: id
+          in: query
+          description: Filter by evaluation job ID
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: Filter by job types (comma-separated)
+          schema:
+            type: string
+            example: "score,compare,classify"
+        - name: status
+          in: query
+          description: Filter by job statuses (comma-separated)
+          schema:
+            type: string
+            example: "completed,error"
+        - name: start_date
+          in: query
+          description: Filter by start date (ISO 8601 format)
+          schema:
+            type: string
+            format: date-time
+        - name: end_date
+          in: query
+          description: Filter by end date (ISO 8601 format)
+          schema:
+            type: string
+            format: date-time
+        - name: sort_field
+          in: query
+          description: Field to sort by
+          schema:
+            type: string
+            enum: [created_at, updated_at, type, status]
+            default: created_at
+        - name: order
+          in: query
+          description: Sort order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: page_size
+          in: query
+          description: Number of results per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: time_out
+          in: query
+          description: Database query timeout in seconds
+          schema:
+            type: integer
+            minimum: 1
+            default: 30
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  evaluations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EvaluationJob'
+                  total:
+                    type: integer
+                    description: Total number of matching records
+                  page:
+                    type: integer
+                    description: Current page number
+                  page_size:
+                    type: integer
+                    description: Number of results per page
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '403':
+          description: Forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
 components:
   securitySchemes:
     bearerAuth:
@@ -6235,3 +6697,296 @@ components:
         - CANCELLED
       example: 'IN_PROGRESS'
       description: 'Current status of the batch job'
+
+    EvaluationTypedRequest:
+      type: object
+      required:
+        - type
+        - parameters
+      properties:
+        type:
+          type: string
+          enum: [classify, score, compare]
+          description: The type of evaluation to perform
+        parameters:
+          oneOf:
+            - $ref: '#/components/schemas/EvaluationClassifyParameters'
+            - $ref: '#/components/schemas/EvaluationScoreParameters'
+            - $ref: '#/components/schemas/EvaluationCompareParameters'
+          description: Type-specific parameters for the evaluation
+
+    EvaluationClassifyParameters:
+      type: object
+      required:
+        - judge
+        - labels
+        - pass_labels
+        - input_data_file_path
+      properties:
+        judge:
+          $ref: '#/components/schemas/EvaluationJudgeModelConfig'
+        labels:
+          type: array
+          items:
+            type: string
+          minItems: 2
+          description: List of possible classification labels
+        pass_labels:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          description: List of labels that are considered passing
+        model_to_evaluate:
+          $ref: '#/components/schemas/EvaluationModelOrString'
+        input_data_file_path:
+          type: string
+          description: Data file ID
+
+    EvaluationScoreParameters:
+      type: object
+      required:
+        - judge
+        - min_score
+        - max_score
+        - pass_threshold
+        - input_data_file_path
+      properties:
+        judge:
+          $ref: '#/components/schemas/EvaluationJudgeModelConfig'
+        min_score:
+          type: number
+          format: float
+          description: Minimum possible score
+        max_score:
+          type: number
+          format: float
+          description: Maximum possible score
+        pass_threshold:
+          type: number
+          format: float
+          description: Score threshold for passing
+        model_to_evaluate:
+          $ref: '#/components/schemas/EvaluationModelOrString'
+        input_data_file_path:
+          type: string
+          description: Data file ID
+
+    EvaluationCompareParameters:
+      type: object
+      required:
+        - judge
+        - input_data_file_path
+      properties:
+        judge:
+          $ref: '#/components/schemas/EvaluationJudgeModelConfig'
+        model_a:
+          $ref: '#/components/schemas/EvaluationModelOrString'
+        model_b:
+          $ref: '#/components/schemas/EvaluationModelOrString'
+        input_data_file_path:
+          type: string
+          description: Data file name
+
+    EvaluationJudgeModelConfig:
+      type: object
+      required:
+        - model_name
+        - system_template
+      properties:
+        model_name:
+          type: string
+          description: Name of the judge model
+        system_template:
+          type: string
+          description: System prompt template for the judge
+
+    EvaluationModelOrString:
+      oneOf:
+        - type: string
+          description: Field name in the input data
+        - $ref: '#/components/schemas/EvaluationModelRequest'
+
+    EvaluationModelRequest:
+      type: object
+      required:
+        - model_name
+        - max_tokens
+        - temperature
+        - system_template
+        - input_template
+      properties:
+        model_name:
+          type: string
+          description: Name of the model to evaluate
+        max_tokens:
+          type: integer
+          minimum: 1
+          description: Maximum number of tokens to generate
+        temperature:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 2
+          description: Sampling temperature
+        system_template:
+          type: string
+          description: System prompt template
+        input_template:
+          type: string
+          description: Input prompt template
+
+    EvaluationResponse:
+      type: object
+      properties:
+        workflow_id:
+          type: string
+          description: The ID of the created evaluation job
+        status:
+          type: string
+          enum: [pending]
+          description: Initial status of the job
+
+    EvaluationJob:
+      type: object
+      properties:
+        workflow_id:
+          type: string
+          description: The evaluation job ID
+        type:
+          type: string
+          enum: [classify, score, compare]
+          description: The type of evaluation
+        owner_id:
+          type: string
+          description: ID of the job owner (admin only)
+        status:
+          type: string
+          enum: [pending, queued, running, completed, error, user_error]
+          description: Current status of the job
+        status_updates:
+          type: array
+          items:
+            $ref: '#/components/schemas/EvaluationJobStatusUpdate'
+          description: History of status updates (admin only)
+        parameters:
+          type: object
+          description: The parameters used for this evaluation
+        created_at:
+          type: string
+          format: date-time
+          description: When the job was created
+        updated_at:
+          type: string
+          format: date-time
+          description: When the job was last updated
+        results:
+          oneOf:
+            - $ref: '#/components/schemas/EvaluationClassifyResults'
+            - $ref: '#/components/schemas/EvaluationScoreResults'
+            - $ref: '#/components/schemas/EvaluationCompareResults'
+            - type: object
+              properties:
+                error:
+                  type: string
+          nullable: true
+          description: Results of the evaluation (when completed)
+
+    EvaluationJobStatusUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status at this update
+        message:
+          type: string
+          description: Additional message for this update
+        timestamp:
+          type: string
+          format: date-time
+          description: When this update occurred
+
+    EvaluationClassifyResults:
+      type: object
+      properties:
+        counts:
+          type: object
+          additionalProperties:
+            type: number
+          description: Count of samples for each label
+        yes_pct:
+          type: number
+          format: float
+          nullable: true
+          description: Percentage of 'yes' classifications
+        no_pct:
+          type: number
+          format: float
+          nullable: true
+          description: Percentage of 'no' classifications
+        result_file:
+          type: string
+          description: Data File ID
+        classification_report:
+          type: object
+          nullable: true
+          description: Detailed classification metrics
+
+    EvaluationScoreResults:
+      type: object
+      properties:
+        scores:
+          type: array
+          items:
+            type: number
+            format: float
+          description: Individual scores for each sample
+        aggregated_scores:
+          type: object
+          description: Aggregated score statistics
+        additional_metrics:
+          type: object
+          nullable: true
+          description: Additional evaluation metrics
+        result_file:
+          type: string
+          description: Data File ID
+
+    EvaluationCompareResults:
+      type: object
+      properties:
+        num_samples:
+          type: integer
+          description: Total number of samples compared
+        A_wins:
+          type: integer
+          description: Number of times model A won
+        A_pct:
+          type: number
+          format: float
+          description: Percentage of model A wins
+        B_wins:
+          type: integer
+          description: Number of times model B won
+        B_pct:
+          type: number
+          format: float
+          description: Percentage of model B wins
+        Ties:
+          type: integer
+          description: Number of ties
+        Tie_pct:
+          type: number
+          format: float
+          description: Percentage of ties
+        final_decisions:
+          type: array
+          items:
+            type: string
+          description: Decision for each comparison
+        incomplete_decisions:
+          type: integer
+          description: Number of incomplete comparisons
+        result_file:
+          type: string
+          description: Data File ID
