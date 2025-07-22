@@ -1,0 +1,59 @@
+name: Sync OpenAPI to docs repo
+permissions:
+  contents: read
+  pull-requests: write
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'openapi.yaml'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout openapi-spec
+        uses: actions/checkout@v4
+
+      - name: Set up SSH for deploy key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DOCS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+        
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
+
+      - name: Clone docs repo
+        run: |
+          git clone git@github.com:togethercomputer/mintlify-docs.git
+          cp openapi.yaml mintlify-docs/openapi.yaml
+
+      - name: Commit and push update
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd mintlify-docs
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet openapi.yaml; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          BRANCH_NAME=sync-openapi-$(date +%s)
+
+          git checkout -b "$BRANCH_NAME"
+          git add openapi.yaml
+          git commit -m "Sync OpenAPI spec from openapi-spec"
+          git push origin "$BRANCH_NAME"
+
+          gh pr create \
+            --title "Sync OpenAPI spec" \
+            --body "This PR syncs openapi.yaml from openapi repo." \
+            --base main \
+            --head "$BRANCH_NAME"
