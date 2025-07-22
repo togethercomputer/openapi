@@ -1,0 +1,37 @@
+name: Sync OpenAPI to docs repo
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'openapi.yaml'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout openapi-spec
+        uses: actions/checkout@v4
+
+      - name: Set up SSH for deploy key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DOCS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Clone docs repo
+        run: |
+          git clone git@github.com:togethercomputer/mintlify-docs.git
+          cp openapi.yaml mintlify-docs/openapi.yaml
+
+      - name: Commit and push update
+        run: |
+          cd mintlify-docs
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add openapi.yaml
+          git commit -m "Sync OpenAPI spec from openapi-spec repo"
+          git push origin main
