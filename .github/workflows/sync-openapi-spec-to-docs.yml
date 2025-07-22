@@ -1,4 +1,7 @@
 name: Sync OpenAPI to docs repo
+permissions:
+  contents: read
+  pull-requests: write
 
 on:
   push:
