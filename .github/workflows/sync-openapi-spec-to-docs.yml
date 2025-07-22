@@ -20,6 +20,9 @@ jobs:
           echo "${{ secrets.DOCS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
+        
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
 
       - name: Clone docs repo
         run: |
@@ -27,11 +30,27 @@ jobs:
           cp openapi.yaml mintlify-docs/openapi.yaml
 
       - name: Commit and push update
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd mintlify-docs
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          if git diff --quiet openapi.yaml; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          BRANCH_NAME=sync-openapi-$(date +%s)
+
+          git checkout -b "$BRANCH_NAME"
           git add openapi.yaml
-          git commit -m "Sync OpenAPI spec from openapi-spec repo"
-          git push origin main
+          git commit -m "Sync OpenAPI spec from openapi-spec"
+          git push origin "$BRANCH_NAME"
+
+          gh pr create \
+            --title "Sync OpenAPI spec" \
+            --body "This PR syncs openapi.yaml from openapi repo." \
+            --base main \
+            --head "$BRANCH_NAME"
