@@ -3281,11 +3281,6 @@ paths:
       description: Get a list of evaluation jobs with optional filtering
       operationId: evaluations-list
       parameters:
-        - name: userId
-          in: query
-          description: Filter by user ID (admin only)
-          schema:
-            type: string
         - name: status
           in: query
           description: Filter by job status
@@ -3484,127 +3479,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /privileged/evaluation/admin:
-    get:
-      tags: ['Admin']
-      summary: Admin endpoint for querying evaluation jobs
-      description: Advanced admin endpoint for querying evaluation jobs with extensive filtering options
-      operationId: admin-evaluations-list
-      parameters:
-        - name: email
-          in: query
-          description: Filter by user email
-          schema:
-            type: string
-        - name: user_id
-          in: query
-          description: Filter by user ID
-          schema:
-            type: string
-        - name: id
-          in: query
-          description: Filter by evaluation job ID
-          schema:
-            type: string
-        - name: type
-          in: query
-          description: Filter by job types (comma-separated)
-          schema:
-            type: string
-            example: "score,compare,classify"
-        - name: status
-          in: query
-          description: Filter by job statuses (comma-separated)
-          schema:
-            type: string
-            example: "completed,error"
-        - name: start_date
-          in: query
-          description: Filter by start date (ISO 8601 format)
-          schema:
-            type: string
-            format: date-time
-        - name: end_date
-          in: query
-          description: Filter by end date (ISO 8601 format)
-          schema:
-            type: string
-            format: date-time
-        - name: sort_field
-          in: query
-          description: Field to sort by
-          schema:
-            type: string
-            enum: [created_at, updated_at, type, status]
-            default: created_at
-        - name: order
-          in: query
-          description: Sort order
-          schema:
-            type: string
-            enum: [asc, desc]
-            default: desc
-        - name: page
-          in: query
-          description: Page number for pagination
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-        - name: page_size
-          in: query
-          description: Number of results per page
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-        - name: time_out
-          in: query
-          description: Database query timeout in seconds
-          schema:
-            type: integer
-            minimum: 1
-            default: 30
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  evaluations:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/EvaluationJob'
-                  total:
-                    type: integer
-                    description: Total number of matching records
-                  page:
-                    type: integer
-                    description: Current page number
-                  page_size:
-                    type: integer
-                    description: Number of results per page
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-        '403':
-          description: Forbidden - admin access required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
 components:
   securitySchemes:
     bearerAuth:
@@ -6961,32 +6835,12 @@ components:
         A_wins:
           type: integer
           description: Number of times model A won
-        A_pct:
-          type: number
-          format: float
-          description: Percentage of model A wins
         B_wins:
           type: integer
           description: Number of times model B won
-        B_pct:
-          type: number
-          format: float
-          description: Percentage of model B wins
         Ties:
           type: integer
           description: Number of ties
-        Tie_pct:
-          type: number
-          format: float
-          description: Percentage of ties
-        final_decisions:
-          type: array
-          items:
-            type: string
-          description: Decision for each comparison
-        incomplete_decisions:
-          type: integer
-          description: Number of incomplete comparisons
-        result_file:
+        result_file_id:
           type: string
           description: Data File ID
