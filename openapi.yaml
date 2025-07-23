@@ -385,9 +385,9 @@ paths:
                 api_key=os.environ.get("TOGETHER_API_KEY"),
             )
 
-            response = client.models.list()
+            models = client.models.list()
 
-            for model in response:
+            for model in models:
                 print(model.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
@@ -398,9 +398,9 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.models.list();
+            const models = await client.models.list();
 
-            for (const model of response) {
+            for (const model of models) {
               console.log(model.id);
             }
         - lang: JavaScript
@@ -412,9 +412,9 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.models.list();
+            const models = await client.models.list();
 
-            for (const model of response) {
+            for (const model of models) {
               console.log(model.id);
             }
         - lang: Shell
@@ -3348,6 +3348,14 @@ components:
           logprobs:
             $ref: '#/components/schemas/LogprobsPart'
 
+    InferenceWarning:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+
     UsageData:
       type: object
       properties:
@@ -3995,10 +4003,7 @@ components:
         warnings:
           type: array
           items:
-            type: object
-            properties:
-              message:
-                type: string
+            $ref: '#/components/schemas/InferenceWarning'
       required: [choices, id, created, model, object]
 
     ChatCompletionStream:
@@ -4084,10 +4089,7 @@ components:
         warnings:
           type: array
           items:
-            type: object
-            properties:
-              message:
-                type: string
+            $ref: '#/components/schemas/InferenceWarning'
     AudioSpeechRequest:
       type: object
       required:
