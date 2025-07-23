@@ -3348,6 +3348,14 @@ components:
           logprobs:
             $ref: '#/components/schemas/LogprobsPart'
 
+    InferenceWarning:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+
     UsageData:
       type: object
       properties:
@@ -3995,10 +4003,7 @@ components:
         warnings:
           type: array
           items:
-            type: object
-            properties:
-              message:
-                type: string
+            $ref: '#/components/schemas/InferenceWarning'
       required: [choices, id, created, model, object]
 
     ChatCompletionStream:
@@ -4084,10 +4089,7 @@ components:
         warnings:
           type: array
           items:
-            type: object
-            properties:
-              message:
-                type: string
+            $ref: '#/components/schemas/InferenceWarning'
     AudioSpeechRequest:
       type: object
       required:
