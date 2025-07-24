@@ -3368,6 +3368,7 @@ paths:
                   status:
                     type: string
                     enum: [pending, queued, running, completed, error, user_error]
+                    example: completed
                   results:
                     oneOf:
                       - $ref: '#/components/schemas/EvaluationClassifyResults'
@@ -6731,6 +6732,7 @@ components:
         workflow_id:
           type: string
           description: The ID of the created evaluation job
+          example: "eval-1234-1244513"
         status:
           type: string
           enum: [pending]
@@ -6747,7 +6749,7 @@ components:
           type: string
           enum: [classify, score, compare]
           description: The type of evaluation
-          example: classift
+          example: classify
         owner_id:
           type: string
           description: ID of the job owner (admin only)
@@ -6755,7 +6757,7 @@ components:
           type: string
           enum: [pending, queued, running, completed, error, user_error]
           description: Current status of the job
-          example: pending
+          example: completed
         status_updates:
           type: array
           items:
@@ -6806,11 +6808,6 @@ components:
     EvaluationClassifyResults:
       type: object
       properties:
-        counts:
-          type: object
-          additionalProperties:
-            type: number
-          description: Count of samples for each label
         generation_fail_count:
           type: number
           format: integer
