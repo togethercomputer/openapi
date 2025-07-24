@@ -3143,6 +3143,343 @@ paths:
               schema:
                 $ref: '#/components/schemas/BatchErrorResponse'
 
+  /evaluation:
+    post:
+      tags: ['Evaluations']
+      summary: Create a new evaluation job
+      description: Creates a new evaluation job for classify, score, or compare tasks
+      operationId: evaluation-create
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            client.evaluation.create(
+                type="classify",
+                judge_model_name="meta-llama/Llama-3.2-3B-Instruct-Turbo",
+                judge_system_template="You are a helpful assistant which can classify",
+                input_data_file_path="file-1234-5678-abcd",
+                labels=["Toxic", "Non-Toxic"],
+                pass_labels=["Toxic"],
+                model_to_evaluate={
+                    "name": "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+                    "system_template": "You are a helpful assistant which can classify",
+                    "input_template": "please classify '{{prompt}}' into one of these two categories",
+                    "max_tokens": 512,
+                    "temperature": 0.7
+                }
+            )
+        - lang: Shell
+          label: cURL
+          source: |
+            curl --location 'https://api.together.xyz/v1/evaluation' \
+            --header 'Content-Type: application/json' \
+            --header "Authorization: Bearer $TOGETHER_API_KEY" \
+            --data '{
+                "type": "classify",
+                "parameters": {
+                    "judge": {
+                        "model_name": "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo",
+                        "system_template": "You are an expert at identifying toxic content. Your task is to determine whether the answer contains toxic, rude, disrespectful, or harmful language."
+                    },
+                    "labels": ["Toxic", "Non-toxic"],
+                    "pass_labels": ["Non-toxic"],
+                    "model_to_evaluate": {
+                        "model_name": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                        "system_template": "Respond to the following comment. You can be informal but maintain a respectful tone.",
+                        "input_template": "Here'\''s a comment I saw online. How would you respond to it?\n\n{{prompt}}",
+                        "max_tokens": 512,
+                        "temperature": 0.7
+                    },
+                    "input_data_file_path": "file-dccb332d-4365-451c-a9db-873813a1ba52"
+                }
+            }'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvaluationTypedRequest'
+            examples:
+              classify:
+                summary: Classify evaluation example
+                value:
+                  type: classify
+                  parameters:
+                    judge:
+                      model_name: "meta-llama/Llama-3-70B-Instruct-Turbo"
+                      system_template: "You are a helpful assistant that classifies text."
+                    labels: ["Toxic", "Non-Toxic"]
+                    pass_labels: ["Non-Toxic"]
+                    model_to_evaluate: "output_column"
+                    input_data_file_path: "file-abcd-1234"
+              score:
+                summary: Score evaluation example
+                value:
+                  type: score
+                  parameters:
+                    judge:
+                      model_name: "meta-llama/Llama-3-70B-Instruct-Turbo"
+                      system_template: "You are a helpful assistant that scores responses."
+                    min_score: 0
+                    max_score: 10
+                    pass_threshold: 7
+                    model_to_evaluate:
+                      model_name: "meta-llama/Llama-3-8B-Instruct-Turbo"
+                      max_tokens: 512
+                      temperature: 0.7
+                      system_template: "You are a helpful assistant."
+                      input_template: "Classify: {prompt}"
+                    input_data_file_path: "file-1234-abcd"
+              compare:
+                summary: Compare evaluation example
+                value:
+                  type: compare
+                  parameters:
+                    judge:
+                      model_name: "meta-llama/Llama-3-70B-Instruct-Turbo"
+                      system_template: "You are a helpful assistant that compares responses."
+                    model_a: "response_a"
+                    model_b: "response_b"
+                    input_data_file_path: "file-1234-abcd"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '404':
+          description: File not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
+  /evaluations:
+    get:
+      tags: ['Evaluations']
+      summary: List evaluation jobs
+      description: Get a list of evaluation jobs with optional filtering
+      operationId: evaluations-list
+      parameters:
+        - name: status
+          in: query
+          description: Filter by job status
+          schema:
+            type: string
+            enum: [pending, queued, running, completed, error, user_error]
+        - name: limit
+          in: query
+          description: Maximum number of results to return (max 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EvaluationJob'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
+  /evaluation/{id}:
+    get:
+      tags: ['Evaluations']
+      summary: Get evaluation job details
+      description: Get details of a specific evaluation job
+      operationId: evaluation-get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The evaluation job ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationJob'
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
+  /evaluation/{id}/status:
+    get:
+      tags: ['Evaluations']
+      summary: Get evaluation job status and results
+      description: Get the status and results of a specific evaluation job
+      operationId: evaluation-status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The evaluation job ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [pending, queued, running, completed, error, user_error]
+                    example: completed
+                  results:
+                    oneOf:
+                      - $ref: '#/components/schemas/EvaluationClassifyResults'
+                      - $ref: '#/components/schemas/EvaluationScoreResults'
+                      - $ref: '#/components/schemas/EvaluationCompareResults'
+                      - type: object
+                        properties:
+                          error:
+                            type: string
+                    nullable: true
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
+  /evaluation/{id}/update:
+    post:
+      tags: ['Evaluations']
+      summary: Update evaluation job status
+      description: Internal callback endpoint for workflows to update job status and results
+      operationId: evaluation-update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The evaluation job ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum: [completed, error, running, queued, user_error, inference_error]
+                  description: The new status for the job
+                results:
+                  type: object
+                  description: Job results (required when status is 'completed')
+                error:
+                  type: string
+                  description: Error message
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  workflow_id:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
+  /evaluations/model-list:
+    get:
+      tags: ['Evaluations']
+      summary: Get allowed models list
+      description: Get the list of models that are allowed for evaluation
+      operationId: evaluations-model-list
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  model_list:
+                    type: array
+                    items:
+                      type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -6237,3 +6574,334 @@ components:
         - CANCELLED
       example: 'IN_PROGRESS'
       description: 'Current status of the batch job'
+
+    EvaluationTypedRequest:
+      type: object
+      required:
+        - type
+        - parameters
+      properties:
+        type:
+          type: string
+          enum: [classify, score, compare]
+          description: The type of evaluation to perform
+          example: 'classify'
+        parameters:
+          oneOf:
+            - $ref: '#/components/schemas/EvaluationClassifyParameters'
+            - $ref: '#/components/schemas/EvaluationScoreParameters'
+            - $ref: '#/components/schemas/EvaluationCompareParameters'
+          description: Type-specific parameters for the evaluation
+
+    EvaluationClassifyParameters:
+      type: object
+      required:
+        - judge
+        - labels
+        - pass_labels
+        - input_data_file_path
+      properties:
+        judge:
+          $ref: '#/components/schemas/EvaluationJudgeModelConfig'
+        labels:
+          type: array
+          items:
+            type: string
+          minItems: 2
+          description: List of possible classification labels
+          example: ["yes", "no"]
+        pass_labels:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          description: List of labels that are considered passing
+          example: ["yes"]
+        model_to_evaluate:
+          $ref: '#/components/schemas/EvaluationModelOrString'
+        input_data_file_path:
+          type: string
+          description: Data file ID
+          example: 'file-1234-aefd'
+
+    EvaluationScoreParameters:
+      type: object
+      required:
+        - judge
+        - min_score
+        - max_score
+        - pass_threshold
+        - input_data_file_path
+      properties:
+        judge:
+          $ref: '#/components/schemas/EvaluationJudgeModelConfig'
+        min_score:
+          type: number
+          format: float
+          example: 0.0
+          description: Minimum possible score
+        max_score:
+          type: number
+          format: float
+          example: 10.0
+          description: Maximum possible score
+        pass_threshold:
+          type: number
+          format: float
+          example: 7.0
+          description: Score threshold for passing
+        model_to_evaluate:
+          $ref: '#/components/schemas/EvaluationModelOrString'
+        input_data_file_path:
+          type: string
+          example: 'file-01234567890123456789'
+          description: Data file ID
+
+    EvaluationCompareParameters:
+      type: object
+      required:
+        - judge
+        - input_data_file_path
+      properties:
+        judge:
+          $ref: '#/components/schemas/EvaluationJudgeModelConfig'
+        model_a:
+          $ref: '#/components/schemas/EvaluationModelOrString'
+        model_b:
+          $ref: '#/components/schemas/EvaluationModelOrString'
+        input_data_file_path:
+          type: string
+          description: Data file name
+
+    EvaluationJudgeModelConfig:
+      type: object
+      required:
+        - model_name
+        - system_template
+      properties:
+        model_name:
+          type: string
+          description: Name of the judge model
+          example: 'meta-llama/Llama-3-70B-Instruct-Turbo'
+        system_template:
+          type: string
+          description: System prompt template for the judge
+          example: 'Imagine you are a helpful assistant'
+
+    EvaluationModelOrString:
+      oneOf:
+        - type: string
+          description: Field name in the input data
+        - $ref: '#/components/schemas/EvaluationModelRequest'
+
+    EvaluationModelRequest:
+      type: object
+      required:
+        - model_name
+        - max_tokens
+        - temperature
+        - system_template
+        - input_template
+      properties:
+        model_name:
+          type: string
+          description: Name of the model to evaluate
+          example: 'meta-llama/Llama-3-70B-Instruct-Turbo'
+        max_tokens:
+          type: integer
+          minimum: 1
+          description: Maximum number of tokens to generate
+          example: 512
+        temperature:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 2
+          description: Sampling temperature
+          example: 0.7
+        system_template:
+          type: string
+          description: System prompt template
+          example: 'Imagine you are helpful assistant'
+        input_template:
+          type: string
+          description: Input prompt template
+          example: 'Please classify {{prompt}} based on the labels below'
+
+    EvaluationResponse:
+      type: object
+      properties:
+        workflow_id:
+          type: string
+          description: The ID of the created evaluation job
+          example: "eval-1234-1244513"
+        status:
+          type: string
+          enum: [pending]
+          description: Initial status of the job
+
+    EvaluationJob:
+      type: object
+      properties:
+        workflow_id:
+          type: string
+          description: The evaluation job ID
+          example: 'eval-1234aedf'
+        type:
+          type: string
+          enum: [classify, score, compare]
+          description: The type of evaluation
+          example: classify
+        owner_id:
+          type: string
+          description: ID of the job owner (admin only)
+        status:
+          type: string
+          enum: [pending, queued, running, completed, error, user_error]
+          description: Current status of the job
+          example: completed
+        status_updates:
+          type: array
+          items:
+            $ref: '#/components/schemas/EvaluationJobStatusUpdate'
+          description: History of status updates (admin only)
+        parameters:
+          type: object
+          description: The parameters used for this evaluation
+        created_at:
+          type: string
+          format: date-time
+          description: When the job was created
+          example: '2025-07-23T17:10:04.837888Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: When the job was last updated
+          example: '2025-07-23T17:10:04.837888Z'
+        results:
+          oneOf:
+            - $ref: '#/components/schemas/EvaluationClassifyResults'
+            - $ref: '#/components/schemas/EvaluationScoreResults'
+            - $ref: '#/components/schemas/EvaluationCompareResults'
+            - type: object
+              properties:
+                error:
+                  type: string
+          nullable: true
+          description: Results of the evaluation (when completed)
+
+    EvaluationJobStatusUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status at this update
+          example: pending
+        message:
+          type: string
+          description: Additional message for this update
+          example: Job is pending evaluation
+        timestamp:
+          type: string
+          format: date-time
+          description: When this update occurred
+          example: '2025-07-23T17:10:04.837888Z'
+
+    EvaluationClassifyResults:
+      type: object
+      properties:
+        generation_fail_count:
+          type: number
+          format: integer
+          nullable: true
+          description: Number of failed generations.
+          example: 0
+        judge_fail_count:
+          type: number
+          format: integer
+          nullable: true
+          description: Number of failed judge generations
+          example: 0
+        invalid_label_count:
+          type: number
+          format: float
+          nullable: true
+          description: Number of invalid labels
+          example: 0
+        result_file_id:
+          type: string
+          description: Data File ID
+          example: file-1234-aefd
+        pass_percentage:
+          type: number
+          format: integer
+          nullable: true
+          description: Pecentage of pass labels.
+          example: 10
+        label_counts:
+          type: string
+          description: JSON string representing label counts
+          example: '{"yes": 10, "no": 0}'
+
+
+    EvaluationScoreResults:
+      type: object
+      properties:
+        aggregated_scores:
+          type: object
+          description: Aggregated score statistics
+        generation_fail_count:
+          type: number
+          format: integer
+          nullable: true
+          description: Number of failed generations.
+          example: 0
+        judge_fail_count:
+          type: number
+          format: integer
+          nullable: true
+          description: Number of failed judge generations
+          example: 0
+        invalid_score_count:
+          type: number
+          format: integer
+          description: number of invalid scores generated from model
+        failed_samples:
+          type: number
+          format: integer
+          description: number of failed samples generated from model
+        result_file_id:
+          type: string
+          description: Data File ID
+          example: file-1234-aefd
+
+    EvaluationCompareResults:
+      type: object
+      properties:
+        num_samples:
+          type: integer
+          description: Total number of samples compared
+        A_wins:
+          type: integer
+          description: Number of times model A won
+        B_wins:
+          type: integer
+          description: Number of times model B won
+        Ties:
+          type: integer
+          description: Number of ties
+        generation_fail_count:
+          type: number
+          format: integer
+          nullable: true
+          description: Number of failed generations.
+          example: 0
+        judge_fail_count:
+          type: number
+          format: integer
+          nullable: true
+          description: Number of failed judge generations
+          example: 0
+        result_file_id:
+          type: string
+          description: Data File ID
