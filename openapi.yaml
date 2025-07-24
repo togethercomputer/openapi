@@ -6582,6 +6582,7 @@ components:
           type: string
           enum: [classify, score, compare]
           description: The type of evaluation to perform
+          example: 'classify'
         parameters:
           oneOf:
             - $ref: '#/components/schemas/EvaluationClassifyParameters'
@@ -6605,17 +6606,20 @@ components:
             type: string
           minItems: 2
           description: List of possible classification labels
+          example: ["yes", "no"]
         pass_labels:
           type: array
           items:
             type: string
           minItems: 1
           description: List of labels that are considered passing
+          example: ["yes"]
         model_to_evaluate:
           $ref: '#/components/schemas/EvaluationModelOrString'
         input_data_file_path:
           type: string
           description: Data file ID
+          example: 'file-1234-aefd'
 
     EvaluationScoreParameters:
       type: object
@@ -6631,19 +6635,23 @@ components:
         min_score:
           type: number
           format: float
+          example: 0.0
           description: Minimum possible score
         max_score:
           type: number
           format: float
+          example: 10.0
           description: Maximum possible score
         pass_threshold:
           type: number
           format: float
+          example: 7.0
           description: Score threshold for passing
         model_to_evaluate:
           $ref: '#/components/schemas/EvaluationModelOrString'
         input_data_file_path:
           type: string
+          example: 'file-01234567890123456789'
           description: Data file ID
 
     EvaluationCompareParameters:
@@ -6671,9 +6679,11 @@ components:
         model_name:
           type: string
           description: Name of the judge model
+          example: 'meta-llama/Llama-3-70B-Instruct-Turbo'
         system_template:
           type: string
           description: System prompt template for the judge
+          example: 'Imagine you are a helpful assistant'
 
     EvaluationModelOrString:
       oneOf:
@@ -6693,22 +6703,27 @@ components:
         model_name:
           type: string
           description: Name of the model to evaluate
+          example: 'meta-llama/Llama-3-70B-Instruct-Turbo'
         max_tokens:
           type: integer
           minimum: 1
           description: Maximum number of tokens to generate
+          example: 512
         temperature:
           type: number
           format: float
           minimum: 0
           maximum: 2
           description: Sampling temperature
+          example: 0.7
         system_template:
           type: string
           description: System prompt template
+          example: 'Imagine you are helpful assistant'
         input_template:
           type: string
           description: Input prompt template
+          example: 'Please classify {{prompt}} based on the labels below'
 
     EvaluationResponse:
       type: object
@@ -6727,10 +6742,12 @@ components:
         workflow_id:
           type: string
           description: The evaluation job ID
+          example: 'eval-1234aedf'
         type:
           type: string
           enum: [classify, score, compare]
           description: The type of evaluation
+          example: classift
         owner_id:
           type: string
           description: ID of the job owner (admin only)
@@ -6738,6 +6755,7 @@ components:
           type: string
           enum: [pending, queued, running, completed, error, user_error]
           description: Current status of the job
+          example: pending
         status_updates:
           type: array
           items:
@@ -6750,10 +6768,12 @@ components:
           type: string
           format: date-time
           description: When the job was created
+          example: '2025-07-23T17:10:04.837888Z'
         updated_at:
           type: string
           format: date-time
           description: When the job was last updated
+          example: '2025-07-23T17:10:04.837888Z'
         results:
           oneOf:
             - $ref: '#/components/schemas/EvaluationClassifyResults'
@@ -6772,13 +6792,16 @@ components:
         status:
           type: string
           description: The status at this update
+          example: pending
         message:
           type: string
           description: Additional message for this update
+          example: Job is pending evaluation
         timestamp:
           type: string
           format: date-time
           description: When this update occurred
+          example: '2025-07-23T17:10:04.837888Z'
 
     EvaluationClassifyResults:
       type: object
@@ -6788,43 +6811,70 @@ components:
           additionalProperties:
             type: number
           description: Count of samples for each label
-        yes_pct:
+        generation_fail_count:
+          type: number
+          format: integer
+          nullable: true
+          description: Number of failed generations.
+          example: 0
+        judge_fail_count:
+          type: number
+          format: integer
+          nullable: true
+          description: Number of failed judge generations
+          example: 0
+        invalid_label_count:
           type: number
           format: float
           nullable: true
-          description: Percentage of 'yes' classifications
-        no_pct:
-          type: number
-          format: float
-          nullable: true
-          description: Percentage of 'no' classifications
-        result_file:
+          description: Number of invalid labels
+          example: 0
+        result_file_id:
           type: string
           description: Data File ID
-        classification_report:
-          type: object
+          example: file-1234-aefd
+        pass_percentage:
+          type: number
+          format: integer
           nullable: true
-          description: Detailed classification metrics
+          description: Pecentage of pass labels.
+          example: 10
+        label_counts:
+          type: string
+          description: JSON string representing label counts
+          example: '{"yes": 10, "no": 0}'
+
 
     EvaluationScoreResults:
       type: object
       properties:
-        scores:
-          type: array
-          items:
-            type: number
-            format: float
-          description: Individual scores for each sample
         aggregated_scores:
           type: object
           description: Aggregated score statistics
-        additional_metrics:
-          type: object
+        generation_fail_count:
+          type: number
+          format: integer
           nullable: true
-          description: Additional evaluation metrics
-        result_file:
+          description: Number of failed generations.
+          example: 0
+        judge_fail_count:
+          type: number
+          format: integer
+          nullable: true
+          description: Number of failed judge generations
+          example: 0
+        invalid_score_count:
+          type: number
+          format: integer
+          description: number of invalid scores generated from model
+        failed_samples:
+          type: number
+          format: integer
+          description: number of failed samples generated from model
+        result_file_id:
           type: string
           description: Data File ID
+          example: file-1234-aefd
 
     EvaluationCompareResults:
       type: object
@@ -6841,6 +6891,18 @@ components:
         Ties:
           type: integer
           description: Number of ties
+        generation_fail_count:
+          type: number
+          format: integer
+          nullable: true
+          description: Number of failed generations.
+          example: 0
+        judge_fail_count:
+          type: number
+          format: integer
+          nullable: true
+          description: Number of failed judge generations
+          example: 0
         result_file_id:
           type: string
           description: Data File ID
