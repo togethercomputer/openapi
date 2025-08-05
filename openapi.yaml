@@ -3213,41 +3213,41 @@ paths:
                   type: classify
                   parameters:
                     judge:
-                      model_name: "meta-llama/Llama-3-70B-Instruct-Turbo"
-                      system_template: "You are a helpful assistant that classifies text."
-                    labels: ["Toxic", "Non-Toxic"]
-                    pass_labels: ["Non-Toxic"]
-                    model_to_evaluate: "output_column"
-                    input_data_file_path: "file-abcd-1234"
+                      model_name: 'meta-llama/Llama-3-70B-Instruct-Turbo'
+                      system_template: 'You are a helpful assistant that classifies text.'
+                    labels: ['Toxic', 'Non-Toxic']
+                    pass_labels: ['Non-Toxic']
+                    model_to_evaluate: 'output_column'
+                    input_data_file_path: 'file-abcd-1234'
               score:
                 summary: Score evaluation example
                 value:
                   type: score
                   parameters:
                     judge:
-                      model_name: "meta-llama/Llama-3-70B-Instruct-Turbo"
-                      system_template: "You are a helpful assistant that scores responses."
+                      model_name: 'meta-llama/Llama-3-70B-Instruct-Turbo'
+                      system_template: 'You are a helpful assistant that scores responses.'
                     min_score: 0
                     max_score: 10
                     pass_threshold: 7
                     model_to_evaluate:
-                      model_name: "meta-llama/Llama-3-8B-Instruct-Turbo"
+                      model_name: 'meta-llama/Llama-3-8B-Instruct-Turbo'
                       max_tokens: 512
                       temperature: 0.7
-                      system_template: "You are a helpful assistant."
-                      input_template: "Classify: {prompt}"
-                    input_data_file_path: "file-1234-abcd"
+                      system_template: 'You are a helpful assistant.'
+                      input_template: 'Classify: {prompt}'
+                    input_data_file_path: 'file-1234-abcd'
               compare:
                 summary: Compare evaluation example
                 value:
                   type: compare
                   parameters:
                     judge:
-                      model_name: "meta-llama/Llama-3-70B-Instruct-Turbo"
-                      system_template: "You are a helpful assistant that compares responses."
-                    model_a: "response_a"
-                    model_b: "response_b"
-                    input_data_file_path: "file-1234-abcd"
+                      model_name: 'meta-llama/Llama-3-70B-Instruct-Turbo'
+                      system_template: 'You are a helpful assistant that compares responses.'
+                    model_a: 'response_a'
+                    model_b: 'response_b'
+                    input_data_file_path: 'file-1234-abcd'
       responses:
         '200':
           description: Successful response
@@ -3367,7 +3367,8 @@ paths:
                 properties:
                   status:
                     type: string
-                    enum: [pending, queued, running, completed, error, user_error]
+                    enum:
+                      [pending, queued, running, completed, error, user_error]
                     example: completed
                   results:
                     oneOf:
@@ -3416,7 +3417,15 @@ paths:
               properties:
                 status:
                   type: string
-                  enum: [completed, error, running, queued, user_error, inference_error]
+                  enum:
+                    [
+                      completed,
+                      error,
+                      running,
+                      queued,
+                      user_error,
+                      inference_error,
+                    ]
                   description: The new status for the job
                 results:
                   type: object
@@ -4130,6 +4139,11 @@ components:
           type: string
           description: The name of the moderation model used to validate tokens. Choose from the available moderation models found [here](https://docs.together.ai/docs/inference-models#moderation-models).
           example: 'safety_model_name'
+        reasoning_effort:
+          type: string
+          enum: ['low', 'medium', 'high']
+          description: Controls the level of reasoning effort the model should apply when generating responses. Higher values may result in more thoughtful and detailed responses but may take longer to generate.
+          example: 'medium'
 
     ChatCompletionMessageParam:
       oneOf:
@@ -4563,7 +4577,7 @@ components:
               maxItems: 2
           description: Controls level of timestamp detail in verbose_json. Only used when response_format is verbose_json. Can be a single granularity or an array to get multiple levels.
           default: segment
-          example: ["word", "segment"]
+          example: ['word', 'segment']
 
     AudioTranscriptionResponse:
       oneOf:
@@ -4728,7 +4742,7 @@ components:
               maxItems: 2
           description: Controls level of timestamp detail in verbose_json. Only used when response_format is verbose_json. Can be a single granularity or an array to get multiple levels.
           default: segment
-          example: ["word", "segment"]
+          example: ['word', 'segment']
 
     AudioTranslationResponse:
       oneOf:
@@ -6609,14 +6623,14 @@ components:
             type: string
           minItems: 2
           description: List of possible classification labels
-          example: ["yes", "no"]
+          example: ['yes', 'no']
         pass_labels:
           type: array
           items:
             type: string
           minItems: 1
           description: List of labels that are considered passing
-          example: ["yes"]
+          example: ['yes']
         model_to_evaluate:
           $ref: '#/components/schemas/EvaluationModelOrString'
         input_data_file_path:
@@ -6734,7 +6748,7 @@ components:
         workflow_id:
           type: string
           description: The ID of the created evaluation job
-          example: "eval-1234-1244513"
+          example: 'eval-1234-1244513'
         status:
           type: string
           enum: [pending]
@@ -6842,7 +6856,6 @@ components:
           type: string
           description: JSON string representing label counts
           example: '{"yes": 10, "no": 0}'
-
 
     EvaluationScoreResults:
       type: object
