@@ -4527,8 +4527,6 @@ components:
           oneOf:
             - $ref: '#/components/schemas/AudioFileBinary'
             - $ref: '#/components/schemas/AudioFileUrl'
-          discriminator:
-            propertyName: type
           description: Audio file upload or public HTTP/HTTPS URL. Supported formats .wav, .mp3, .m4a, .webm, .flac.
         model:
           type: string
@@ -6918,25 +6916,11 @@ components:
           description: Data File ID
 
     AudioFileBinary:
-      type: object
-      required: [type, data]
-      properties:
-        type:
-          type: string
-          enum: [binary]
-        data:
-          type: string
-          format: binary
-          description: Audio file to transcribe
+      type: string
+      format: binary
+      description: Audio file to transcribe
 
     AudioFileUrl:
-      type: object
-      required: [type, url]
-      properties:
-        type:
-          type: string
-          enum: [url]
-        url:
-          type: string
-          format: uri
-          description: Public HTTPS URL to audio file
+      type: string
+      format: uri
+      description: Public HTTPS URL to audio file
