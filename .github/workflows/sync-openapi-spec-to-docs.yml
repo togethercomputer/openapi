@@ -7,7 +7,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'openapi.yaml'
+      - "openapi.yaml"
 
 jobs:
   sync:
@@ -23,7 +23,7 @@ jobs:
           echo "${{ secrets.DOCS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
-        
+
       - name: Install GitHub CLI
         run: sudo apt-get install -y gh
 
@@ -34,7 +34,7 @@ jobs:
 
       - name: Commit and push update
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.DOCS_REPO_PAT }}
         run: |
           cd mintlify-docs
           git config user.name "github-actions[bot]"
@@ -57,3 +57,4 @@ jobs:
             --body "This PR syncs openapi.yaml from openapi repo." \
             --base main \
             --head "$BRANCH_NAME"
+
