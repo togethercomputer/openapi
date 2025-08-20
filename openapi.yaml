@@ -159,8 +159,9 @@ paths:
             )
 
             response = client.completions.create(
-                model="meta-llama/Llama-2-70b-hf",
+                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
                 prompt="The largest city in France is",
+                max_tokens=1
             )
 
             print(response.choices[0].text)
@@ -174,8 +175,9 @@ paths:
             });
 
             const response = await client.completions.create({
-              model: "meta-llama/Llama-2-70b-hf",
+              model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
               prompt: "The largest city in France is",
+              max_tokens: 1
             });
 
             console.log(response.choices[0].text);
@@ -189,8 +191,9 @@ paths:
             });
 
             const response = await client.completions.create({
-              model: "meta-llama/Llama-2-70b-hf",
+              model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
               prompt: "The largest city in France is",
+              max_tokens: 1
             });
 
             console.log(response.choices[0].text);
@@ -201,8 +204,9 @@ paths:
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json" \
                  -d '{
-                   "model": "meta-llama/Llama-2-70b-hf",
-                   "prompt": "The largest city in France is"
+                   "model": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                   "prompt": "The largest city in France is",
+                   "max_tokens": 1
                  }'
       operationId: completions
       requestBody:
