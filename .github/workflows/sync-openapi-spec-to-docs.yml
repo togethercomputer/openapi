@@ -7,7 +7,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'openapi.yaml'
+      - "openapi.yaml"
 
 jobs:
   sync:
@@ -31,7 +31,7 @@ jobs:
 
       - name: Commit and push update
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.DOCS_REPO_PAT }}
         run: |
           cd mintlify-docs
           git config user.name "github-actions[bot]"
