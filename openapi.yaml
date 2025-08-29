@@ -159,8 +159,9 @@ paths:
             )
 
             response = client.completions.create(
-                model="meta-llama/Llama-2-70b-hf",
+                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
                 prompt="The largest city in France is",
+                max_tokens=1
             )
 
             print(response.choices[0].text)
@@ -174,8 +175,9 @@ paths:
             });
 
             const response = await client.completions.create({
-              model: "meta-llama/Llama-2-70b-hf",
+              model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
               prompt: "The largest city in France is",
+              max_tokens: 1
             });
 
             console.log(response.choices[0].text);
@@ -189,8 +191,9 @@ paths:
             });
 
             const response = await client.completions.create({
-              model: "meta-llama/Llama-2-70b-hf",
+              model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
               prompt: "The largest city in France is",
+              max_tokens: 1
             });
 
             console.log(response.choices[0].text);
@@ -201,8 +204,9 @@ paths:
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json" \
                  -d '{
-                   "model": "meta-llama/Llama-2-70b-hf",
-                   "prompt": "The largest city in France is"
+                   "model": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                   "prompt": "The largest city in France is",
+                   "max_tokens": 1
                  }'
       operationId: completions
       requestBody:
@@ -1236,6 +1240,12 @@ paths:
                 from_checkpoint:
                   type: string
                   description: The checkpoint identifier to continue training from a previous fine-tuning job. Format is `{$JOB_ID}` or `{$OUTPUT_MODEL_NAME}` or `{$JOB_ID}:{$STEP}` or `{$OUTPUT_MODEL_NAME}:{$STEP}`. The step value is optional; without it, the final checkpoint will be used.
+                from_hf_model:
+                  type: string
+                  description: The Hugging Face Hub repo to start training from. Should be as close as possible to the base model (specified by the `model` argument) in terms of architecture and size.
+                hf_model_revision:
+                  type: string
+                  description: The revision of the Hugging Face Hub model to continue training from. E.g., hf_model_revision=main (default, used if the argument is not provided) or hf_model_revision='607a30d783dfa663caf39e06633721c8d4cfcd7e' (specific commit).
                 hf_api_token:
                   type: string
                   description: The API token for the Hugging Face Hub.
@@ -3213,41 +3223,41 @@ paths:
                   type: classify
                   parameters:
                     judge:
-                      model_name: "meta-llama/Llama-3-70B-Instruct-Turbo"
-                      system_template: "You are a helpful assistant that classifies text."
-                    labels: ["Toxic", "Non-Toxic"]
-                    pass_labels: ["Non-Toxic"]
-                    model_to_evaluate: "output_column"
-                    input_data_file_path: "file-abcd-1234"
+                      model_name: 'meta-llama/Llama-3-70B-Instruct-Turbo'
+                      system_template: 'You are a helpful assistant that classifies text.'
+                    labels: ['Toxic', 'Non-Toxic']
+                    pass_labels: ['Non-Toxic']
+                    model_to_evaluate: 'output_column'
+                    input_data_file_path: 'file-abcd-1234'
               score:
                 summary: Score evaluation example
                 value:
                   type: score
                   parameters:
                     judge:
-                      model_name: "meta-llama/Llama-3-70B-Instruct-Turbo"
-                      system_template: "You are a helpful assistant that scores responses."
+                      model_name: 'meta-llama/Llama-3-70B-Instruct-Turbo'
+                      system_template: 'You are a helpful assistant that scores responses.'
                     min_score: 0
                     max_score: 10
                     pass_threshold: 7
                     model_to_evaluate:
-                      model_name: "meta-llama/Llama-3-8B-Instruct-Turbo"
+                      model_name: 'meta-llama/Llama-3-8B-Instruct-Turbo'
                       max_tokens: 512
                       temperature: 0.7
-                      system_template: "You are a helpful assistant."
-                      input_template: "Classify: {prompt}"
-                    input_data_file_path: "file-1234-abcd"
+                      system_template: 'You are a helpful assistant.'
+                      input_template: 'Classify: {prompt}'
+                    input_data_file_path: 'file-1234-abcd'
               compare:
                 summary: Compare evaluation example
                 value:
                   type: compare
                   parameters:
                     judge:
-                      model_name: "meta-llama/Llama-3-70B-Instruct-Turbo"
-                      system_template: "You are a helpful assistant that compares responses."
-                    model_a: "response_a"
-                    model_b: "response_b"
-                    input_data_file_path: "file-1234-abcd"
+                      model_name: 'meta-llama/Llama-3-70B-Instruct-Turbo'
+                      system_template: 'You are a helpful assistant that compares responses.'
+                    model_a: 'response_a'
+                    model_b: 'response_b'
+                    input_data_file_path: 'file-1234-abcd'
       responses:
         '200':
           description: Successful response
@@ -3367,7 +3377,8 @@ paths:
                 properties:
                   status:
                     type: string
-                    enum: [pending, queued, running, completed, error, user_error]
+                    enum:
+                      [pending, queued, running, completed, error, user_error]
                     example: completed
                   results:
                     oneOf:
@@ -3416,7 +3427,15 @@ paths:
               properties:
                 status:
                   type: string
-                  enum: [completed, error, running, queued, user_error, inference_error]
+                  enum:
+                    [
+                      completed,
+                      error,
+                      running,
+                      queued,
+                      user_error,
+                      inference_error,
+                    ]
                   description: The new status for the job
                 results:
                   oneOf:
@@ -4132,6 +4151,11 @@ components:
           type: string
           description: The name of the moderation model used to validate tokens. Choose from the available moderation models found [here](https://docs.together.ai/docs/inference-models#moderation-models).
           example: 'safety_model_name'
+        reasoning_effort:
+          type: string
+          enum: ['low', 'medium', 'high']
+          description: Controls the level of reasoning effort the model should apply when generating responses. Higher values may result in more thoughtful and detailed responses but may take longer to generate.
+          example: 'medium'
 
     ChatCompletionMessageParam:
       oneOf:
@@ -4513,12 +4537,8 @@ components:
       properties:
         file:
           oneOf:
-            - type: string
-              format: binary
-              description: Audio file to transcribe
-            - type: string
-              format: uri
-              description: Public HTTP/HTTPS URL to audio file
+            - $ref: '#/components/schemas/AudioFileBinary'
+            - $ref: '#/components/schemas/AudioFileUrl'
           description: Audio file upload or public HTTP/HTTPS URL. Supported formats .wav, .mp3, .m4a, .webm, .flac.
         model:
           type: string
@@ -4565,7 +4585,7 @@ components:
               maxItems: 2
           description: Controls level of timestamp detail in verbose_json. Only used when response_format is verbose_json. Can be a single granularity or an array to get multiple levels.
           default: segment
-          example: ["word", "segment"]
+          example: ['word', 'segment']
 
     AudioTranscriptionResponse:
       oneOf:
@@ -4730,7 +4750,7 @@ components:
               maxItems: 2
           description: Controls level of timestamp detail in verbose_json. Only used when response_format is verbose_json. Can be a single granularity or an array to get multiple levels.
           default: segment
-          example: ["word", "segment"]
+          example: ['word', 'segment']
 
     AudioTranslationResponse:
       oneOf:
@@ -5413,6 +5433,10 @@ components:
           type: string
         from_checkpoint:
           type: string
+        from_hf_model:
+          type: string
+        hf_model_revision:
+          type: string
 
     FinetuneResponseTruncated:
       type: object
@@ -5533,6 +5557,12 @@ components:
         from_checkpoint:
           type: string
           description: Checkpoint used to continue training
+        from_hf_model:
+          type: string
+          description: Hugging Face Hub repo to start training from
+        hf_model_revision:
+          type: string
+          description: The revision of the Hugging Face Hub model to continue training from
 
     FinetuneJobStatus:
       type: string
@@ -6611,14 +6641,14 @@ components:
             type: string
           minItems: 2
           description: List of possible classification labels
-          example: ["yes", "no"]
+          example: ['yes', 'no']
         pass_labels:
           type: array
           items:
             type: string
           minItems: 1
           description: List of labels that are considered passing
-          example: ["yes"]
+          example: ['yes']
         model_to_evaluate:
           $ref: '#/components/schemas/EvaluationModelOrString'
         input_data_file_path:
@@ -6736,7 +6766,7 @@ components:
         workflow_id:
           type: string
           description: The ID of the created evaluation job
-          example: "eval-1234-1244513"
+          example: 'eval-1234-1244513'
         status:
           type: string
           enum: [pending]
@@ -6846,7 +6876,6 @@ components:
           description: JSON string representing label counts
           example: '{"yes": 10, "no": 0}'
 
-
     EvaluationScoreResults:
       type: object
       properties:
@@ -6917,3 +6946,13 @@ components:
         result_file_id:
           type: string
           description: Data File ID
+
+    AudioFileBinary:
+      type: string
+      format: binary
+      description: Audio file to transcribe
+
+    AudioFileUrl:
+      type: string
+      format: uri
+      description: Public HTTPS URL to audio file
