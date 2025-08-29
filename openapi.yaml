@@ -3419,8 +3419,10 @@ paths:
                   enum: [completed, error, running, queued, user_error, inference_error]
                   description: The new status for the job
                 results:
-                  type: object
-                  description: Job results (required when status is 'completed')
+                  oneOf:
+                    - $ref: '#/components/schemas/EvaluationClassifyResults'
+                    - $ref: '#/components/schemas/EvaluationScoreResults'
+                    - $ref: '#/components/schemas/EvaluationCompareResults'
                 error:
                   type: string
                   description: Error message
@@ -6768,6 +6770,7 @@ components:
         parameters:
           type: object
           description: The parameters used for this evaluation
+          additionalProperties: true
         created_at:
           type: string
           format: date-time
@@ -6849,7 +6852,16 @@ components:
       properties:
         aggregated_scores:
           type: object
-          description: Aggregated score statistics
+          properties:
+            mean_score:
+              type: number
+              format: float
+            std_score:
+              type: number
+              format: float
+            pass_percentage:
+              type: number
+              format: float
         generation_fail_count:
           type: number
           format: integer
