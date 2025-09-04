@@ -1381,6 +1381,85 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinetuneResponse'
+    delete:
+      tags: ['Fine-tuning']
+      summary: Delete a fine-tune job
+      description: Delete a fine-tuning job.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.fine_tuning.delete(id="ft-id")
+
+            print(response)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.fineTune.delete("ft-id");
+
+            console.log(response);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.fineTune.delete("ft-id");
+
+            console.log(response);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X "DELETE" "https://api.together.xyz/v1/fine-tunes/ft-id?force=false" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: force
+          in: query
+          required: true
+          schema:
+            type: boolean
+            default: null
+      responses:
+        '200':
+          description: Fine-tune job deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinetuneDeleteResponse'
+        '404':
+          description: Fine-tune job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
   /fine-tunes/{id}/events:
     get:
       tags: ['Fine-tuning']
@@ -5563,7 +5642,12 @@ components:
         hf_model_revision:
           type: string
           description: The revision of the Hugging Face Hub model to continue training from
-
+    FinetuneDeleteResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Message indicating the result of the deletion
     FinetuneJobStatus:
       type: string
       enum:
