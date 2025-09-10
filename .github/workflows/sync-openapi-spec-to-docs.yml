@@ -49,7 +49,7 @@ jobs:
 
           git checkout -b "$BRANCH_NAME"
           git add openapi.yaml
-          git commit -m "Sync OpenAPI spec from openapi-spec"
+          git commit -m "Sync OpenAPI spec"
           git push origin "$BRANCH_NAME"
 
           gh pr create \
