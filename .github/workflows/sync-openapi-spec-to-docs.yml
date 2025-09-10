@@ -54,7 +54,7 @@ jobs:
 
           gh pr create \
             --title "Sync OpenAPI spec" \
-            --body "This PR syncs openapi.yaml from openapi repo." \
+            --body "This PR syncs the openapi.yaml from the togethercomputer/openapi repository." \
             --base main \
-            --head "$BRANCH_NAME"
-
+            --head "$BRANCH_NAME" \
+            --assignee ryanto,zainhas,Nutlope
