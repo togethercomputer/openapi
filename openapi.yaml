@@ -4082,6 +4082,9 @@ components:
               type: string
             name:
               type: string
+        reasoning:
+          type: string
+          nullable: true
     ChatCompletionTool:
       type: object
       required: [type, function]
