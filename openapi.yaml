@@ -4975,6 +4975,9 @@ components:
               required:
                 - arguments
                 - name
+            reasoning:
+              type: string
+              nullable: true
 
     EmbeddingsRequest:
       type: object
