@@ -1075,6 +1075,159 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
+  /files/multipart/initiate:
+    post:
+      tags: ['Files']
+      summary: Initiate multipart upload
+      description: Initiate a multipart upload for large files (>5GB) with presigned URLs for each part.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.files.multipart.initiate(
+                filename="large_dataset.jsonl",
+                file_size=7516192768,  # 7GB
+                num_parts=75,
+                purpose="fine-tune",
+                file_type="jsonl"
+            )
+
+            print(response.upload_id)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultipartInitiateRequest'
+      responses:
+        '200':
+          description: Multipart upload initiated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultipartInitiateResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
+  /files/multipart/complete:
+    post:
+      tags: ['Files']
+      summary: Complete multipart upload
+      description: Complete a multipart upload by providing ETags for all uploaded parts.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.files.multipart.complete(
+                upload_id="upload-123",
+                file_id="file-456",
+                parts=[
+                    {"PartNumber": 1, "ETag": "etag1"},
+                    {"PartNumber": 2, "ETag": "etag2"}
+                ]
+            )
+
+            print(response.id)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultipartCompleteRequest'
+      responses:
+        '200':
+          description: Multipart upload completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
+  /files/multipart/abort:
+    post:
+      tags: ['Files']
+      summary: Abort multipart upload
+      description: Abort a multipart upload and clean up any uploaded parts.
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            client.files.multipart.abort(
+                upload_id="upload-123",
+                file_id="file-456"
+            )
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultipartAbortRequest'
+      responses:
+        '200':
+          description: Multipart upload aborted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
   /fine-tunes:
     post:
       tags: ['Fine-tuning']
@@ -5437,6 +5590,127 @@ components:
           type: string
         deleted:
           type: boolean
+    
+    MultipartInitiateRequest:
+      type: object
+      required:
+        - filename
+        - file_size
+        - num_parts
+        - purpose
+        - file_type
+      properties:
+        filename:
+          type: string
+          description: The name of the file being uploaded
+          example: 'large_dataset.jsonl'
+        file_size:
+          type: integer
+          format: int64
+          description: Total size of the file in bytes
+          example: 7516192768
+        num_parts:
+          type: integer
+          description: Number of parts to split the file into (1-250)
+          minimum: 1
+          maximum: 250
+          example: 75
+        purpose:
+          $ref: '#/components/schemas/FilePurpose'
+        file_type:
+          $ref: '#/components/schemas/FileType'
+    
+    MultipartInitiateResponse:
+      type: object
+      required:
+        - upload_id
+        - file_id
+        - parts
+      properties:
+        upload_id:
+          type: string
+          description: Unique identifier for this multipart upload session
+          example: 'upload-abc123'
+        file_id:
+          type: string
+          description: File ID for the upload
+          example: 'file-def456'
+        parts:
+          type: array
+          description: Presigned URLs and headers for each part
+          items:
+            $ref: '#/components/schemas/PartInfo'
+    
+    PartInfo:
+      type: object
+      required:
+        - PartNumber
+        - URL
+      properties:
+        PartNumber:
+          type: integer
+          description: Part number (1-based)
+          example: 1
+        URL:
+          type: string
+          description: Presigned URL for uploading this part
+          example: 'https://s3.amazonaws.com/...'
+        Headers:
+          type: object
+          additionalProperties:
+            type: string
+          description: Headers to include with the upload request
+          example:
+            Authorization: 'Bearer token'
+    
+    MultipartCompleteRequest:
+      type: object
+      required:
+        - upload_id
+        - file_id
+        - parts
+      properties:
+        upload_id:
+          type: string
+          description: Upload session ID from initiate response
+          example: 'upload-abc123'
+        file_id:
+          type: string
+          description: File ID from initiate response
+          example: 'file-def456'
+        parts:
+          type: array
+          description: ETags for each successfully uploaded part
+          items:
+            type: object
+            required:
+              - PartNumber
+              - ETag
+            properties:
+              PartNumber:
+                type: integer
+                description: Part number (1-based)
+                example: 1
+              ETag:
+                type: string
+                description: ETag returned from S3 part upload
+                example: '"abc123def456"'
+    
+    MultipartAbortRequest:
+      type: object
+      required:
+        - upload_id
+        - file_id
+      properties:
+        upload_id:
+          type: string
+          description: Upload session ID from initiate response
+          example: 'upload-abc123'
+        file_id:
+          type: string
+          description: File ID from initiate response
+          example: 'file-def456'
+    
     FinetuneResponse:
       type: object
       required:
