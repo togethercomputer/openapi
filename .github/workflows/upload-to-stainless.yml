@@ -12,27 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check for "Skip Readme"
-        id: check_rdme
-        uses: actions/github-script@v7
-        with:
-          script: |
-            // Get the list of PRs merged into the current commit
-            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              commit_sha: context.sha,
-            });
-
-            // Check if any PR has the "Skip Readme" label
-            if (prs.length > 0) {
-              const pr = prs[0]; // Assume the first PR is the relevant one
-              const hasIgnoreLabel = pr.labels.some(label => label.name === 'Skip Readme');
-              return hasIgnoreLabel;
-            }
-            return false;
-          result-encoding: string
-
       # Upload OpenAPI spec to Stainless
       - uses: stainless-api/upload-openapi-spec-action@main
         with:
@@ -40,10 +19,3 @@ jobs:
           input_path: 'openapi.yaml'
           output_path: 'openapi.documented.yaml'
           project_name: 'togetherai'
-
-      # Conditionally run the rdme step
-      - name: Update Readme docs
-        if: steps.check_rdme.outputs.result != 'true'
-        uses: readmeio/rdme@v8
-        with:
-          rdme: openapi "openapi.yaml" --key=${{ secrets.README_TOKEN }} --id=${{ secrets.README_DEFINITION_ID }}
