@@ -24,9 +24,6 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      - name: Install GitHub CLI
-        run: sudo apt-get install -y gh
-
       - name: Clone docs repo
         run: |
           git clone git@github.com:togethercomputer/mintlify-docs.git
