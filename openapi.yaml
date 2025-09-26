@@ -7124,6 +7124,7 @@ components:
         - temperature
         - system_template
         - input_template
+        - model_source
       properties:
         model:
           type: string
