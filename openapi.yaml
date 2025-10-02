@@ -3534,6 +3534,7 @@ paths:
 
   /evaluations:
     get:
+      tags: ['Evaluations']
       summary: List evaluation jobs
       description: Get a list of evaluation jobs with optional filtering
       operationId: evaluations-list
