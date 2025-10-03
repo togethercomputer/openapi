@@ -3391,6 +3391,7 @@ paths:
       summary: Create a new evaluation job
       description: Creates a new evaluation job for classify, score, or compare tasks
       operationId: evaluation-create
+      x-stainless-resource-name: evaluationCreate
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (Python)
@@ -3537,6 +3538,7 @@ paths:
       summary: List evaluation jobs
       description: Get a list of evaluation jobs with optional filtering
       operationId: evaluations-list
+      x-stainless-resource-name: evaluationList
       parameters:
         - name: status
           in: query
@@ -5590,7 +5592,7 @@ components:
           type: string
         deleted:
           type: boolean
-    
+
     MultipartInitiateRequest:
       type: object
       required:
@@ -5619,7 +5621,7 @@ components:
           $ref: '#/components/schemas/FilePurpose'
         file_type:
           $ref: '#/components/schemas/FileType'
-    
+
     MultipartInitiateResponse:
       type: object
       required:
@@ -5640,7 +5642,7 @@ components:
           description: Presigned URLs and headers for each part
           items:
             $ref: '#/components/schemas/PartInfo'
-    
+
     PartInfo:
       type: object
       required:
@@ -5662,7 +5664,7 @@ components:
           description: Headers to include with the upload request
           example:
             Authorization: 'Bearer token'
-    
+
     MultipartCompleteRequest:
       type: object
       required:
@@ -5695,7 +5697,7 @@ components:
                 type: string
                 description: ETag returned from S3 part upload
                 example: '"abc123def456"'
-    
+
     MultipartAbortRequest:
       type: object
       required:
@@ -5710,7 +5712,7 @@ components:
           type: string
           description: File ID from initiate response
           example: 'file-def456'
-    
+
     FinetuneResponse:
       type: object
       required:
