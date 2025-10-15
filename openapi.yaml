@@ -7108,7 +7108,7 @@ components:
           description: "Bearer/API token for external judge models."
         external_base_url:
           type: string
-          description: "Base URL for external judge models."
+          description: "Base URL for external judge models. Must be OpenAI-compatible base URL."
 
     EvaluationModelOrString:
       oneOf:
@@ -7159,7 +7159,7 @@ components:
           description: "Bearer/API token for external models."
         external_base_url:
           type: string
-          description: "Base URL for external models."
+          description: "Base URL for external models. Must be OpenAI-compatible base URL"
 
     EvaluationResponse:
       type: object
