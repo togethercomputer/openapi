@@ -11,11 +11,109 @@ info:
     name: MIT
     url: https://github.com/togethercomputer/openapi/blob/main/LICENSE
 servers:
-  - url: https://api.together.xyz/v1
+  - url: https://api.together.xyz/
 security:
   - bearerAuth: []
 paths:
-  /chat/completions:
+  /v2/videos/status:
+    get:
+      tags: ['Video']
+      summary: Fetch video metadata
+      description: Fetch video metadata
+      operationId: retrieveVideo
+      x-codeSamples:
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.videos.retrieve(videoId)
+
+            console.log(response.status);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.videos.retrieve(videoId)
+
+            console.log(response.status);
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Identifier of video from create response.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoResource'
+        '400':
+          description: Invalid request parameters.
+        '404':
+          description: Video ID not found.
+  /v2/videos:
+    post:
+      tags: ['Video']
+      summary: Create video
+      description: Create a video
+      operationId: createVideo
+      x-codeSamples:
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.videos.create({
+              model: "together/video-model",
+              prompt: "A cartoon of an astronaut riding a horse on the moon",
+            })
+
+            console.log(response.id);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.videos.create({
+              model: "together/video-model",
+              prompt: "A cartoon of an astronaut riding a horse on the moon",
+            })
+
+            console.log(response.id);
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateVideoResponse'
+  /v1/chat/completions:
     post:
       tags: ['Chat']
       summary: Create chat completion
@@ -142,7 +240,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
       deprecated: false
-  /completions:
+  /v1/completions:
     post:
       tags: ['Completion']
       summary: Create completion
@@ -261,7 +359,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
       deprecated: false
-  /embeddings:
+  /v1/embeddings:
     post:
       tags: ['Embeddings']
       summary: Create embedding
@@ -373,7 +471,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
       deprecated: false
-  /models:
+  /v1/models:
     get:
       tags: ['Models']
       summary: List all models
@@ -526,7 +624,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ModelUploadSuccessResponse'
 
-  /jobs/{jobId}:
+  /v1/jobs/{jobId}:
     get:
       tags: ['Jobs']
       summary: Get job status
@@ -548,7 +646,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JobInfoSuccessResponse'
 
-  /jobs:
+  /v1/jobs:
     get:
       tags: ['Jobs']
       summary: List all jobs
@@ -562,7 +660,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JobsInfoSuccessResponse'
 
-  /images/generations:
+  /v1/images/generations:
     post:
       tags: ['Images']
       summary: Create image
@@ -718,7 +816,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ImageResponse'
-  /files:
+  /v1/files:
     get:
       tags: ['Files']
       summary: List all files
@@ -779,7 +877,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileList'
-  /files/{id}:
+  /v1/files/{id}:
     get:
       tags: ['Files']
       summary: List file
@@ -901,7 +999,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileDeleteResponse'
-  /files/{id}/content:
+  /v1/files/{id}/content:
     get:
       tags: ['Files']
       summary: Get file contents
@@ -971,7 +1069,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /files/upload:
+  /v1/files/upload:
     post:
       tags: ['Files']
       summary: Upload a file
@@ -1075,160 +1173,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /files/multipart/initiate:
-    post:
-      tags: ['Files']
-      summary: Initiate multipart upload
-      description: Initiate a multipart upload for large files (>5GB) with presigned URLs for each part.
-      x-codeSamples:
-        - lang: Python
-          label: Together AI SDK (Python)
-          source: |
-            from together import Together
-            import os
 
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            response = client.files.multipart.initiate(
-                filename="large_dataset.jsonl",
-                file_size=7516192768,  # 7GB
-                num_parts=75,
-                purpose="fine-tune",
-                file_type="jsonl"
-            )
-
-            print(response.upload_id)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MultipartInitiateRequest'
-      responses:
-        '200':
-          description: Multipart upload initiated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MultipartInitiateResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-
-  /files/multipart/complete:
-    post:
-      tags: ['Files']
-      summary: Complete multipart upload
-      description: Complete a multipart upload by providing ETags for all uploaded parts.
-      x-codeSamples:
-        - lang: Python
-          label: Together AI SDK (Python)
-          source: |
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            response = client.files.multipart.complete(
-                upload_id="upload-123",
-                file_id="file-456",
-                parts=[
-                    {"PartNumber": 1, "ETag": "etag1"},
-                    {"PartNumber": 2, "ETag": "etag2"}
-                ]
-            )
-
-            print(response.id)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MultipartCompleteRequest'
-      responses:
-        '200':
-          description: Multipart upload completed successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FileResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-
-  /files/multipart/abort:
-    post:
-      tags: ['Files']
-      summary: Abort multipart upload
-      description: Abort a multipart upload and clean up any uploaded parts.
-      x-codeSamples:
-        - lang: Python
-          label: Together AI SDK (Python)
-          source: |
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            client.files.multipart.abort(
-                upload_id="upload-123",
-                file_id="file-456"
-            )
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MultipartAbortRequest'
-      responses:
-        '200':
-          description: Multipart upload aborted successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-
-  /fine-tunes:
+  /v1/fine-tunes:
     post:
       tags: ['Fine-tuning']
       summary: Create job
@@ -1472,7 +1418,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinetuneTruncatedList'
-  /fine-tunes/{id}:
+  /v1/fine-tunes/{id}:
     get:
       tags: ['Fine-tuning']
       summary: List job
@@ -1534,86 +1480,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinetuneResponse'
-    delete:
-      tags: ['Fine-tuning']
-      summary: Delete a fine-tune job
-      description: Delete a fine-tuning job.
-      x-codeSamples:
-        - lang: Python
-          label: Together AI SDK (Python)
-          source: |
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            response = client.fine_tuning.delete(id="ft-id")
-
-            print(response)
-        - lang: TypeScript
-          label: Together AI SDK (TypeScript)
-          source: |
-            import Together from "together-ai";
-
-            const client = new Together({
-              apiKey: process.env.TOGETHER_API_KEY,
-            });
-
-            const response = await client.fineTune.delete("ft-id");
-
-            console.log(response);
-        - lang: JavaScript
-          label: Together AI SDK (JavaScript)
-          source: |
-            import Together from "together-ai";
-
-            const client = new Together({
-              apiKey: process.env.TOGETHER_API_KEY,
-            });
-
-            const response = await client.fineTune.delete("ft-id");
-
-            console.log(response);
-        - lang: Shell
-          label: cURL
-          source: |
-            curl -X "DELETE" "https://api.together.xyz/v1/fine-tunes/ft-id?force=false" \
-                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                 -H "Content-Type: application/json"
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: force
-          in: query
-          required: true
-          schema:
-            type: boolean
-            default: null
-      responses:
-        '200':
-          description: Fine-tune job deleted successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FinetuneDeleteResponse'
-        '404':
-          description: Fine-tune job not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-  /fine-tunes/{id}/events:
+  /v1/fine-tunes/{id}/events:
     get:
       tags: ['Fine-tuning']
       summary: List job events
@@ -1675,7 +1542,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinetuneListEvents'
-  /fine-tunes/{id}/checkpoints:
+  /v1/fine-tunes/{id}/checkpoints:
     get:
       tags: ['Fine-tuning']
       summary: List checkpoints
@@ -1737,7 +1604,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinetuneListCheckpoints'
-  /finetune/download:
+  /v1/finetune/download:
     get:
       tags: ['Fine-tuning']
       summary: Download model
@@ -1830,7 +1697,7 @@ paths:
           description: Invalid request parameters.
         '404':
           description: Fine-tune ID not found.
-  /fine-tunes/{id}/cancel:
+  /v1/fine-tunes/{id}/cancel:
     post:
       tags: ['Fine-tuning']
       summary: Cancel job
@@ -1897,7 +1764,7 @@ paths:
           description: Invalid request parameters.
         '404':
           description: Fine-tune ID not found.
-  /rerank:
+  /v1/rerank:
     post:
       tags: ['Rerank']
       summary: Create a rerank request
@@ -2092,7 +1959,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
       deprecated: false
-  /audio/speech:
+  /v1/audio/speech:
     post:
       tags: ['Audio']
       summary: Create audio generation request
@@ -2212,7 +2079,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /audio/transcriptions:
+  /v1/audio/transcriptions:
     post:
       tags: ['Audio']
       summary: Create audio transcription request
@@ -2317,7 +2184,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /audio/translations:
+  /v1/audio/translations:
     post:
       tags: ['Audio']
       summary: Create audio translation request
@@ -2426,7 +2293,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /endpoints:
+  /v1/endpoints:
     get:
       tags: ['Endpoints']
       summary: List all endpoints, can be filtered by type
@@ -2636,7 +2503,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /endpoints/{endpointId}:
+  /v1/endpoints/{endpointId}:
     get:
       tags: ['Endpoints']
       summary: Get endpoint by ID
@@ -2906,7 +2773,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /hardware:
+  /v1/hardware:
     get:
       tags: ['Hardware']
       summary: List available hardware configurations
@@ -2987,7 +2854,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /tci/execute:
+  /v1/tci/execute:
     post:
       tags: ['Code Interpreter']
       callbacks: {}
@@ -3067,7 +2934,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExecuteResponse'
           description: Execute Response
-  /tci/sessions:
+  /v1/tci/sessions:
     get:
       tags: ['Code Interpreter']
       callbacks: {}
@@ -3117,7 +2984,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SessionListResponse'
           description: List Response
-  /batches:
+  /v1/batches:
     get:
       tags: ['Batches']
       summary: List batch jobs
@@ -3288,7 +3155,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BatchErrorResponse'
 
-  /batches/{id}:
+  /v1/batches/{id}:
     get:
       tags: ['Batches']
       summary: Get a batch job
@@ -3385,7 +3252,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BatchErrorResponse'
 
-  /evaluations:
+  /v1/evaluations:
     get:
       tags: ['Evaluations']
       summary: List evaluation jobs
@@ -3423,7 +3290,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /evaluation/{id}:
+  /v1/evaluation/{id}:
     get:
       tags: ['Evaluations']
       summary: Get evaluation job details
@@ -3456,7 +3323,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /evaluation/{id}/status:
+  /v1/evaluation/{id}/status:
     get:
       tags: ['Evaluations']
       summary: Get evaluation job status and results
@@ -3505,7 +3372,80 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /evaluations/model-list:
+  /v1/evaluation/{id}/update:
+    post:
+      tags: ['Evaluations']
+      summary: Update evaluation job status
+      description: Internal callback endpoint for workflows to update job status and results
+      operationId: evaluation-update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The evaluation job ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum:
+                    [
+                      completed,
+                      error,
+                      running,
+                      queued,
+                      user_error,
+                      inference_error,
+                    ]
+                  description: The new status for the job
+                results:
+                  oneOf:
+                    - $ref: '#/components/schemas/EvaluationClassifyResults'
+                    - $ref: '#/components/schemas/EvaluationScoreResults'
+                    - $ref: '#/components/schemas/EvaluationCompareResults'
+                error:
+                  type: string
+                  description: Error message
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  workflow_id:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+
+  /v1/evaluations/model-list:
     get:
       tags: ['Evaluations']
       summary: Get allowed models list
@@ -3539,6 +3479,81 @@ components:
       x-default: default
 
   schemas:
+    CreateVideoBody:
+      properties:
+        model:
+          type: string
+          description: The model to be used for the video creation request.
+        prompt:
+          type: string
+          maxLength: 32000
+          minLength: 1
+          description: Text prompt that describes the video to generate.
+        height:
+          type: integer
+        width:
+          type: integer
+        seconds:
+          type: string
+          description: Clip duration in seconds.
+        fps:
+          type: integer
+          description: Frames per second. Defaults to 24.
+        steps:
+          type: integer
+          minimum: 10
+          maximum: 50
+          description: The number of denoising steps the model performs during video generation. More steps typically result in higher quality output but require longer processing time.
+        seed:
+          type: integer
+          description: Seed to use in initializing the video generation.  Using the same seed allows deterministic video generation.  If not provided a random seed is generated for each request.
+        guidance_scale:
+          type: integer
+          description: Controls how closely the video generation follows your prompt. Higher values make the model adhere more strictly to your text description, while lower values allow more creative freedom. guidence_scale affects both visual content and temporal consistency.Recommended range is 6.0-10.0 for most video models. Values above 12 may cause over-guidance artifacts or unnatural motion patterns.
+        output_format:
+          $ref: '#/components/schemas/VideoOutputFormat'
+          description: Specifies the format of the output video. Defaults to MP4.
+        output_quality:
+          type: integer
+          description: Compression quality. Defaults to 20.
+        negative_prompt:
+          type: string
+          description: Similar to prompt, but specifies what to avoid instead of what to include
+        frame_images:
+          description: Array of images to guide video generation, like keyframes.  If size 1, starting frame, if size 2, starting and ending frame, if more than 2 then frame must be specified
+          example:
+            - [
+              {
+                "input_image": "aac49721-1964-481a-ae78-8a4e29b91402",
+                "frame": 0
+              },
+              {
+                "input_image": "c00abf5f-6cdb-4642-a01d-1bfff7bc3cf7",
+                "frame": 48
+              },
+              {
+                "input_image": "3ad204c3-a9de-4963-8a1a-c3911e3afafe",
+                "frame": "last"
+              }
+            ]
+          type: array
+          items:
+            $ref: '#/components/schemas/VideoFrameImageInput'
+        reference_images:
+          description: TODO need to figure this out
+          type: array
+          items:
+            type: unknown
+            
+
+        
+      type: object
+      required:
+        - prompt
+        - model
+      title: Create video request
+      description: Parameters for creating a new video generation job.
+
     RerankRequest:
       type: object
       properties:
@@ -7117,3 +7132,104 @@ components:
       type: string
       format: uri
       description: Public HTTPS URL to audio file
+    
+    VideoStatus:
+      description: Current lifecycle status of the video job.
+      type: string
+      enum:
+        - in_progress
+        - completed
+        - failed
+
+    VideoFrameImageInput:
+      type: object
+      required: ['input_image', 'frame']
+      properties:
+        input_image:
+          type: string
+          description: idk
+        frame:
+          anyOf:
+            - type: number
+            - type: string
+              enum:
+                - first
+                - last
+            
+    
+    VideoOutputFormat:
+      type: string
+      enum:
+        - MP4
+        - WEBM
+
+    CreateVideoResponse:
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the video job.
+      
+    VideoResource:
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the video job.
+        model: 
+          type: string
+          description: The video generation model that produced the job.
+        status:
+          $ref: '#/components/schemas/VideoStatus'
+          description: Current lifecycle status of the video job.
+        info:
+          description: Metadata about the video resource
+          properties:
+            user_id: 
+              type: string
+              description: ID of user who created the video
+            errors:
+              description: Errors that caused the creation to fail.
+              type: array
+              items:
+                type: object
+                properties:
+                  code: 
+                    type: string
+                  message: 
+                    type: string
+                required:
+                  - code
+                  - message
+          required:
+            - user_id        
+        created_at:
+          type: string
+          description: Unix timestamp (seconds) for when the job was created.
+        done_at:
+          type: string
+          description: Unix timestamp (seconds) for when the job completed, if finished.
+        inputs:
+          type: object
+          description: The parameters used for the creation of this video.
+        outputs:
+          type: object
+          properties:
+            cost:
+              type: integer
+              description: The cost of generated video charged to the owners account.
+            video_url:
+              type: string
+              description: URL hosting the generated video
+          required:
+            - cost
+            - video_url
+      type: object
+      required:
+        - id
+        - model
+        - status
+        - info
+        - inputs
+        - created_at
+        - done_at
+      title: Video job
+      description: Structured information describing a generated video job.
