@@ -7254,7 +7254,6 @@ components:
       description: Parameters for creating a new video generation job.
       type: object
       required:
-        - prompt
         - model
       properties:
         model:
