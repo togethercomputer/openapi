@@ -15,6 +15,137 @@ servers:
 security:
   - bearerAuth: []
 paths:
+  /videos/status:
+    get:
+      tags: ['Video']
+      summary: Fetch video metadata
+      description: Fetch video metadata
+      servers:
+        - url: https://api.together.xyz/v2
+      operationId: retrieveVideo
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.videos.retrieve(video_id)
+
+            print(response.id)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+            
+            const response = await client.videos.retrieve(videoId);
+            
+            console.log(response.status);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+            
+            const response = await client.videos.retrieve(videoId);
+            
+            console.log(response.status);
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Identifier of video from create response.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoResource'
+        '400':
+          description: Invalid request parameters.
+        '404':
+          description: Video ID not found.
+  /videos:
+    post:
+      tags: ['Video']
+      summary: Create video
+      description: Create a video
+      operationId: createVideo
+      servers:
+        - url: https://api.together.xyz/v2
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.videos.create(
+                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                prompt="A cartoon of an astronaut riding a horse on the moon"
+            )
+
+            print(response.id)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+            
+            const response = await client.videos.create({
+              model: "together/video-model",
+              prompt: "A cartoon of an astronaut riding a horse on the moon",
+            });
+            
+            console.log(response.id);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+            
+            const response = await client.videos.create({
+              model: "together/video-model",
+              prompt: "A cartoon of an astronaut riding a horse on the moon",
+            });
+            
+            console.log(response.id);
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateVideoResponse'
   /chat/completions:
     post:
       tags: ['Chat']
@@ -7117,3 +7248,175 @@ components:
       type: string
       format: uri
       description: Public HTTPS URL to audio file
+
+    CreateVideoBody:
+      title: Create video request
+      description: Parameters for creating a new video generation job.
+      type: object
+      required:
+        - prompt
+        - model
+      properties:
+        model:
+          type: string
+          description: The model to be used for the video creation request.
+        prompt:
+          type: string
+          maxLength: 32000
+          minLength: 1
+          description: Text prompt that describes the video to generate.
+        height:
+          type: integer
+        width:
+          type: integer
+        seconds:
+          type: string
+          description: Clip duration in seconds.
+        fps:
+          type: integer
+          description: Frames per second. Defaults to 24.
+        steps:
+          type: integer
+          minimum: 10
+          maximum: 50
+          description: The number of denoising steps the model performs during video generation. More steps typically result in higher quality output but require longer processing time.
+        seed:
+          type: integer
+          description: Seed to use in initializing the video generation.  Using the same seed allows deterministic video generation.  If not provided a random seed is generated for each request.
+        guidance_scale:
+          type: integer
+          description: Controls how closely the video generation follows your prompt. Higher values make the model adhere more strictly to your text description, while lower values allow more creative freedom. guidence_scale affects both visual content and temporal consistency.Recommended range is 6.0-10.0 for most video models. Values above 12 may cause over-guidance artifacts or unnatural motion patterns.
+        output_format:
+          $ref: '#/components/schemas/VideoOutputFormat'
+          description: Specifies the format of the output video. Defaults to MP4.
+        output_quality:
+          type: integer
+          description: Compression quality. Defaults to 20.
+        negative_prompt:
+          type: string
+          description: Similar to prompt, but specifies what to avoid instead of what to include
+        frame_images:
+          description: Array of images to guide video generation, like keyframes.  If size 1, starting frame, if size 2, starting and ending frame, if more than 2 then frame must be specified
+          example:
+            - [
+              {
+                "input_image": "aac49721-1964-481a-ae78-8a4e29b91402",
+                "frame": 0
+              },
+              {
+                "input_image": "c00abf5f-6cdb-4642-a01d-1bfff7bc3cf7",
+                "frame": 48
+              },
+              {
+                "input_image": "3ad204c3-a9de-4963-8a1a-c3911e3afafe",
+                "frame": "last"
+              }
+            ]
+          type: array
+          items:
+            $ref: '#/components/schemas/VideoFrameImageInput'
+        reference_images:
+          description: TODO need to figure this out
+          type: array
+          items:
+            type: unknown
+    VideoStatus:
+      description: Current lifecycle status of the video job.
+      type: string
+      enum:
+        - in_progress
+        - completed
+        - failed
+
+    VideoFrameImageInput:
+      type: object
+      required: ['input_image', 'frame']
+      properties:
+        input_image:
+          type: string
+          description: idk
+        frame:
+          anyOf:
+            - type: number
+            - type: string
+              enum:
+                - first
+                - last
+
+
+    VideoOutputFormat:
+      type: string
+      enum:
+        - MP4
+        - WEBM
+
+    CreateVideoResponse:
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the video job.
+
+    VideoResource:
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the video job.
+        model: 
+          type: string
+          description: The video generation model that produced the job.
+        status:
+          $ref: '#/components/schemas/VideoStatus'
+          description: Current lifecycle status of the video job.
+        info:
+          description: Metadata about the video resource
+          properties:
+            user_id: 
+              type: string
+              description: ID of user who created the video
+            errors:
+              description: Errors that caused the creation to fail.
+              type: array
+              items:
+                type: object
+                properties:
+                  code: 
+                    type: string
+                  message: 
+                    type: string
+                required:
+                  - code
+                  - message
+          required:
+            - user_id        
+        created_at:
+          type: string
+          description: Unix timestamp (seconds) for when the job was created.
+        done_at:
+          type: string
+          description: Unix timestamp (seconds) for when the job completed, if finished.
+        inputs:
+          type: object
+          description: The parameters used for the creation of this video.
+        outputs:
+          type: object
+          properties:
+            cost:
+              type: integer
+              description: The cost of generated video charged to the owners account.
+            video_url:
+              type: string
+              description: URL hosting the generated video
+          required:
+            - cost
+            - video_url
+      type: object
+      required:
+        - id
+        - model
+        - status
+        - info
+        - inputs
+        - created_at
+        - done_at
+      title: Video job
+      description: Structured information describing a generated video job.
