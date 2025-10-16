@@ -11,15 +11,17 @@ info:
     name: MIT
     url: https://github.com/togethercomputer/openapi/blob/main/LICENSE
 servers:
-  - url: https://api.together.xyz
+  - url: https://api.together.xyz/v1
 security:
   - bearerAuth: []
 paths:
-  /v2/videos/status:
+  /videos/status:
     get:
       tags: ['Video']
       summary: Fetch video metadata
       description: Fetch video metadata
+      servers:
+        - url: https://api.together.xyz/v2
       operationId: retrieveVideo
       x-codeSamples:
         - lang: TypeScript
@@ -58,12 +60,14 @@ paths:
           description: Invalid request parameters.
         '404':
           description: Video ID not found.
-  /v2/videos:
+  /videos:
     post:
       tags: ['Video']
       summary: Create video
       description: Create a video
       operationId: createVideo
+      servers:
+        - url: https://api.together.xyz/v2
       x-codeSamples:
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
@@ -101,7 +105,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreateVideoResponse'
-  /v1/chat/completions:
+  /chat/completions:
     post:
       tags: ['Chat']
       summary: Create chat completion
@@ -228,7 +232,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
       deprecated: false
-  /v1/completions:
+  /completions:
     post:
       tags: ['Completion']
       summary: Create completion
@@ -347,7 +351,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
       deprecated: false
-  /v1/embeddings:
+  /embeddings:
     post:
       tags: ['Embeddings']
       summary: Create embedding
@@ -459,7 +463,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
       deprecated: false
-  /v1/models:
+  /models:
     get:
       tags: ['Models']
       summary: List all models
@@ -612,7 +616,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ModelUploadSuccessResponse'
 
-  /v1/jobs/{jobId}:
+  /jobs/{jobId}:
     get:
       tags: ['Jobs']
       summary: Get job status
@@ -634,7 +638,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JobInfoSuccessResponse'
 
-  /v1/jobs:
+  /jobs:
     get:
       tags: ['Jobs']
       summary: List all jobs
@@ -648,7 +652,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JobsInfoSuccessResponse'
 
-  /v1/images/generations:
+  /images/generations:
     post:
       tags: ['Images']
       summary: Create image
@@ -804,7 +808,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ImageResponse'
-  /v1/files:
+  /files:
     get:
       tags: ['Files']
       summary: List all files
@@ -865,7 +869,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileList'
-  /v1/files/{id}:
+  /files/{id}:
     get:
       tags: ['Files']
       summary: List file
@@ -987,7 +991,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileDeleteResponse'
-  /v1/files/{id}/content:
+  /files/{id}/content:
     get:
       tags: ['Files']
       summary: Get file contents
@@ -1057,7 +1061,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /v1/files/upload:
+  /files/upload:
     post:
       tags: ['Files']
       summary: Upload a file
@@ -1161,7 +1165,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /v1/files/multipart/initiate:
+  /files/multipart/initiate:
     post:
       tags: ['Files']
       summary: Initiate multipart upload
@@ -1212,7 +1216,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /v1/files/multipart/complete:
+  /files/multipart/complete:
     post:
       tags: ['Files']
       summary: Complete multipart upload
@@ -1264,7 +1268,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /v1/files/multipart/abort:
+  /files/multipart/abort:
     post:
       tags: ['Files']
       summary: Abort multipart upload
@@ -1314,7 +1318,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /v1/fine-tunes:
+  /fine-tunes:
     post:
       tags: ['Fine-tuning']
       summary: Create job
@@ -1558,7 +1562,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinetuneTruncatedList'
-  /v1/fine-tunes/{id}:
+  /fine-tunes/{id}:
     get:
       tags: ['Fine-tuning']
       summary: List job
@@ -1699,7 +1703,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /v1/fine-tunes/{id}/events:
+  /fine-tunes/{id}/events:
     get:
       tags: ['Fine-tuning']
       summary: List job events
@@ -1761,7 +1765,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinetuneListEvents'
-  /v1/fine-tunes/{id}/checkpoints:
+  /fine-tunes/{id}/checkpoints:
     get:
       tags: ['Fine-tuning']
       summary: List checkpoints
@@ -1823,7 +1827,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinetuneListCheckpoints'
-  /v1/finetune/download:
+  /finetune/download:
     get:
       tags: ['Fine-tuning']
       summary: Download model
@@ -1916,7 +1920,7 @@ paths:
           description: Invalid request parameters.
         '404':
           description: Fine-tune ID not found.
-  /v1/fine-tunes/{id}/cancel:
+  /fine-tunes/{id}/cancel:
     post:
       tags: ['Fine-tuning']
       summary: Cancel job
@@ -1983,7 +1987,7 @@ paths:
           description: Invalid request parameters.
         '404':
           description: Fine-tune ID not found.
-  /v1/rerank:
+  /rerank:
     post:
       tags: ['Rerank']
       summary: Create a rerank request
@@ -2178,7 +2182,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
       deprecated: false
-  /v1/audio/speech:
+  /audio/speech:
     post:
       tags: ['Audio']
       summary: Create audio generation request
@@ -2298,7 +2302,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /v1/audio/transcriptions:
+  /audio/transcriptions:
     post:
       tags: ['Audio']
       summary: Create audio transcription request
@@ -2403,7 +2407,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /v1/audio/translations:
+  /audio/translations:
     post:
       tags: ['Audio']
       summary: Create audio translation request
@@ -2512,7 +2516,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /v1/endpoints:
+  /endpoints:
     get:
       tags: ['Endpoints']
       summary: List all endpoints, can be filtered by type
@@ -2722,7 +2726,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /v1/endpoints/{endpointId}:
+  /endpoints/{endpointId}:
     get:
       tags: ['Endpoints']
       summary: Get endpoint by ID
@@ -2992,7 +2996,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /v1/hardware:
+  /hardware:
     get:
       tags: ['Hardware']
       summary: List available hardware configurations
@@ -3073,7 +3077,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /v1/tci/execute:
+  /tci/execute:
     post:
       tags: ['Code Interpreter']
       callbacks: {}
@@ -3153,7 +3157,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExecuteResponse'
           description: Execute Response
-  /v1/tci/sessions:
+  /tci/sessions:
     get:
       tags: ['Code Interpreter']
       callbacks: {}
@@ -3203,7 +3207,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SessionListResponse'
           description: List Response
-  /v1/batches:
+  /batches:
     get:
       tags: ['Batches']
       summary: List batch jobs
@@ -3374,7 +3378,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BatchErrorResponse'
 
-  /v1/batches/{id}:
+  /batches/{id}:
     get:
       tags: ['Batches']
       summary: Get a batch job
@@ -3471,7 +3475,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BatchErrorResponse'
 
-  /v1/evaluations:
+  /evaluations:
     get:
       tags: ['Evaluations']
       summary: List evaluation jobs
@@ -3509,7 +3513,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /v1/evaluation/{id}:
+  /evaluation/{id}:
     get:
       tags: ['Evaluations']
       summary: Get evaluation job details
@@ -3542,7 +3546,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /v1/evaluation/{id}/status:
+  /evaluation/{id}/status:
     get:
       tags: ['Evaluations']
       summary: Get evaluation job status and results
@@ -3591,7 +3595,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
 
-  /v1/evaluations/model-list:
+  /evaluations/model-list:
     get:
       tags: ['Evaluations']
       summary: Get allowed models list
