@@ -15,7 +15,7 @@ servers:
 security:
   - bearerAuth: []
 paths:
-  /videos/status:
+  /videos/{id}:
     get:
       tags: ['Video']
       summary: Fetch video metadata
@@ -24,45 +24,26 @@ paths:
         - url: https://api.together.xyz/v2
       operationId: retrieveVideo
       x-codeSamples:
-        - lang: Python
-          label: Together AI SDK (Python)
-          source: |
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            response = client.videos.retrieve(video_id)
-
-            print(response.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
             import Together from "together-ai";
-            
             const client = new Together({
               apiKey: process.env.TOGETHER_API_KEY,
             });
-            
-            const response = await client.videos.retrieve(videoId);
-            
+            const response = await client.videos.retrieve(videoId)
             console.log(response.status);
         - lang: JavaScript
           label: Together AI SDK (JavaScript)
           source: |
             import Together from "together-ai";
-            
             const client = new Together({
               apiKey: process.env.TOGETHER_API_KEY,
             });
-            
-            const response = await client.videos.retrieve(videoId);
-            
+            const response = await client.videos.retrieve(videoId)
             console.log(response.status);
       parameters:
-        - in: query
+        - in: path
           name: id
           schema:
             type: string
@@ -74,7 +55,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VideoResource'
+                $ref: '#/components/schemas/VideoJob'
         '400':
           description: Invalid request parameters.
         '404':
@@ -88,51 +69,29 @@ paths:
       servers:
         - url: https://api.together.xyz/v2
       x-codeSamples:
-        - lang: Python
-          label: Together AI SDK (Python)
-          source: |
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            response = client.videos.create(
-                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
-                prompt="A cartoon of an astronaut riding a horse on the moon"
-            )
-
-            print(response.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
             import Together from "together-ai";
-            
             const client = new Together({
               apiKey: process.env.TOGETHER_API_KEY,
             });
-            
             const response = await client.videos.create({
               model: "together/video-model",
               prompt: "A cartoon of an astronaut riding a horse on the moon",
-            });
-            
+            })
             console.log(response.id);
         - lang: JavaScript
           label: Together AI SDK (JavaScript)
           source: |
             import Together from "together-ai";
-            
             const client = new Together({
               apiKey: process.env.TOGETHER_API_KEY,
             });
-            
             const response = await client.videos.create({
               model: "together/video-model",
               prompt: "A cartoon of an astronaut riding a horse on the moon",
-            });
-            
+            })
             console.log(response.id);
       requestBody:
         content:
@@ -7355,48 +7314,46 @@ components:
           type: string
           description: Unique identifier for the video job.
 
-    VideoResource:
+    VideoJob:
       properties:
         id:
           type: string
           description: Unique identifier for the video job.
+        object:
+          description: The object type, which is always video.
+          type: string
+          enum:
+            - video   
         model: 
           type: string
           description: The video generation model that produced the job.
         status:
           $ref: '#/components/schemas/VideoStatus'
-          description: Current lifecycle status of the video job.
-        info:
-          description: Metadata about the video resource
-          properties:
-            user_id: 
-              type: string
-              description: ID of user who created the video
-            errors:
-              description: Errors that caused the creation to fail.
-              type: array
-              items:
-                type: object
-                properties:
-                  code: 
-                    type: string
-                  message: 
-                    type: string
-                required:
-                  - code
-                  - message
-          required:
-            - user_id        
+          description: Current lifecycle status of the video job.     
         created_at:
-          type: string
+          type: number
           description: Unix timestamp (seconds) for when the job was created.
-        done_at:
-          type: string
+        completed_at:
+          type: number
           description: Unix timestamp (seconds) for when the job completed, if finished.
-        inputs:
+        size:
+          type: string
+          description: The resolution of the generated video.
+        seconds:
+          type: string
+          description: Duration of the generated clip in seconds.
+        error:
+          description: Error payload that explains why generation failed, if applicable.
           type: object
-          description: The parameters used for the creation of this video.
+          properties:
+            code: 
+              type: string
+            message: 
+              type: string
+          required:
+            - message
         outputs:
+          description: Available upon completion, the outputs provides the cost charged and the hosted url to access the video
           type: object
           properties:
             cost:
@@ -7413,9 +7370,8 @@ components:
         - id
         - model
         - status
-        - info
-        - inputs
+        - size
+        - seconds
         - created_at
-        - done_at
       title: Video job
       description: Structured information describing a generated video job.
