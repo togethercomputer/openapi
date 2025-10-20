@@ -74,7 +74,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VideoJob'
+                $ref: '#/components/schemas/VideoRetrieveResponse'
         '400':
           description: Invalid request parameters.
         '404':
@@ -7355,7 +7355,7 @@ components:
           type: string
           description: Unique identifier for the video job.
 
-    VideoJob:
+    VideoRetrieveResponse:
       properties:
         id:
           type: string
