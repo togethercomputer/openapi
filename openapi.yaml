@@ -29,28 +29,37 @@ paths:
           source: |
             from together import Together
             import os
+            
             client = Together(
                 api_key=os.environ.get("TOGETHER_API_KEY"),
             )
+            
             response = client.videos.retrieve(video_id)
+            
             print(response.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
             import Together from "together-ai";
+            
             const client = new Together({
               apiKey: process.env.TOGETHER_API_KEY,
             });
-            const response = await client.videos.retrieve(videoId)
+            
+            const response = await client.videos.retrieve(videoId);
+            
             console.log(response.status);
         - lang: JavaScript
           label: Together AI SDK (JavaScript)
           source: |
             import Together from "together-ai";
+            
             const client = new Together({
               apiKey: process.env.TOGETHER_API_KEY,
             });
-            const response = await client.videos.retrieve(videoId)
+            
+            const response = await client.videos.retrieve(videoId);
+            
             console.log(response.status);
       parameters:
         - in: path
@@ -79,29 +88,51 @@ paths:
       servers:
         - url: https://api.together.xyz/v2
       x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+            
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+            
+            response = client.videos.create(
+                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                prompt="A cartoon of an astronaut riding a horse on the moon"
+            )
+            
+            print(response.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
             import Together from "together-ai";
+            
             const client = new Together({
               apiKey: process.env.TOGETHER_API_KEY,
             });
+            
             const response = await client.videos.create({
               model: "together/video-model",
               prompt: "A cartoon of an astronaut riding a horse on the moon",
-            })
+            });
+            
             console.log(response.id);
         - lang: JavaScript
           label: Together AI SDK (JavaScript)
           source: |
             import Together from "together-ai";
+            
             const client = new Together({
               apiKey: process.env.TOGETHER_API_KEY,
             });
+            
             const response = await client.videos.create({
               model: "together/video-model",
               prompt: "A cartoon of an astronaut riding a horse on the moon",
-            })
+            });
+            
             console.log(response.id);
       requestBody:
         content:
