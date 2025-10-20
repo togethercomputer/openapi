@@ -24,6 +24,16 @@ paths:
         - url: https://api.together.xyz/v2
       operationId: retrieveVideo
       x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+            response = client.videos.retrieve(video_id)
+            print(response.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
