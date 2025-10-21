@@ -7295,7 +7295,7 @@ components:
           type: string
           description: Similar to prompt, but specifies what to avoid instead of what to include
         frame_images:
-          description: Array of images to guide video generation, like keyframes.  If size 1, starting frame, if size 2, starting and ending frame, if more than 2 then frame must be specified
+          description: Array of images to guide video generation, similar to keyframes. 
           example:
             - [
               {
@@ -7315,10 +7315,10 @@ components:
           items:
             $ref: '#/components/schemas/VideoFrameImageInput'
         reference_images:
-          description: TODO need to figure this out
+          description: Unlike frame_images which constrain specific timeline positions, reference images guide the general appearance that should appear consistently across the video.
           type: array
           items:
-            type: unknown
+            type: string
     VideoStatus:
       description: Current lifecycle status of the video job.
       type: string
@@ -7329,19 +7329,19 @@ components:
 
     VideoFrameImageInput:
       type: object
-      required: ['input_image', 'frame']
+      required: ['input_image']
       properties:
         input_image:
           type: string
-          description: idk
+          description: URL path to hosted image that is used for a frame
         frame:
+          description: Optional param to specify where to insert the frame. If this is omitted, the following heuristics are applied: frame_images size is one, frame is first. If size is two, frames are first and last. If size is larger, frames are first, last and evenly spaced between.
           anyOf:
             - type: number
             - type: string
               enum:
                 - first
                 - last
-
 
     VideoOutputFormat:
       type: string
