@@ -7354,6 +7354,8 @@ components:
         - WEBM
 
     CreateVideoResponse:
+      type: object
+      required: ['id']
       properties:
         id:
           type: string
