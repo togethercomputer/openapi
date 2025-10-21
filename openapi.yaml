@@ -7335,7 +7335,11 @@ components:
           type: string
           description: URL path to hosted image that is used for a frame
         frame:
-          description: Optional param to specify where to insert the frame. If this is omitted, the following heuristics are applied: frame_images size is one, frame is first. If size is two, frames are first and last. If size is larger, frames are first, last and evenly spaced between.
+          description: |
+            Optional param to specify where to insert the frame. If this is omitted, the following heuristics are applied:
+            - frame_images size is one, frame is first.
+            - If size is two, frames are first and last.
+            - If size is larger, frames are first, last and evenly spaced between.
           anyOf:
             - type: number
             - type: string
