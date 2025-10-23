@@ -4498,6 +4498,8 @@ components:
     ChatCompletionToolMessageParam:
       type: object
       properties:
+        name:
+          type: string
         role:
           type: string
           enum: ['tool']
