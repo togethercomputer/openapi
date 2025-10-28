@@ -4314,6 +4314,13 @@ components:
           type: string
           description: The name of the moderation model used to validate tokens. Choose from the available moderation models found [here](https://docs.together.ai/docs/inference-models#moderation-models).
           example: 'safety_model_name'
+        chat_template_kwargs:
+          type: object
+          description: An object that allows you to pass arguments to the models chat template.
+          properties:
+            thinking:
+              description: Controls whether the model includes the <think> tag wrapped reasoning process in the response.
+              type: boolean
         reasoning_effort:
           type: string
           enum: ['low', 'medium', 'high']
