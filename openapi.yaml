@@ -3848,7 +3848,8 @@ paths:
                 console.log(`Final: ${message.transcript}`);
                 ws.close();
               } else if (message.type === 'conversation.item.input_audio_transcription.failed') {
-                console.error(`Error: ${message.error.message}`);
+                const errorMessage = message.error?.message ?? message.message ?? 'Unknown error';
+                console.error(`Error: ${errorMessage}`);
                 ws.close();
               }
             });
