@@ -27,6 +27,7 @@ jobs:
           stainless_api_key: ${{ secrets.STAINLESS_API_KEY }}
           commit_message: ${{ github.event.head_commit.message }}
           base_sha: ${PR_SHA:-$GITHUB_SHA}
+          base_ref: ${{ github.base_ref }}
           # base_sha: ${{ github.event.pull_request.base.sha }}
           org: togethercomputer
           project: togetherai
