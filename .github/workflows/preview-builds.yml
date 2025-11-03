@@ -28,6 +28,7 @@ jobs:
           commit_message: ${{ github.event.head_commit.message }}
           base_sha: ${{ github.sha }}
           base_ref: ${{ github.ref }}
+          head_sha: ${{ github.head_ref }}
           # base_sha: ${{ github.event.pull_request.base.sha }}
           org: togethercomputer
           project: togetherai
