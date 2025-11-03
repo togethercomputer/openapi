@@ -11,8 +11,6 @@ jobs:
   preview:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
-    env:
-      PR_NUMBER: ${{ github.event.number }}
     permissions:
       contents: read
       pull-requests: write
