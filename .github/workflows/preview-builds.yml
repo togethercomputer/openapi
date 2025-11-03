@@ -22,6 +22,7 @@ jobs:
         uses: stainless-api/upload-openapi-spec-action/preview@v1
         with:
           stainless_api_key: ${{ secrets.STAINLESS_API_KEY }}
+          commit_message: 'Preview build'
           org: togethercomputer
           project: togetherai
           oas_path: openapi.yaml
