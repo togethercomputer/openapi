@@ -9,9 +9,6 @@ jobs:
   preview:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
-    env:
-      PR_SHA: ${{ github.event.pull_request.head.sha }}
-      GITHUB_SHA: ${{ github.sha }}
     permissions:
       contents: read
       pull-requests: write
@@ -28,7 +25,7 @@ jobs:
           commit_message: ${{ github.event.head_commit.message }}
           base_sha: ${{ github.sha }}
           base_ref: ${{ github.ref }}
-          head_sha: ${{ github.head_ref }}
+          head_sha: ${{ github.event.pull_request.head.sha }}
           # event: ${{ github.event | jq -r }}
           # base_sha: ${{ github.event.pull_request.base.sha }}
           org: togethercomputer
