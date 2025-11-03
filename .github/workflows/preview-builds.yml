@@ -29,6 +29,7 @@ jobs:
           base_sha: ${{ github.sha }}
           base_ref: ${{ github.ref }}
           head_sha: ${{ github.head_ref }}
+          event: ${ echo ${{ github.event }} | jq -r}
           # base_sha: ${{ github.event.pull_request.base.sha }}
           org: togethercomputer
           project: togetherai
