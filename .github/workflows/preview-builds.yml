@@ -1,0 +1,39 @@
+name: Preview Builds
+
+on:
+  push:
+    branches-ignore:
+      - main
+    paths:
+      - "openapi.yaml"
+
+jobs:
+  preview:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    env:
+      PR_NUMBER: ${{ github.event.number }}
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Run preview builds
+        uses: stainless-api/upload-openapi-spec-action/preview@v1
+        with:
+          stainless_api_key: ${{ secrets.STAINLESS_API_KEY }}
+          org: togethercomputer
+          commit_message: 'Preview build'
+          base_sha: ${{ github.sha }}
+          base_ref: 'main'
+          base_branch: 'main'
+          default_branch: 'main'
+          head_sha: ${{ github.sha }}
+          branch: ${{ github.ref }}
+
+          project: 'togetherai'
+          oas_path: 'openapi.yaml'
