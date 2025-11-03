@@ -23,6 +23,7 @@ jobs:
         with:
           stainless_api_key: ${{ secrets.STAINLESS_API_KEY }}
           commit_message: ${{ github.event.head_commit.message }}
+          base_sha: ${{ github.event.base_sha }}
           org: togethercomputer
           project: togetherai
           oas_path: openapi.yaml
