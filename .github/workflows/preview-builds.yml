@@ -26,6 +26,7 @@ jobs:
           base_sha: ${{ github.sha }}
           base_ref: ${{ github.ref }}
           head_sha: foobar
+          write_comment: false
           # event: ${{ github.event | jq -r }}
           # base_sha: ${{ github.event.pull_request.base.sha }}
           org: togethercomputer
