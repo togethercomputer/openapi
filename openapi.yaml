@@ -308,7 +308,7 @@ paths:
             const response = await client.completions.create({
               model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
               prompt: "The largest city in France is",
-              max_tokens: 1
+              max_tokens: 1,
             });
 
             console.log(response.choices[0].text);
