@@ -3823,7 +3823,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BatchErrorResponse'
 
-  /v1/evaluation:
+  /evaluation:
     post:
       tags:
         - evaluation
@@ -3899,7 +3899,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorData"
-  /v1/evaluation/model-list:
+  /evaluation/model-list:
     get:
       tags:
         - evaluation
@@ -3937,7 +3937,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorData"
-  /v1/evaluations:
+  /evaluations:
     get:
       tags:
         - evaluation
@@ -3984,7 +3984,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorData"
 
-  /v1/evaluation/{id}:
+  /evaluation/{id}:
     get:
       tags:
         - evaluation
@@ -4016,7 +4016,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorData"
 
-  /v1/evaluation/{id}/status:
+  /evaluation/{id}/status:
     get:
       tags:
         - evaluation
@@ -4059,7 +4059,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorData"
 
-  /v1/evaluation/{id}/update:
+  /evaluation/{id}/update:
     post:
       tags:
         - evaluation
