@@ -3823,135 +3823,98 @@ paths:
               schema:
                 $ref: '#/components/schemas/BatchErrorResponse'
 
-  /evaluations:
+  /v1/evaluation:
+    post:
+      tags:
+        - evaluation
+      summary: Create an evaluation job
+      operationId: createEvaluationJob
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EvaluationTypedRequest"
+      responses:
+        "200":
+          description: "Evaluation job created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvaluationResponse"
+        "400":
+          description: "Invalid request format"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Failed to create evaluation job"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
     get:
-      tags: ['Evaluations']
-      summary: List evaluation jobs
-      description: Get a list of evaluation jobs with optional filtering
-      operationId: evaluations-list
-      x-stainless-resource-name: evaluationList
+      tags:
+        - evaluation
+      summary: Get all evaluation jobs
+      operationId: getAllEvaluationJobs
       parameters:
         - name: status
           in: query
-          description: Filter by job status
+          required: false
           schema:
             type: string
-            enum: [pending, queued, running, completed, error, user_error]
+            default: "pending"
         - name: limit
           in: query
-          description: Maximum number of results to return (max 100)
+          required: false
           schema:
             type: integer
-            minimum: 1
-            maximum: 100
             default: 10
+        - name: userId
+          in: query
+          required: false
+          description: "Admin users can specify a user ID to filter jobs. Pass empty string to get all jobs."
+          schema:
+            type: string
       responses:
-        '200':
-          description: Successful response
+        "200":
+          description: "evaluation jobs retrieved successfully"
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/EvaluationJob'
-        '400':
-          description: Bad request
+                  $ref: "#/components/schemas/EvaluationJob"
+        "400":
+          description: "Invalid request format"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorData'
-
-  /evaluation/{id}:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Error retrieving jobs from manager"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+  /v1/evaluation/model-list:
     get:
-      tags: ['Evaluations']
-      summary: Get evaluation job details
-      description: Get details of a specific evaluation job
-      operationId: evaluation-get
+      tags:
+        - evaluation
+      summary: Get model list
+      operationId: getModelList
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: The evaluation job ID
+        - name: model_source
+          in: query
+          required: false
           schema:
             type: string
+            default: "all"
       responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EvaluationJob'
-        '404':
-          description: Job not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-
-  /evaluation/{id}/status:
-    get:
-      tags: ['Evaluations']
-      summary: Get evaluation job status and results
-      description: Get the status and results of a specific evaluation job
-      operationId: evaluation-status
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: The evaluation job ID
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      [pending, queued, running, completed, error, user_error]
-                    example: completed
-                  results:
-                    oneOf:
-                      - $ref: '#/components/schemas/EvaluationClassifyResults'
-                      - $ref: '#/components/schemas/EvaluationScoreResults'
-                      - $ref: '#/components/schemas/EvaluationCompareResults'
-                      - type: object
-                        properties:
-                          error:
-                            type: string
-                    nullable: true
-        '404':
-          description: Job not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorData'
-
-  /evaluations/model-list:
-    get:
-      tags: ['Evaluations']
-      summary: Get allowed models list
-      description: Get the list of models that are allowed for evaluation
-      operationId: evaluations-model-list
-      responses:
-        '200':
-          description: Successful response
+        "200":
+          description: "Model list retrieved successfully"
           content:
             application/json:
               schema:
@@ -3961,12 +3924,193 @@ paths:
                     type: array
                     items:
                       type: string
-        '500':
-          description: Internal server error
+                      description: "The name of the model"
+        "400":
+          description: "Invalid request format"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorData'
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Error retrieving model list"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+  /v1/evaluations:
+    get:
+      tags:
+        - evaluation
+      summary: Get all evaluation jobs
+      operationId: getAllEvaluationsJobs
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            default: "pending"
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: userId
+          in: query
+          required: false
+          description: "Admin users can specify a user ID to filter jobs. Pass empty string to get all jobs."
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "evaluation jobs retrieved successfully"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EvaluationJob"
+        "400":
+          description: "Invalid request format"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Error retrieving jobs from manager"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
+  /v1/evaluation/{id}:
+    get:
+      tags:
+        - evaluation
+      summary: Get evaluation job details
+      operationId: getEvaluationJobDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Evaluation job details retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvaluationJob"
+        "404":
+          description: "Evaluation job not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Failed to get evaluation job"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
+  /v1/evaluation/{id}/status:
+    get:
+      tags:
+        - evaluation
+      summary: Get evaluation job status and results
+      operationId: getEvaluationJobStatusAndResults
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Evaluation job status and results retrieved successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: "The status of the evaluation job"
+                    enum: ["completed", "error", "user_error", "running", "queued", "pending"]
+                  results:
+                    description: "The results of the evaluation job"
+                    oneOf:
+                      - $ref: "#/components/schemas/EvaluationClassifyResults"
+                      - $ref: "#/components/schemas/EvaluationScoreResults"
+                      - $ref: "#/components/schemas/EvaluationCompareResults"
+        "404":
+          description: "Evaluation job not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Failed to get evaluation job"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+
+  /v1/evaluation/{id}/update:
+    post:
+      tags:
+        - evaluation
+      summary: Update evaluation job status and results
+      operationId: updateEvaluationJobStatusAndResults
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [completed, error, user_error, running, queued, pending]
+                results:
+                  type: object
+                  description: "The results of the evaluation job. The concrete structure depends on the type of evaluation job"
+                error:
+                  type: string
+                  description: "Error message when status is 'error' or 'user_error'"
+      responses:
+        "200":
+          description: "Evaluation job status updated successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  workflow_id:
+                    type: string
+                  status:
+                    type: string
+        "400":
+          description: "Invalid request format"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Failed to update job status"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
 
   /realtime:
     get:
