@@ -2930,6 +2930,22 @@ paths:
               - serverless
           description: Filter endpoints by type
           example: dedicated
+        - name: usage_type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - on-demand
+              - reserved
+          description: Filter endpoints by usage type
+          example: on-demand
+        - name: mine
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: If true, return only endpoints owned by the caller
       responses:
         '200':
           description: '200'
