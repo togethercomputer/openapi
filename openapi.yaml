@@ -2944,7 +2944,7 @@ paths:
           in: query
           required: false
           schema:
-            type: bool
+            type: boolean
           description: If true, return only endpoints owned by the caller
       responses:
         '200':
