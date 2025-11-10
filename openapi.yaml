@@ -5153,6 +5153,9 @@ components:
                   content:
                     type: string
                     nullable: true
+                  reasoning:
+                    type: string
+                    nullable: true
                   tool_calls:
                     type: array
                     items:
