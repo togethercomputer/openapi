@@ -3937,12 +3937,50 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorData"
+  /evaluations/model-list:
+    get:
+      tags:
+        - evaluation
+      summary: Get model list
+      operationId: getModelListDeprecated
+      parameters:
+        - name: model_source
+          in: query
+          required: false
+          schema:
+            type: string
+            default: "all"
+      responses:
+        "200":
+          description: "Model list retrieved successfully. Deprecated! Please use /evaluation/model-list"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  model_list:
+                    type: array
+                    items:
+                      type: string
+                      description: "The name of the model"
+        "400":
+          description: "Invalid request format"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+        "500":
+          description: "Error retrieving model list"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
   /evaluations:
     get:
       tags:
         - evaluation
-      summary: Get all evaluation jobs
-      operationId: getAllEvaluationsJobs
+      summary: Get all evaluation jobs. Deprecated! Please use /evaluation
+      operationId: getAllEvaluationJobsDeprecated
       parameters:
         - name: status
           in: query
