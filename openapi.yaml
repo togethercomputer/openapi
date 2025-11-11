@@ -4647,6 +4647,9 @@ components:
             content:
               type: string
               nullable: true
+            reasoning:
+              type: string
+              nullable: true
             tool_calls:
               type: array
               items:
@@ -5148,6 +5151,9 @@ components:
                     type: string
                     enum: ['system', 'user', 'assistant', 'function', 'tool']
                   content:
+                    type: string
+                    nullable: true
+                  reasoning:
                     type: string
                     nullable: true
                   tool_calls:
