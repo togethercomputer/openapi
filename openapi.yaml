@@ -7722,102 +7722,109 @@ components:
       description: 'Current status of the batch job'
 
     EvaluationTypedRequest:
-      type: object
-      required:
-        - type
-        - parameters
-      properties:
-        type:
-          type: string
-          enum: [classify, score, compare]
-          description: The type of evaluation to perform
-          example: 'classify'
-        parameters:
-          oneOf:
-            - $ref: '#/components/schemas/EvaluationClassifyParameters'
-            - $ref: '#/components/schemas/EvaluationScoreParameters'
-            - $ref: '#/components/schemas/EvaluationCompareParameters'
-          description: Type-specific parameters for the evaluation
+      description: Type-specific parameters for the evaluation
+      oneOf:
+        - $ref: '#/components/schemas/EvaluationClassifyParameters'
+        - $ref: '#/components/schemas/EvaluationScoreParameters'
+        - $ref: '#/components/schemas/EvaluationCompareParameters'
 
     EvaluationClassifyParameters:
       type: object
-      required:
-        - judge
-        - labels
-        - pass_labels
-        - input_data_file_path
+      required: ['type', 'parameters']
       properties:
-        judge:
-          $ref: '#/components/schemas/EvaluationJudgeModelConfig'
-        labels:
-          type: array
-          items:
-            type: string
-          minItems: 2
-          description: List of possible classification labels
-          example: ['yes', 'no']
-        pass_labels:
-          type: array
-          items:
-            type: string
-          minItems: 1
-          description: List of labels that are considered passing
-          example: ['yes']
-        model_to_evaluate:
-          $ref: '#/components/schemas/EvaluationModelOrString'
-        input_data_file_path:
-          type: string
-          description: Data file ID
-          example: 'file-1234-aefd'
+        type:
+          const: classify
+        parameters:
+          type: object
+          required:
+            - judge
+            - labels
+            - pass_labels
+            - input_data_file_path
+          properties:
+            judge:
+              $ref: '#/components/schemas/EvaluationJudgeModelConfig'
+            labels:
+              type: array
+              items:
+                type: string
+              minItems: 2
+              description: List of possible classification labels
+              example: ['yes', 'no']
+            pass_labels:
+              type: array
+              items:
+                type: string
+              minItems: 1
+              description: List of labels that are considered passing
+              example: ['yes']
+            model_to_evaluate:
+              $ref: '#/components/schemas/EvaluationModelOrString'
+            input_data_file_path:
+              type: string
+              description: Data file ID
+              example: 'file-1234-aefd'
 
     EvaluationScoreParameters:
       type: object
-      required:
-        - judge
-        - min_score
-        - max_score
-        - pass_threshold
-        - input_data_file_path
+      required: ['type', 'parameters']
       properties:
-        judge:
-          $ref: '#/components/schemas/EvaluationJudgeModelConfig'
-        min_score:
-          type: number
-          format: float
-          example: 0.0
-          description: Minimum possible score
-        max_score:
-          type: number
-          format: float
-          example: 10.0
-          description: Maximum possible score
-        pass_threshold:
-          type: number
-          format: float
-          example: 7.0
-          description: Score threshold for passing
-        model_to_evaluate:
-          $ref: '#/components/schemas/EvaluationModelOrString'
-        input_data_file_path:
-          type: string
-          example: 'file-01234567890123456789'
-          description: Data file ID
+        type:
+          const: score
+        parameters:
+          type: object
+          required:
+            - judge
+            - min_score
+            - max_score
+            - pass_threshold
+            - input_data_file_path
+          properties:
+            judge:
+              $ref: '#/components/schemas/EvaluationJudgeModelConfig'
+            min_score:
+              type: number
+              format: float
+              example: 0.0
+              description: Minimum possible score
+            max_score:
+              type: number
+              format: float
+              example: 10.0
+              description: Maximum possible score
+            pass_threshold:
+              type: number
+              format: float
+              example: 7.0
+              description: Score threshold for passing
+            model_to_evaluate:
+              $ref: '#/components/schemas/EvaluationModelOrString'
+            input_data_file_path:
+              type: string
+              example: 'file-01234567890123456789'
+              description: Data file ID
 
     EvaluationCompareParameters:
       type: object
-      required:
-        - judge
-        - input_data_file_path
+      required: ['type', 'parameters']
       properties:
-        judge:
-          $ref: '#/components/schemas/EvaluationJudgeModelConfig'
-        model_a:
-          $ref: '#/components/schemas/EvaluationModelOrString'
-        model_b:
-          $ref: '#/components/schemas/EvaluationModelOrString'
-        input_data_file_path:
-          type: string
-          description: Data file name
+        type:
+          const: compare
+        parameters:
+          type: object
+          required:
+            - judge
+            - input_data_file_path
+          properties:
+            judge:
+              $ref: '#/components/schemas/EvaluationJudgeModelConfig'
+            model_a:
+              $ref: '#/components/schemas/EvaluationModelOrString'
+            model_b:
+              $ref: '#/components/schemas/EvaluationModelOrString'
+            input_data_file_path:
+              type: string
+              description: Data file name
 
     EvaluationJudgeModelConfig:
       type: object
