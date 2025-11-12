@@ -4423,9 +4423,13 @@ components:
   schemas:
     ListAvailibilityZonesResponse: 
       description: List of unique availability zones
-      type: array
-      items:
-        type: string
+      type: object
+      required: ['avzones']
+      properties:
+        avzones:
+          type: array
+          items:
+            type: string
         
     RerankRequest:
       type: object
