@@ -2864,6 +2864,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
+  /clusters/availability-zones:
+    get:
+      tags: ['endpoints']
+      summary: List all available availability zones.
+      description: List all available availability zones.
+      operationId: availabilityZones
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAvailibilityZonesResponse'
   /endpoints:
     get:
       tags: ['Endpoints']
@@ -4408,6 +4421,12 @@ components:
       x-default: default
 
   schemas:
+    ListAvailibilityZonesResponse: 
+      description: List of unique availability zones
+      type: array
+      items:
+        type: string
+        
     RerankRequest:
       type: object
       properties:
