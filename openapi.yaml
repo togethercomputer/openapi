@@ -7822,10 +7822,11 @@ components:
     EvaluationJudgeModelConfig:
       type: object
       required:
-        - model_name
+        - model
         - system_template
+        - model_source
       properties:
-        model_name:
+        model:
           type: string
           description: Name of the judge model
           example: 'meta-llama/Llama-3-70B-Instruct-Turbo'
@@ -7833,6 +7834,16 @@ components:
           type: string
           description: System prompt template for the judge
           example: 'Imagine you are a helpful assistant'
+        model_source:
+          type: string
+          description: "Source of the judge model."
+          enum: [serverless, dedicated, external]
+        external_api_token:
+          type: string
+          description: "Bearer/API token for external judge models."
+        external_base_url:
+          type: string
+          description: "Base URL for external judge models. Must be OpenAI-compatible base URL."
 
     EvaluationModelOrString:
       oneOf:
@@ -7843,13 +7854,14 @@ components:
     EvaluationModelRequest:
       type: object
       required:
-        - model_name
+        - model
         - max_tokens
         - temperature
         - system_template
         - input_template
+        - model_source
       properties:
-        model_name:
+        model:
           type: string
           description: Name of the model to evaluate
           example: 'meta-llama/Llama-3-70B-Instruct-Turbo'
@@ -7873,6 +7885,16 @@ components:
           type: string
           description: Input prompt template
           example: 'Please classify {{prompt}} based on the labels below'
+        model_source:
+          type: string
+          description: "Source of the model."
+          enum: [serverless, dedicated, external]
+        external_api_token:
+          type: string
+          description: "Bearer/API token for external models."
+        external_base_url:
+          type: string
+          description: "Base URL for external models. Must be OpenAI-compatible base URL"
 
     EvaluationResponse:
       type: object
