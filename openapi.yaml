@@ -4468,7 +4468,7 @@ components:
         data:
           type: array
           items:
-            - $ref: '#/schema/components/ModelVoices'
+            $ref: '#/components/schemas/ModelVoices'
 
     ModelVoices:
       description: Represents a model with its available voices.
