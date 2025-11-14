@@ -15,6 +15,45 @@ servers:
 security:
   - bearerAuth: []
 paths:
+  /voices:
+    get:
+      tags: ['Voices']
+      summary: Fetch available voices for each model
+      description: Fetch available voices for each model
+      operationId: fetchVoices
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListVoicesResponse'
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.audio.voices.list()
+
+            print(response.data)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.audio.voices.list()
+
+            console.log(response.data);
   /videos/{id}:
     get:
       tags: ['Video']
@@ -4421,6 +4460,35 @@ components:
       x-default: default
 
   schemas:
+    ListVoicesResponse:
+      description: Response containing a list of models and their available voices.
+      type: object
+      required: ['data']
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModelVoices'
+
+    ModelVoices:
+      description: Represents a model with its available voices.
+      type: object
+      required: ['model', 'voices']
+      properties:
+        model:
+          type: string
+
+        voices:
+          type: array
+          items:
+            type: object
+            required: ['id', 'name']
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+          
     ListAvailibilityZonesResponse: 
       description: List of unique availability zones
       type: object
