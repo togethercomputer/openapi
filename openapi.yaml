@@ -3890,7 +3890,102 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BatchErrorResponse'
+  /batches/{id}/cancel:
+    post:
+      tags: ['Batches']
+      summary: Cancel a batch job
+      description: Cancel a batch job by ID
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
 
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            batch = client.batches.cancel("batch_id")
+
+            print(batch)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const batch = await client.batches.cancel("batch-id");
+
+            console.log(batch);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const batch = await client.batches.cancel("batch-id");
+
+            console.log(batch);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/batches/ID/cancel" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Job ID
+          schema:
+            type: string
+          example: 'batch_job_abc123def456'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchJob'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchErrorResponse'
   /evaluation:
     post:
       tags:
