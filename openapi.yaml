@@ -1911,7 +1911,7 @@ paths:
     get:
       tags: ['Fine-tuning']
       summary: Download model
-      description: Download a compressed fine-tuned model or checkpoint to local disk.
+      description: Download a compressed fine-tuned model or checkpoint.
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (Python)
@@ -1982,20 +1982,16 @@ paths:
             enum:
               - merged
               - adapter
+              - model_output_path
           description: Specifies checkpoint type to download - `merged` vs `adapter`. This field is required if the checkpoint_step is not set.
-        - in: query
-          name: output
-          schema:
-            type: string
-          required: false
-          description: Specifies output file name for downloaded model. Defaults to `$PWD/{model_name}.{extension}`.
       responses:
         '200':
           description: Successfully downloaded the fine-tuned model or checkpoint.
           content:
-            application/json:
+            application/octet-stream:
               schema:
-                $ref: '#/components/schemas/FinetuneDownloadResult'
+                type: string
+                format: binary
         '400':
           description: Invalid request parameters.
         '404':
