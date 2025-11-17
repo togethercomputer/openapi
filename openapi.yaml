@@ -7004,22 +7004,6 @@ components:
         checkpoint_type:
           type: string
 
-    FinetuneDownloadResult:
-      type: object
-      properties:
-        object:
-          enum:
-            - null
-            - local
-        id:
-          type: string
-        checkpoint_step:
-          type: integer
-        filename:
-          type: string
-        size:
-          type: integer
-
     FullTrainingType:
       type: object
       properties:
