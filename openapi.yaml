@@ -7273,6 +7273,9 @@ components:
           description: The number of minutes of inactivity after which the endpoint will be automatically stopped. Set to null, omit or set to 0 to disable automatic timeout.
           nullable: true
           example: 60
+        availability_zone:
+          type: string
+          description: Create the endpoint in a specified availability zone (e.g., us-central-4b)
 
     DedicatedEndpoint:
       type: object
