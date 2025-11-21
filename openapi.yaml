@@ -5618,7 +5618,7 @@ components:
             - pcm_mulaw
             - pcm_alaw
         sample_rate:
-          type: number
+          type: integer
           default: 44100
           description: Sampling rate to use for the output audio. The default sampling rate for canopylabs/orpheus-3b-0.1-ft and hexgrad/Kokoro-82M is 24000 and for cartesia/sonic is 44100.
         stream:
