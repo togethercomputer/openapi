@@ -2022,7 +2022,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.fineTune.delete("ft-id");
+            const response = await client.fineTuning.delete("ft-id");
 
             console.log(response);
         - lang: JavaScript
@@ -2034,7 +2034,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.fineTune.delete("ft-id");
+            const response = await client.fineTuning.delete("ft-id");
 
             console.log(response);
         - lang: Shell
