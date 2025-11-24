@@ -39,7 +39,7 @@ paths:
                 api_key=os.environ.get("TOGETHER_API_KEY"),
             )
 
-            response = client.audio.vces.list()
+            response = client.audio.voices.list()
 
             print(response.data)
         - lang: Python v2
@@ -176,7 +176,7 @@ paths:
             )
 
             response = client.videos.create(
-                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                model="together/video-model",
                 prompt="A cartoon of an astronaut riding a horse on the moon"
             )
 
@@ -192,7 +192,7 @@ paths:
             )
 
             response = client.videos.create(
-                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                model="together/video-model",
                 prompt="A cartoon of an astronaut riding a horse on the moon"
             )
 
