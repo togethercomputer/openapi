@@ -39,11 +39,36 @@ paths:
                 api_key=os.environ.get("TOGETHER_API_KEY"),
             )
 
+            response = client.audio.vces.list()
+
+            print(response.data)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
             response = client.audio.voices.list()
 
             print(response.data)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.audio.voices.list()
+
+            console.log(response.data);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
           source: |
             import Together from "together-ai";
 
@@ -65,6 +90,19 @@ paths:
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.videos.retrieve(video_id)
+
+            print(response.id)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
           source: |
             from together import Together
             import os
@@ -143,6 +181,22 @@ paths:
             )
 
             print(response.id)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.videos.create(
+                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                prompt="A cartoon of an astronaut riding a horse on the moon"
+            )
+
+            print(response.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -210,6 +264,23 @@ paths:
             )
 
             print(response.choices[0].message.content)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.chat.completions.create(
+                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": "What are some fun things to do in New York?"},
+                ]
+            )
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -320,6 +391,23 @@ paths:
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.completions.create(
+                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                prompt="The largest city in France is",
+                max_tokens=1
+            )
+
+            print(response.choices[0].text)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
           source: |
             from together import Together
             import os
@@ -453,6 +541,22 @@ paths:
             )
 
             print(response.data[0].embedding)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.embeddings.create(
+                model="BAAI/bge-large-en-v1.5",
+                input="New York City",
+            )
+
+            print(response.data[0].embedding)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -563,6 +667,20 @@ paths:
 
             for model in models:
                 print(model.id)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            models = client.models.list()
+
+            for model in models:
+                print(model.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -641,6 +759,38 @@ paths:
       summary: Upload a custom model or adapter
       description: Upload a custom model or adapter from Hugging Face or S3
       x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.models.upload(
+                "My-Fine-Tuned-Model",
+                "https://ml-models.s3.us-west-2.amazonaws.com/models/my-fine-tuned-model.tar.gz",
+            )
+
+            print(response.job_id)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            client.models.upload(
+                model_name="My-Fine-Tuned-Model",
+                model_source="https://ml-models.s3.us-west-2.amazonaws.com/models/my-fine-tuned-model.tar.gz",
+            )
+
+            print(response.data.job_id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -755,6 +905,23 @@ paths:
             )
 
             print(response.data[0].url)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.images.generate(
+                model="black-forest-labs/FLUX.1-schnell",
+                steps=4,
+                prompt="A cartoon of an astronaut riding a horse on the moon",
+            )
+
+            print(response.data[0].url)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -764,7 +931,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.images.create({
+            const response = await client.images.generate({
               model: "black-forest-labs/FLUX.1-schnell",
               prompt: "A cartoon of an astronaut riding a horse on the moon",
             });
@@ -779,7 +946,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.images.create({
+            const response = await client.images.generate({
               model: "black-forest-labs/FLUX.1-schnell",
               prompt: "A cartoon of an astronaut riding a horse on the moon",
             });
@@ -908,6 +1075,20 @@ paths:
 
             for file in response.data:
                 print(file.id)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.files.list()
+
+            for file in response.data:
+                print(file.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -957,6 +1138,19 @@ paths:
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            file = client.files.retrieve(id="file-id")
+
+            print(file)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
           source: |
             from together import Together
             import os
@@ -1029,6 +1223,19 @@ paths:
             response = client.files.delete(id="file-id")
 
             print(response)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.files.delete(id="file-id")
+
+            print(response)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -1090,6 +1297,19 @@ paths:
             file = client.files.retrieve_content(id="file-id")
 
             print(file.filename)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            with client.files.with_streaming_response.content(id="file-id") as response:
+              for line in response.iter_lines():
+                print(line)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -1149,6 +1369,21 @@ paths:
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            file_path = os.path.join(current_dir, "data.jsonl")
+            file = client.files.upload(file=file_path)
+
+            print(file.id)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
           source: |
             from together import Together
             import os
@@ -1420,6 +1655,22 @@ paths:
             )
 
             print(response)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.fine_tuning.create(
+                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Reference",
+                training_file="file-id"
+            )
+
+            print(response)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -1429,7 +1680,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.fineTune.create({
+            const response = await client.fineTuning.create({
               model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Reference",
               training_file: "file-id",
             });
@@ -1444,7 +1695,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.fineTune.create({
+            const response = await client.fineTuning.create({
               model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Reference",
               training_file: "file-id",
             });
@@ -1601,6 +1852,20 @@ paths:
 
             for fine_tune in response.data:
                 print(f"ID: {fine_tune.id}, Status: {fine_tune.status}")
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.fine_tuning.list()
+
+            for fine_tune in response.data:
+                print(f"ID: {fine_tune.id}, Status: {fine_tune.status}")
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -1610,7 +1875,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.fineTune.list();
+            const response = await client.fineTuning.list();
 
             for (const fineTune of response.data) {
               console.log(fineTune.id, fineTune.status);
@@ -1624,7 +1889,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.fineTune.list();
+            const response = await client.fineTuning.list();
 
             for (const fineTune of response.data) {
               console.log(fineTune.id, fineTune.status);
@@ -1661,6 +1926,19 @@ paths:
             fine_tune = client.fine_tuning.retrieve(id="ft-id")
 
             print(fine_tune)
+         - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            fine_tune = client.fine_tuning.retrieve(id="ft-id")
+
+            print(fine_tune)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -1670,7 +1948,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const fineTune = await client.fineTune.retrieve("ft-id");
+            const fineTune = await client.fineTuning.retrieve("ft-id");
 
             console.log(fineTune);
         - lang: JavaScript
@@ -1682,7 +1960,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const fineTune = await client.fineTune.retrieve("ft-id");
+            const fineTune = await client.fineTuning.retrieve("ft-id");
 
             console.log(fineTune);
         - lang: Shell
@@ -1711,6 +1989,19 @@ paths:
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.fine_tuning.delete(id="ft-id")
+
+            print(response)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
           source: |
             from together import Together
             import os
@@ -1760,7 +2051,6 @@ paths:
             type: string
         - name: force
           in: query
-          required: true
           schema:
             type: boolean
             default: null
@@ -1802,6 +2092,20 @@ paths:
             events = client.fine_tuning.list_events(id="ft-id")
 
             print(events)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.fine_tuning.list_events(id="ft-id")
+
+            for event in response.data:
+                print(event)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -1811,7 +2115,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const events = await client.fineTune.listEvents("ft-id");
+            const events = await client.fineTuning.listEvents("ft-id");
 
             console.log(events);
         - lang: JavaScript
@@ -1823,7 +2127,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const events = await client.fineTune.listEvents("ft-id");
+            const events = await client.fineTuning.listEvents("ft-id");
 
             console.log(events);
         - lang: Shell
@@ -1864,6 +2168,19 @@ paths:
             checkpoints = client.fine_tuning.list_checkpoints(id="ft-id")
 
             print(checkpoints)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            checkpoints = client.fine_tuning.list_checkpoints(id="ft-id")
+
+            print(checkpoints)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -1873,7 +2190,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const checkpoints = await client.fineTune.retrieveCheckpoints("ft-id");
+            const checkpoints = await client.fineTuning.listCheckpoints("ft-id");
 
             console.log(checkpoints);
         - lang: JavaScript
@@ -1885,7 +2202,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const checkpoints = await client.fineTune.retrieveCheckpoints("ft-id");
+            const checkpoints = await client.fineTuning.listCheckpoints("ft-id");
 
             console.log(checkpoints);
         - lang: Shell
@@ -1911,7 +2228,7 @@ paths:
     get:
       tags: ['Fine-tuning']
       summary: Download model
-      description: Download a compressed fine-tuned model or checkpoint.
+      description: Receive a compressed fine-tuned model or checkpoint.
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (Python)
@@ -1923,9 +2240,27 @@ paths:
                 api_key=os.environ.get("TOGETHER_API_KEY"),
             )
 
+            # This will download the content to a location on disk
             response = client.fine_tuning.download(id="ft-id")
 
             print(response)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            # Using `with_streaming_response` gives you control to do what you want with the response.
+            stream = client.fine_tuning.with_streaming_response.content(ft_id="ft-id")
+
+            with stream as response:
+                for line in response.iter_lines():
+                    print(line)
+
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -1935,12 +2270,11 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.fineTune.download({
+            const response = await client.fineTuning.content({
               ft_id: "ft-id",
-              checkpoint: "merged",
             });
 
-            console.log(response);
+            console.log(await response.blob());
         - lang: JavaScript
           label: Together AI SDK (JavaScript)
           source: |
@@ -1950,12 +2284,11 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.fineTune.download({
+            const response = await client.fineTuning.content({
               ft_id: "ft-id",
-              checkpoint: "merged",
             });
 
-            console.log(response);
+            console.log(await response.blob());
         - lang: Shell
           label: cURL
           source: |
@@ -2015,6 +2348,19 @@ paths:
             response = client.fine_tuning.cancel(id="ft-id")
 
             print(response)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.fine_tuning.cancel(id="ft-id")
+
+            print(response)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -2024,7 +2370,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.fineTune.cancel("ft-id");
+            const response = await client.fineTuning.cancel("ft-id");
 
             console.log(response);
         - lang: JavaScript
@@ -2036,7 +2382,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.fineTune.cancel("ft-id");
+            const response = await client.fineTuning.cancel("ft-id");
 
             console.log(response);
         - lang: Shell
@@ -2108,6 +2454,45 @@ paths:
                 print(f"Rank: {result.index + 1}")
                 print(f"Title: {documents[result.index]['title']}")
                 print(f"Text: {documents[result.index]['text']}")
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            documents = [
+                {
+                    "title": "Llama",
+                    "text": "The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era."
+                },
+                {
+                    "title": "Panda",
+                    "text": "The giant panda (Ailuropoda melanoleuca), also known as the panda bear or simply panda, is a bear species endemic to China."
+                },
+                {
+                    "title": "Guanaco",
+                    "text": "The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations."
+                },
+                {
+                    "title": "Wild Bactrian camel",
+                    "text": "The wild Bactrian camel (Camelus ferus) is an endangered species of camel endemic to Northwest China and southwestern Mongolia."
+                }
+            ]
+
+            response = client.rerank.create(
+                model="Salesforce/Llama-Rank-v1",
+                query="What animals can I find near Peru?",
+                documents=documents,
+            )
+
+            for result in response.results:
+                print(f"Rank: {result.index + 1}")
+                print(f"Title: {documents[result.index]['title']}")
+                print(f"Text: {documents[result.index]['text']}")
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -2134,7 +2519,7 @@ paths:
               "text": "The wild Bactrian camel (Camelus ferus) is an endangered species of camel endemic to Northwest China and southwestern Mongolia."
             }];
 
-            const response = await client.rerank({
+            const response = await client.rerank.create({
               model: "Salesforce/Llama-Rank-v1",
               query: "What animals can I find near Peru?",
               documents,
@@ -2171,7 +2556,7 @@ paths:
               "text": "The wild Bactrian camel (Camelus ferus) is an endangered species of camel endemic to Northwest China and southwestern Mongolia."
             }];
 
-            const response = await client.rerank({
+            const response = await client.rerank.create({
               model: "Salesforce/Llama-Rank-v1",
               query: "What animals can I find near Peru?",
               documents,
@@ -2281,6 +2666,24 @@ paths:
             )
 
             response.stream_to_file("audio.wav")
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.audio.speech.with_streaming_response.create(
+                model="cartesia/sonic-2",
+                input="The quick brown fox jumps over the lazy dog.",
+                voice="laidback woman",
+            )
+
+            with response as stream:
+              stream.stream_to_file("audio.wav")
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -2293,7 +2696,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.audio.create({
+            const response = await client.audio.speech.create({
               model: "cartesia/sonic-2",
               input: "The quick brown fox jumps over the lazy dog.",
               voice: "laidback woman",
@@ -2317,7 +2720,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const response = await client.audio.create({
+            const response = await client.audio.speech.create({
               model: "cartesia/sonic-2",
               input: "The quick brown fox jumps over the lazy dog.",
               voice: "laidback woman",
@@ -2695,7 +3098,23 @@ paths:
           label: Together AI SDK (Python)
           source: |
             from together import Together
-            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            file = open("audio.wav", "rb")
+
+            response = client.audio.transcriptions.create(
+                model="openai/whisper-large-v3",
+                file=file,
+            )
+
+            print(response.text)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
 
             client = Together(
                 api_key=os.environ.get("TOGETHER_API_KEY"),
@@ -2815,6 +3234,25 @@ paths:
             )
 
             print(response.text)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            file = open("audio.wav", "rb")
+
+            response = client.audio.translations.create(
+                model="openai/whisper-large-v3",
+                file=file,
+                language="es",
+            )
+
+            print(response.text)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -2912,6 +3350,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListAvailibilityZonesResponse'
+      x-codeSamples:
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.endpoints.list_avzones()
+
+            print(response.avzones)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.endpoints.listAvzones();
+
+            console.log(response.avzones);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.endpoints.listAvzones();
+
+            console.log(response.avzones);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/clusters/availability-zones" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json"
   /endpoints:
     get:
       tags: ['Endpoints']
@@ -2931,6 +3413,20 @@ paths:
             endpoints = client.endpoints.list()
 
             for endpoint in endpoints:
+                print(endpoint.id)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.endpoints.list()
+
+            for endpoint in response.data:
                 print(endpoint.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
@@ -3059,6 +3555,26 @@ paths:
             )
 
             print(endpoint.id)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            endpoint = client.endpoints.create(
+                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                hardware="1x_nvidia_a100_80gb_sxm",
+                autoscaling={
+                  "min_replicas": 2,
+                  "max_replicas": 5,
+                }
+            )
+
+            print(endpoint.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -3144,6 +3660,32 @@ paths:
       summary: Get endpoint by ID
       description: Retrieves details about a specific endpoint, including its current state, configuration, and scaling settings.
       x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            endpoint = client.endpoints.get("endpoint-id")
+
+            print(endpoint.id)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            endpoint = client.endpoints.retrieve("endpoint-id")
+
+            print(endpoint.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -3417,6 +3959,34 @@ paths:
         When a model parameter is provided, it returns only hardware configurations compatible
         with that model, including their current availability status.
       x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.endpoints.list_hardware()
+
+            for hardware in response:
+                print(hardware.id)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.hardware.list()
+
+            for hardware in response.data:
+                print(hardware.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -3513,6 +4083,22 @@ paths:
             )
 
             print(response.data.outputs[0].data);
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.code_interpreter.execute(
+                code="print('Hello world!')",
+                language="python",
+            )
+
+            print(response.data.outputs[0].data);
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -3576,6 +4162,24 @@ paths:
       description: |
         Lists all your currently active sessions.
       x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            # together v1 does not support this method
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.code_interpreter.sessions.list()
+
+            for session in response.data.sessions:
+                print(session.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -3636,6 +4240,20 @@ paths:
             )
 
             batches = client.batches.list_batches()
+
+            for batch in batches:
+                print(batch.id)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            batches = client.batches.list()
 
             for batch in batches:
                 print(batch.id)
@@ -3710,6 +4328,19 @@ paths:
             batch = client.batches.create_batch("file_id", endpoint="/v1/chat/completions")
 
             print(batch.id)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            batch = client.batches.create(input_file_id="file_id", endpoint="/v1/chat/completions")
+
+            print(batch.job)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -3809,6 +4440,19 @@ paths:
             batch = client.batches.get_batch("batch_id")
 
             print(batch)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            batch = client.batches.retrieve("batch_id")
+
+            print(batch)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -3905,6 +4549,19 @@ paths:
             batch = client.batches.cancel("batch_id")
 
             print(batch)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            batch = client.batches.cancel("batch_id")
+
+            print(batch)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -3988,6 +4645,106 @@ paths:
         - evaluation
       summary: Create an evaluation job
       operationId: createEvaluationJob
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.evaluation.create(
+                type="classify",
+                judge_model_name="meta-llama/Llama-3.1-70B-Instruct-Turbo",
+                judge_system_template="You are an expert evaluator...",
+                input_data_file_path="file-abc123",
+                labels=["good", "bad"],
+                pass_labels=["good"],
+                model_to_evaluate="meta-llama/Llama-3.1-8B-Instruct-Turbo"
+            )
+
+            print(response.workflow_id)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.evals.create(
+                type="classify",
+                parameters=ParametersEvaluationClassifyParameters(
+                    judge=ParametersEvaluationClassifyParametersJudge(
+                        model="meta-llama/Llama-3.1-70B-Instruct-Turbo",
+                        model_source="serverless",
+                        system_template="You are an expert evaluator...",
+                    ),
+                    input_data_file_path="file-abc123",
+                    labels=["good", "bad"],
+                    pass_labels=["good"],
+                    model_to_evaluate="meta-llama/Llama-3.1-8B-Instruct-Turbo"
+                )
+            )
+
+            print(response.workflow_id)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.evals.create({
+              type: 'classify',
+              parameters: {
+                judge: {
+                  model: 'meta-llama/Llama-3.1-70B-Instruct-Turbo',
+                  model_source: 'serverless',
+                  system_template: 'You are an expert evaluator...',
+                },
+                input_data_file_path: 'file-abc123',
+                labels: ['good', 'bad'],
+                pass_labels: ['good'],
+                model_to_evaluate: 'meta-llama/Llama-3.1-8B-Instruct-Turbo',
+              },
+            });
+
+            console.log(response.workflow_id);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.evals.create({
+              type: 'classify',
+              parameters: {
+                judge: {
+                  model: 'meta-llama/Llama-3.1-70B-Instruct-Turbo',
+                  model_source: 'serverless',
+                  system_template: 'You are an expert evaluator...',
+                },
+                input_data_file_path: 'file-abc123',
+                labels: ['good', 'bad'],
+                pass_labels: ['good'],
+                model_to_evaluate: 'meta-llama/Llama-3.1-8B-Instruct-Turbo',
+              },
+            });
+
+            console.log(response.workflow_id);
+
+
       requestBody:
         required: true
         content:
@@ -4018,6 +4775,63 @@ paths:
         - evaluation
       summary: Get all evaluation jobs
       operationId: getAllEvaluationJobs
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            jobs = client.evaluation.list()
+
+            for job in jobs:
+                print(job.workflow_id)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.evals.list()
+
+            for job in response:
+                print(job.workflow_id)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.evals.list();
+
+            for (const job of response) {
+              console.log(job.workflow_id);
+            }
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.evals.list();
+
+            for (const job of response) {
+              console.log(job.workflow_id);
+            }
       parameters:
         - name: status
           in: query
@@ -4096,97 +4910,63 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorData"
-  /evaluations/model-list:
-    get:
-      tags:
-        - evaluation
-      summary: Get model list
-      operationId: getModelListDeprecated
-      parameters:
-        - name: model_source
-          in: query
-          required: false
-          schema:
-            type: string
-            default: "all"
-      responses:
-        "200":
-          description: "Model list retrieved successfully. Deprecated! Please use /evaluation/model-list"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  model_list:
-                    type: array
-                    items:
-                      type: string
-                      description: "The name of the model"
-        "400":
-          description: "Invalid request format"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-        "500":
-          description: "Error retrieving model list"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-  /evaluations:
-    get:
-      tags:
-        - evaluation
-      summary: Get all evaluation jobs. Deprecated! Please use /evaluation
-      operationId: getAllEvaluationJobsDeprecated
-      parameters:
-        - name: status
-          in: query
-          required: false
-          schema:
-            type: string
-            default: "pending"
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            default: 10
-        - name: userId
-          in: query
-          required: false
-          description: "Admin users can specify a user ID to filter jobs. Pass empty string to get all jobs."
-          schema:
-            type: string
-      responses:
-        "200":
-          description: "evaluation jobs retrieved successfully"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/EvaluationJob"
-        "400":
-          description: "Invalid request format"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-        "500":
-          description: "Error retrieving jobs from manager"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-
   /evaluation/{id}:
     get:
       tags:
         - evaluation
       summary: Get evaluation job details
       operationId: getEvaluationJobDetails
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            client.evaluation.retrieve('eval_id')
+
+            print(response)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.evals.retrieve('eval_id')
+
+            print(response)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.evals.retrieve('eval_id');
+
+            console.log(response);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.evals.retrieve('eval_id');
+
+            console.log(response);
       parameters:
         - name: id
           in: path
@@ -4219,6 +4999,61 @@ paths:
         - evaluation
       summary: Get evaluation job status and results
       operationId: getEvaluationJobStatusAndResults
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.evaluation.status('eval_id')
+
+            print(response.status)
+            print(response.results)
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.evals.status('eval_id')
+
+            print(response.status)
+            print(response.results)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.evals.status('eval_id');
+
+            console.log(response.status);
+            console.log(response.results);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.evals.status('eval_id');
+
+            console.log(response.status);
+            console.log(response.results);
       parameters:
         - name: id
           in: path
@@ -4262,6 +5097,51 @@ paths:
         - evaluation
       summary: Update evaluation job status and results
       operationId: updateEvaluationJobStatusAndResults
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (Python)
+          source: |
+            # Together v1 does not support this method
+        - lang: Python v2
+          label: Together AI SDK (Python v2)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.evals.update('eval_id', status='completed', results={'score': 0.9})
+
+            print(response.workflow_id)
+            print(response.status)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.evals.update('eval_id', status='completed', results={'score': 0.9});
+
+            console.log(response.workflow_id);
+            console.log(response.status);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.evals.update('eval_id', status='completed', results={'score': 0.9});
+
+            console.log(response.workflow_id);
+            console.log(response.status);
       parameters:
         - name: id
           in: path
