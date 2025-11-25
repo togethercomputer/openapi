@@ -1772,7 +1772,7 @@ paths:
             fine_tune = client.fine_tuning.retrieve(id="ft-id")
 
             print(fine_tune)
-         - lang: Python v2
+        - lang: Python v2
           label: Together AI SDK (Python v2)
           source: |
             from together import Together
