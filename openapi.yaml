@@ -43,7 +43,7 @@ paths:
 
             print(response.data)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -102,7 +102,7 @@ paths:
 
             print(response.id)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -182,7 +182,7 @@ paths:
 
             print(response.id)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -265,7 +265,7 @@ paths:
 
             print(response.choices[0].message.content)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -407,7 +407,7 @@ paths:
 
             print(response.choices[0].text)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -542,7 +542,7 @@ paths:
 
             print(response.data[0].embedding)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -668,7 +668,7 @@ paths:
             for model in models:
                 print(model.id)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -776,7 +776,7 @@ paths:
 
             print(response.job_id)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -906,7 +906,7 @@ paths:
 
             print(response.data[0].url)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -1076,7 +1076,7 @@ paths:
             for file in response.data:
                 print(file.id)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -1150,7 +1150,7 @@ paths:
 
             print(file)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -1224,7 +1224,7 @@ paths:
 
             print(response)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -1298,7 +1298,7 @@ paths:
 
             print(file.filename)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -1383,7 +1383,7 @@ paths:
 
             print(file.id)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -1502,7 +1502,7 @@ paths:
 
             print(response)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -1699,7 +1699,7 @@ paths:
             for fine_tune in response.data:
                 print(f"ID: {fine_tune.id}, Status: {fine_tune.status}")
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -1773,7 +1773,7 @@ paths:
 
             print(fine_tune)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -1847,7 +1847,7 @@ paths:
 
             print(response)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -1939,7 +1939,7 @@ paths:
 
             print(events)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -2015,7 +2015,7 @@ paths:
 
             print(checkpoints)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -2091,7 +2091,7 @@ paths:
 
             print(response)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -2195,7 +2195,7 @@ paths:
 
             print(response)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -2301,7 +2301,7 @@ paths:
                 print(f"Title: {documents[result.index]['title']}")
                 print(f"Text: {documents[result.index]['text']}")
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -2513,7 +2513,7 @@ paths:
 
             response.stream_to_file("audio.wav")
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -2958,7 +2958,7 @@ paths:
 
             print(response.text)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
 
@@ -3081,7 +3081,7 @@ paths:
 
             print(response.text)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -3198,7 +3198,7 @@ paths:
                 $ref: '#/components/schemas/ListAvailibilityZonesResponse'
       x-codeSamples:
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -3261,7 +3261,7 @@ paths:
             for endpoint in endpoints:
                 print(endpoint.id)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -3402,7 +3402,7 @@ paths:
 
             print(endpoint.id)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -3520,7 +3520,7 @@ paths:
 
             print(endpoint.id)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -3820,7 +3820,7 @@ paths:
             for hardware in response:
                 print(hardware.id)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -3930,7 +3930,7 @@ paths:
 
             print(response.data.outputs[0].data);
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -4013,7 +4013,7 @@ paths:
           source: |
             # together v1 does not support this method
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -4090,7 +4090,7 @@ paths:
             for batch in batches:
                 print(batch.id)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -4175,7 +4175,7 @@ paths:
 
             print(batch.id)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -4287,7 +4287,7 @@ paths:
 
             print(batch)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -4396,7 +4396,7 @@ paths:
 
             print(batch)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -4514,7 +4514,7 @@ paths:
 
             print(response.workflow_id)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -4637,7 +4637,7 @@ paths:
             for job in jobs:
                 print(job.workflow_id)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -4777,7 +4777,7 @@ paths:
 
             print(response)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
@@ -4861,7 +4861,7 @@ paths:
             print(response.status)
             print(response.results)
         - lang: Python v2
-          label: Together AI SDK (Python v2)
+          label: Python v2
           source: |
             from together import Together
             import os
