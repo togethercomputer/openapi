@@ -151,7 +151,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VideoRetrieveResponse'
+                $ref: '#/components/schemas/VideoJob'
         '400':
           description: Invalid request parameters.
         '404':
@@ -238,7 +238,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateVideoResponse'
+                $ref: '#/components/schemas/VideoJob'
   /chat/completions:
     post:
       tags: ['Chat']
@@ -8873,15 +8873,7 @@ components:
         - MP4
         - WEBM
 
-    CreateVideoResponse:
-      type: object
-      required: ['id']
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the video job.
-
-    VideoRetrieveResponse:
+    VideoJob:
       properties:
         id:
           type: string
