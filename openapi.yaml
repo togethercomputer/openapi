@@ -3299,6 +3299,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorData'
   /gpu_cluster:
+    get:
+      servers:
+        - url: https://manager.cloud.together.ai/api/v1
+      tags: ['GPUClusterService']
+      summary: List all GPU clusters.
+      operationId: GPUClusterService_List
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GPUClusters'
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization Bearer $TOGETHER_API_KEY" \
+                  https://manager.cloud.together.ai/api/v1/gpu_clusters
     put:
       servers:
         - url: https://manager.cloud.together.ai/api/v1
@@ -3410,27 +3430,6 @@ paths:
             curl -X DELETE \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
                   https://manager.cloud.together.ai/api/v1/gpu_cluster/${CLUSTER_ID}
-  /gpu_clusters:
-    get:
-      servers:
-        - url: https://manager.cloud.together.ai/api/v1
-      tags: ['GPUClusterService']
-      summary: List all GPU clusters.
-      operationId: GPUClusterService_List
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GPUClusters'
-      x-codeSamples:
-        - lang: Shell
-          label: cURL
-          source: |
-            curl -X GET \
-                  -H "Authorization Bearer $TOGETHER_API_KEY" \
-                  https://manager.cloud.together.ai/api/v1/gpu_clusters
   /instance-types:
     get:
       servers:
