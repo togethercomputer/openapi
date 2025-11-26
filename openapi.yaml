@@ -785,7 +785,7 @@ paths:
                 api_key=os.environ.get("TOGETHER_API_KEY"),
             )
 
-            client.models.upload(
+            response = client.models.upload(
                 model_name="My-Fine-Tuned-Model",
                 model_source="https://ml-models.s3.us-west-2.amazonaws.com/models/my-fine-tuned-model.tar.gz",
             )
@@ -4773,7 +4773,7 @@ paths:
                 api_key=os.environ.get("TOGETHER_API_KEY"),
             )
 
-            client.evaluation.retrieve('eval_id')
+            response = client.evaluation.retrieve('eval_id')
 
             print(response)
         - lang: Python v2
