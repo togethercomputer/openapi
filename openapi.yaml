@@ -3479,6 +3479,26 @@ paths:
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
                   https://manager.cloud.together.ai/api/v1/regions
   /shared_volume:
+    get:
+      servers:
+        - url: https://manager.cloud.together.ai/api/v1
+      tags: ['SharedVolumeService']
+      summary: List all shared volumes.
+      operationId: SharedVolumeService_List
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SharedVolumes'
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://manager.cloud.together.ai/api/v1/shared_volumes
     put:
       servers:
         - url: https://manager.cloud.together.ai/api/v1
@@ -3586,27 +3606,6 @@ paths:
             curl -X DELETE \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
                   https://manager.cloud.together.ai/api/v1/shared_volume/${SHARED_VOLUME_ID}
-  /shared_volumes:
-    get:
-      servers:
-        - url: https://manager.cloud.together.ai/api/v1
-      tags: ['SharedVolumeService']
-      summary: List all shared volumes.
-      operationId: SharedVolumeService_List
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SharedVolumes'
-      x-codeSamples:
-        - lang: Shell
-          label: cURL
-          source: |
-            curl -X GET \
-                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://manager.cloud.together.ai/api/v1/shared_volumes
   /clusters/availability-zones:
     get:
       tags: ['endpoints']
