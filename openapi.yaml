@@ -5767,6 +5767,10 @@ components:
                     $ref: '#/components/schemas/Region'
     SharedVolumeCreateRequest:
         type: object
+        required:
+          - volume_name
+          - size_tib
+          - region
         properties:
             volume_name:
                 type: string
@@ -5776,6 +5780,7 @@ components:
                 format: uint32
             region:
                 type: string
+                description: Region name. Usable regions can be found from `client.clusters.list_regions()`
     SharedVolumeCreateResponse:
         type: object
         properties:
