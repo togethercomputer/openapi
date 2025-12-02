@@ -6382,6 +6382,12 @@ components:
                 },
                 ...
           default: false
+        min_speakers:
+          type: integer
+          description: Minimum number of speakers expected in the audio. Used to improve diarization accuracy when the approximate number of speakers is known.
+        max_speakers:
+          type: integer
+          description: Maximum number of speakers expected in the audio. Used to improve diarization accuracy when the approximate number of speakers is known.
 
     AudioTranscriptionResponse:
       oneOf:
