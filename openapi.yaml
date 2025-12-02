@@ -1054,6 +1054,12 @@ paths:
                       scale:
                         type: number
                         description: The strength of the LoRA's influence. Most LoRA's recommend a value of 1.
+                reference_images:
+                  description: An array of image URLs that guide the overall appearance and style of the generated image. These reference images influence the visual characteristics consistently across the generation.
+                  type: array
+                  items:
+                    type: string
+                    description: URL of a reference image to guide the image generation.
                 disable_safety_checker:
                   type: boolean
                   description: If true, disables the safety checker for image generation.
