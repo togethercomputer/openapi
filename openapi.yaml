@@ -5887,17 +5887,23 @@ components:
                 name:
                   type: string
         response_format:
-          type: object
-          description: An object specifying the format that the model must output.
-          properties:
-            type:
-              description: The type of the response format.
-              type: string
-              example: json
-            schema:
-              description: The schema of the response format.
-              type: object
-              additionalProperties: true
+          description: |
+            An object specifying the format that the model must output.
+
+            Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+            Structured Outputs which ensures the model will match your supplied JSON
+            schema. Learn more in the [Structured Outputs
+            guide](https://docs.together.ai/docs/json-mode).
+
+            Setting to `{ "type": "json_object" }` enables the older JSON mode, which
+            ensures the message the model generates is valid JSON. Using `json_schema`
+            is preferred for models that support it.
+          discriminator:
+                  propertyName: type
+          anyOf:
+            - $ref: '#/components/schemas/ResponseFormatText'
+            - $ref: '#/components/schemas/ResponseFormatJsonSchema'
+            - $ref: '#/components/schemas/ResponseFormatJsonObject'
         tools:
           type: array
           description: A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for.
@@ -5918,6 +5924,92 @@ components:
           enum: ['low', 'medium', 'high']
           description: Controls the level of reasoning effort the model should apply when generating responses. Higher values may result in more thoughtful and detailed responses but may take longer to generate.
           example: 'medium'
+
+    ResponseFormatText:
+      type: object
+      title: Text
+      description: |
+        Default response format. Used to generate text responses.
+      properties:
+        type:
+          type: string
+          description: The type of response format being defined. Always `text`.
+          enum:
+            - text
+          x-stainless-const: true
+      required:
+        - type
+    ResponseFormatJsonObject:
+      type: object
+      title: JSON object
+      description: |
+        JSON object response format. An older method of generating JSON responses.
+        Using `json_schema` is recommended for models that support it. Note that the
+        model will not generate JSON without a system or user message instructing it
+        to do so.
+      properties:
+        type:
+          type: string
+          description: The type of response format being defined. Always `json_object`.
+          enum:
+            - json_object
+          x-stainless-const: true
+      required:
+        - type
+    ResponseFormatJsonSchema:
+      type: object
+      title: JSON schema
+      description: |
+        JSON Schema response format. Used to generate structured JSON responses.
+        Learn more about [Structured Outputs](https://docs.together.ai/docs/json-mode).
+      properties:
+        type:
+          type: string
+          description: The type of response format being defined. Always `json_schema`.
+          enum:
+            - json_schema
+          x-stainless-const: true
+        json_schema:
+          type: object
+          title: JSON schema
+          description: |
+            Structured Outputs configuration options, including a JSON Schema.
+          properties:
+            description:
+              type: string
+              description: |
+                A description of what the response format is for, used by the model to
+                determine how to respond in the format.
+            name:
+              type: string
+              description: |
+                The name of the response format. Must be a-z, A-Z, 0-9, or contain
+                underscores and dashes, with a maximum length of 64.
+            schema:
+              $ref: '#/components/schemas/ResponseFormatJsonSchemaSchema'
+            strict:
+              anyOf:
+                - type: boolean
+                  default: false
+                  description: |
+                    Whether to enable strict schema adherence when generating the output.
+                    If set to true, the model will always follow the exact schema defined
+                    in the `schema` field. Only a subset of JSON Schema is supported when
+                    `strict` is `true`. To learn more, read the [Structured Outputs
+                    guide](https://docs.together.ai/docs/json-mode).
+                - type: 'null'
+          required:
+            - name
+      required:
+        - type
+        - json_schema
+    ResponseFormatJsonSchemaSchema:
+      type: object
+      title: JSON schema
+      description: |
+        The schema for the response format, described as a JSON Schema object.
+        Learn how to build JSON schemas [here](https://json-schema.org/).
+      additionalProperties: true
 
     ChatCompletionMessageParam:
       oneOf:
