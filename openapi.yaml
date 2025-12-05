@@ -1426,72 +1426,10 @@ paths:
                   type: integer
                   default: 1
                   description: Number of complete passes through the training dataset (higher values may improve results but increase cost and risk of overfitting)
-                n_checkpoints:
-                  type: integer
-                  default: 1
-                  description: Number of intermediate model versions saved during training for evaluation
                 n_evals:
                   type: integer
                   default: 0
                   description: Number of evaluations to be run on a given validation set during training
-                batch_size:
-                  oneOf:
-                    - type: integer
-                    - type: string
-                      enum:
-                        - max
-                  default: 'max'
-                  description: Number of training examples processed together (larger batches use more memory but may train faster). Defaults to "max". We use training optimizations like packing, so the effective batch size may be different than the value you set.
-                learning_rate:
-                  type: number
-                  format: float
-                  default: 0.00001
-                  description: Controls how quickly the model adapts to new information (too high may cause instability, too low may slow convergence)
-                lr_scheduler:
-                  type: object
-                  default: none
-                  $ref: '#/components/schemas/LRScheduler'
-                  description: The learning rate scheduler to use. It specifies how the learning rate is adjusted during training.
-                warmup_ratio:
-                  type: number
-                  format: float
-                  default: 0.0
-                  description: The percent of steps at the start of training to linearly increase the learning rate.
-                max_grad_norm:
-                  type: number
-                  format: float
-                  default: 1.0
-                  description: Max gradient norm to be used for gradient clipping. Set to 0 to disable.
-                weight_decay:
-                  type: number
-                  format: float
-                  default: 0.0
-                  description: Weight decay. Regularization parameter for the optimizer.
-                suffix:
-                  type: string
-                  description: Suffix that will be added to your fine-tuned model name
-                wandb_api_key:
-                  type: string
-                  description: Integration key for tracking experiments and model metrics on W&B platform
-                wandb_base_url:
-                  type: string
-                  description: The base URL of a dedicated Weights & Biases instance.
-                wandb_project_name:
-                  type: string
-                  description: The Weights & Biases project for your run. If not specified, will use `together` as the project name.
-                wandb_name:
-                  type: string
-                  description: The Weights & Biases name for your run.
-                train_on_inputs:
-                  oneOf:
-                    - type: boolean
-                    - type: string
-                      enum:
-                        - auto
-                  type: boolean
-                  default: auto
-                  description: Whether to mask the user messages in conversational data or prompts in instruction data.
-                  deprecated: true
                 training_method:
                   type: object
                   oneOf:
@@ -1503,21 +1441,6 @@ paths:
                   oneOf:
                     - $ref: '#/components/schemas/FullTrainingType'
                     - $ref: '#/components/schemas/LoRATrainingType'
-                from_checkpoint:
-                  type: string
-                  description: The checkpoint identifier to continue training from a previous fine-tuning job. Format is `{$JOB_ID}` or `{$OUTPUT_MODEL_NAME}` or `{$JOB_ID}:{$STEP}` or `{$OUTPUT_MODEL_NAME}:{$STEP}`. The step value is optional; without it, the final checkpoint will be used.
-                from_hf_model:
-                  type: string
-                  description: The Hugging Face Hub repo to start training from. Should be as close as possible to the base model (specified by the `model` argument) in terms of architecture and size.
-                hf_model_revision:
-                  type: string
-                  description: The revision of the Hugging Face Hub model to continue training from. E.g., hf_model_revision=main (default, used if the argument is not provided) or hf_model_revision='607a30d783dfa663caf39e06633721c8d4cfcd7e' (specific commit).
-                hf_api_token:
-                  type: string
-                  description: The API token for the Hugging Face Hub.
-                hf_output_repo_name:
-                  type: string
-                  description: The name of the Hugging Face repository to upload the fine-tuned model to
       responses:
         '500':
           description: Internal Server Error
