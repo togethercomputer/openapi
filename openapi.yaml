@@ -1775,6 +1775,79 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinetuneTruncatedList'
+  /fine-tunes/estimate-price:
+    post:
+      tags: ['Fine-tuning']
+      summary: Estimate price
+      description: Estimate the price of a fine-tuning job.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - training_file
+                - model
+              properties:
+                training_file:
+                  type: string
+                  description: File-ID of a training file uploaded to the Together API
+                validation_file:
+                  type: string
+                  description: File-ID of a validation file uploaded to the Together API
+                model:
+                  type: string
+                  description: Name of the base model to run fine-tune job on
+                n_epochs:
+                  type: integer
+                  default: 1
+                  description: Number of complete passes through the training dataset (higher values may improve results but increase cost and risk of overfitting)
+                n_evals:
+                  type: integer
+                  default: 0
+                  description: Number of evaluations to be run on a given validation set during training
+                training_method:
+                  type: object
+                  oneOf:
+                    - $ref: '#/components/schemas/TrainingMethodSFT'
+                    - $ref: '#/components/schemas/TrainingMethodDPO'
+                  description: The training method to use. 'sft' for Supervised Fine-Tuning or 'dpo' for Direct Preference Optimization.
+                training_type:
+                  type: object
+                  oneOf:
+                    - $ref: '#/components/schemas/FullTrainingType'
+                    - $ref: '#/components/schemas/LoRATrainingType'
+      responses:
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+        '200':
+          description: Price estimated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  estimated_total_price:
+                    type: number
+                    description: The price of the fine-tuning job
+                  allowed_to_proceed:
+                    type: boolean
+                    description: Whether the user is allowed to proceed with the fine-tuning job
+                    example: true
+                  user_limit:
+                    type: number
+                    description: The user's credit limit in dollars
+                  estimated_train_token_count:
+                    type: number
+                    description: The estimated number of tokens to be trained
+                  estimated_eval_token_count:
+                    type: number
+                    description: The estimated number of tokens for evaluation
   /fine-tunes/{id}:
     get:
       tags: ['Fine-tuning']
