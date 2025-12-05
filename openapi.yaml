@@ -1499,6 +1499,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
+  /fine-tunes/estimate-price:
+    post:
+      tags: ['Fine-tuning']
+      summary: Estimate price
+      description: Estimate the price of a fine-tuning job.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FineTuningPriceEstimateRequest'
+      responses:
+        '200':
+          description: Price estimated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FineTuningPriceEstimateResponse'
+            
   /fine-tunes:
     post:
       tags: ['Fine-tuning']
@@ -5227,6 +5246,68 @@ components:
       x-default: default
 
   schemas:
+    FineTuningPriceEstimateRequest:
+      type: object
+      required:
+        - training_file
+        - model
+        - n_epochs
+        - n_evals
+        - training_type
+        - training_method
+      properties:
+        training_file:
+          type: string
+          description: The model to be used for the fine-tuning job.
+        validation_file:
+          type: string
+          description: The validation file to be used for the fine-tuning job.
+        model:
+          type: string
+          description: The model to be used for the fine-tuning job.
+        n_epochs:
+          type: integer
+          description: The number of epochs to use for the fine-tuning job.
+        n_evals:
+          type: integer
+          description: The number of evals to use for the fine-tuning job.
+        training_method:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/TrainingMethodSFT'
+            - $ref: '#/components/schemas/TrainingMethodDPO'
+          description: The training method to use. 'sft' for Supervised Fine-Tuning or 'dpo' for Direct Preference Optimization.
+        training_type:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FullTrainingType'
+            - $ref: '#/components/schemas/LoRATrainingType'
+
+
+    FineTuningPriceEstimateResponse:
+      type: object
+      required:
+        - estimated_total_price
+        - user_limit
+        - estimated_train_token_count
+        - estimated_eval_token_count
+        - allowed_to_proceed
+      properties:
+        estimated_total_price:
+          type: number
+          description: The estimated total price of the fine-tuning job.
+        user_limit:
+          type: number
+          description: The user limit of the fine-tuning job.
+        estimated_train_token_count:
+          type: number
+          description: The estimated train token count of the fine-tuning job.
+        estimated_eval_token_count:
+          type: number
+          description: The estimated eval token count of the fine-tuning job.
+        allowed_to_proceed:
+          type: boolean
+          description: Whether the user is allowed to proceed with the fine-tuning job.
     ListVoicesResponse:
       description: Response containing a list of models and their available voices.
       type: object
