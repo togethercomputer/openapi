@@ -1820,6 +1820,12 @@ paths:
                 from_hf_model:
                   type: string
                   description: The Hugging Face Hub repo to start training from. Should be as close as possible to the base model (specified by the `model` argument) in terms of architecture and size.
+                hf_api_token:
+                  type: string
+                  description: The API token for the Hugging Face Hub.
+                hf_model_revision:
+                  type: string
+                  description: The revision of the Hugging Face Hub model to continue training from. E.g., hf_model_revision=main (default, used if the argument is not provided) or hf_model_revision='607a30d783dfa663caf39e06633721c8d4cfcd7e' (specific commit).
                 from_checkpoint:
                   type: string
                   description: The checkpoint identifier to continue training from a previous fine-tuning job. Format is `{$JOB_ID}` or `{$OUTPUT_MODEL_NAME}` or `{$JOB_ID}:{$STEP}` or `{$OUTPUT_MODEL_NAME}:{$STEP}`. The step value is optional; without it, the final checkpoint will be used.
