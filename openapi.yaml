@@ -723,6 +723,12 @@ paths:
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       operationId: models
+      parameters:
+        - name: dedicated
+          in: query
+          description: Filter models to only return dedicated models
+          schema:
+            type: boolean
       responses:
         '200':
           description: '200'
