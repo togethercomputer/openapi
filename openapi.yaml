@@ -3371,10 +3371,8 @@ paths:
                   -H "Authorization Bearer $TOGETHER_API_KEY" \
                   --data '{ "region": "us-west-2", "gpu_type": "H100_SXM", "num_gpus": 8, "cluster_name": "my-gpu-cluster", "duration_days": 7, "driver_version": "CUDA_12_6_560" }' \
                   https://api.together.ai/v1/clusters
-  /gpu_cluster/{cluster_id}:
+  /clusters/{cluster_id}:
     get:
-      servers:
-        - url: https://manager.cloud.together.ai/api/v1
       tags: ['GPUClusterService']
       summary: Get GPU cluster by cluster ID
       operationId: GPUClusterService_Get
@@ -3397,10 +3395,8 @@ paths:
           source: |
             curl -X GET \
                   -H "Authorization Bearer $TOGETHER_API_KEY" \
-                  https://manager.cloud.together.ai/api/v1/gpu_cluster/${CLUSTER_ID}
+                  https://api.together.ai/v1/clusters/${CLUSTER_ID}
     delete:
-      servers:
-        - url: https://manager.cloud.together.ai/api/v1
       tags: ['GPUClusterService']
       summary: Delete GPU cluster by cluster ID
       operationId: GPUClusterService_Delete
@@ -3423,38 +3419,9 @@ paths:
           source: |
             curl -X DELETE \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://manager.cloud.together.ai/api/v1/gpu_cluster/${CLUSTER_ID}
-  /instance-types:
+                  https://api.together.ai/v1/clusters/${CLUSTER_ID}
+  /clusters/regions:
     get:
-      servers:
-        - url: https://manager.cloud.together.ai/api/v1
-      tags: ['InstanceTypesService']
-      summary: List instance types
-      operationId: InstanceTypesService_List
-      parameters:
-        - name: region
-          in: query
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InstanceTypesResponse'
-      x-codeSamples:
-        - lang: Shell
-          label: cURL
-          source: |
-            curl -X POST \
-                 -H "Authorization Bearer $TOGETHER_API_KEY" \
-                 --data '{ "region": "us-west-2"}' \
-                 https://manager.cloud.together.ai/api/v1/instance_types
-  /regions:
-    get:
-      servers:
-        - url: https://manager.cloud.together.ai/api/v1
       tags: ['RegionService']
       summary: List regions and corresponding supported driver versions
       operationId: RegionService_List
@@ -3471,11 +3438,9 @@ paths:
           source: |
             curl -X GET \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://manager.cloud.together.ai/api/v1/regions
-  /shared_volume:
+                  https://api.together.ai/v1/clusters/regions
+  /clusters/storages
     get:
-      servers:
-        - url: https://manager.cloud.together.ai/api/v1
       tags: ['SharedVolumeService']
       summary: List all shared volumes.
       operationId: SharedVolumeService_List
@@ -3492,10 +3457,8 @@ paths:
           source: |
             curl -X GET \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://manager.cloud.together.ai/api/v1/shared_volumes
+                  https://api.together.ai/v1/clusters/storages
     put:
-      servers:
-        - url: https://manager.cloud.together.ai/api/v1
       tags: ['SharedVolumeService']
       summary: Update a shared volume.
       operationId: SharedVolumeService_Update
@@ -3519,10 +3482,8 @@ paths:
               curl -X PUT \
                     -H "Authorization: Bearer $TOGETHER_API_KEY" \
                     --data '{ "volume_id": "12345-67890-12345-67890", "size_tib": 3}' \
-                    https://manager.cloud.together.ai/api/v1/shared_volume
+                    https://api.together.ai/v1/clusters/storages
     post:
-      servers:
-        - url: https://manager.cloud.together.ai/api/v1
       tags: ['SharedVolumeService']
       summary: Create a shared volume.
       operationId: SharedVolumeService_Create
@@ -3546,11 +3507,9 @@ paths:
             curl -X POST \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
                   --data '{ "volume_name": "my-shared-volume", "size_tib": 2, "region": "us-west-2" }' \
-                  https://manager.cloud.together.ai/api/v1/shared_volume
-  /shared_volume/{volume_id}:
+                  https://api.together.ai/v1/clusters/storages
+  /clusters/storages/{volume_id}:
     get:
-      servers:
-        - url: https://manager.cloud.together.ai/api/v1
       tags: ['SharedVolumeService']
       summary: Get shared volume by volume Id.
       operationId: SharedVolumeService_Get
@@ -3573,10 +3532,8 @@ paths:
           source: |
             curl -X GET \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://manager.cloud.together.ai/api/v1/shared_volume/${SHARED_VOLUME_ID}
+                  https://api.together.ai/v1/clusters/storages/${VOLUME_ID}
     delete:
-      servers:
-        - url: https://manager.cloud.together.ai/api/v1
       tags: ['SharedVolumeService']
       summary: Delete shared volume by volume id.
       operationId: SharedVolumeService_Delete
@@ -3599,7 +3556,7 @@ paths:
           source: |
             curl -X DELETE \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://manager.cloud.together.ai/api/v1/shared_volume/${SHARED_VOLUME_ID}
+                  https://api.together.ai/v1/clusters/storages/${VOLUME_ID}
   /clusters/availability-zones:
     get:
       tags: ['endpoints']
