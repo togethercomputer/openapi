@@ -3439,7 +3439,7 @@ paths:
             curl -X GET \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
                   https://api.together.ai/v1/clusters/regions
-  /clusters/storages
+  /clusters/storages:
     get:
       tags: ['SharedVolumeService']
       summary: List all shared volumes.
