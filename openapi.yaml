@@ -3298,10 +3298,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /gpu_cluster:
+  /clusters:
     get:
-      servers:
-        - url: https://manager.cloud.together.ai/api/v1
       tags: ['GPUClusterService']
       summary: List all GPU clusters.
       operationId: GPUClusterService_List
@@ -3318,10 +3316,8 @@ paths:
           source: |
             curl -X GET \
                   -H "Authorization Bearer $TOGETHER_API_KEY" \
-                  https://manager.cloud.together.ai/api/v1/gpu_clusters
+                  https://api.together.ai/v1/clusters
     put:
-      servers:
-        - url: https://manager.cloud.together.ai/api/v1
       tags: ['GPUClusterService']
       summary: Update a GPU Cluster.
       operationId: GPUClusterService_Update
@@ -3349,10 +3345,8 @@ paths:
               curl -X PUT \
                     -H "Authorization Bearer $TOGETHER_API_KEY" \
                     --data '{ "cluster_id": "cluster id", "cluster_type": "kubernetes", "num_gpus": 24 }' \
-                    https://manager.cloud.together.ai/api/v1/gpu_cluster
+                    https://api.together.ai/v1/clusters
     post:
-      servers:
-        - url: https://manager.cloud.together.ai/api/v1
       tags: ['GPUClusterService']
       summary: Create GPU Cluster
       operationId: GPUClusterService_Create
@@ -3376,7 +3370,7 @@ paths:
             curl -X POST \
                   -H "Authorization Bearer $TOGETHER_API_KEY" \
                   --data '{ "region": "us-west-2", "gpu_type": "H100_SXM", "num_gpus": 8, "cluster_name": "my-gpu-cluster", "duration_days": 7, "driver_version": "CUDA_12_6_560" }' \
-                  https://manager.cloud.together.ai/api/v1/gpu_cluster
+                  https://api.together.ai/v1/clusters
   /gpu_cluster/{cluster_id}:
     get:
       servers:
