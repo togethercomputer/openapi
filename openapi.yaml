@@ -173,7 +173,7 @@ paths:
             # Docs for v2 can be found by changing the above selector ^
             from together import Together
             import os
- 
+
             client = Together(
                 api_key=os.environ.get("TOGETHER_API_KEY"),
             )
@@ -208,7 +208,7 @@ paths:
             const client = new Together({
               apiKey: process.env.TOGETHER_API_KEY,
             });
-            
+
             const response = await client.videos.create({
               model: "together/video-model",
               prompt: "A cartoon of an astronaut riding a horse on the moon",
@@ -2897,7 +2897,7 @@ paths:
                         audio_data = bytearray()
                         async for message in ws:
                             data = json.loads(message)
-                            
+
                             if data["type"] == "conversation.item.input_text.received":
                                 print(f"Text received: {data['text']}")
                             elif data["type"] == "conversation.item.audio_output.delta":
@@ -2947,7 +2947,7 @@ paths:
 
               if (message.type === 'session.created') {
                 console.log(`Session created: ${message.session.id}`);
-                
+
                 // Send text chunks
                 const textChunks = [
                   "Hello, this is a test.",
@@ -3017,7 +3017,7 @@ paths:
             type: string
             default: tara
           description: |
-            The voice to use for speech generation. Default is 'tara'. 
+            The voice to use for speech generation. Default is 'tara'.
             Available voices vary by model. Can also be updated via `tts_session.updated` event.
         - in: query
           name: max_partial_length
@@ -3026,7 +3026,7 @@ paths:
             type: integer
             default: 250
           description: |
-            Maximum number of characters in partial text before forcing TTS generation 
+            Maximum number of characters in partial text before forcing TTS generation
             even without a sentence ending. Helps reduce latency for long text without punctuation.
       responses:
         '101':
@@ -5336,8 +5336,8 @@ components:
                 type: string
               name:
                 type: string
-          
-    ListAvailibilityZonesResponse: 
+
+    ListAvailibilityZonesResponse:
       description: List of unique availability zones
       type: object
       required: ['avzones']
@@ -5346,7 +5346,7 @@ components:
           type: array
           items:
             type: string
-        
+
     RerankRequest:
       type: object
       properties:
@@ -7462,6 +7462,8 @@ components:
           type: string
         hf_model_revision:
           type: string
+        progress:
+          $ref: '#/components/schemas/FineTuneProgress'
 
     FinetuneResponseTruncated:
       type: object
@@ -7588,6 +7590,9 @@ components:
         hf_model_revision:
           type: string
           description: The revision of the Hugging Face Hub model to continue training from
+        progress:
+          $ref: '#/components/schemas/FineTuneProgress'
+          description: Progress information for the fine-tuning job
     FinetuneDeleteResponse:
       type: object
       properties:
@@ -7711,7 +7716,20 @@ components:
           type: integer
         hash:
           type: string
-
+    FineTuneProgress:
+      type: object
+      description: Progress information for a fine-tuning job
+      required:
+        - estimate_available
+        - seconds_remaining
+      properties:
+        estimate_available:
+          type: boolean
+          description: Whether time estimate is available
+        seconds_remaining:
+          type: integer
+          format: int64
+          description: Estimated time remaining in seconds for the fine-tuning job to next state
     FinetuneListCheckpoints:
       type: object
       required:
@@ -9042,7 +9060,7 @@ components:
           type: string
           description: Similar to prompt, but specifies what to avoid instead of what to include
         frame_images:
-          description: Array of images to guide video generation, similar to keyframes. 
+          description: Array of images to guide video generation, similar to keyframes.
           example:
             - [
               {
@@ -9109,13 +9127,13 @@ components:
           description: The object type, which is always video.
           type: string
           enum:
-            - video   
-        model: 
+            - video
+        model:
           type: string
           description: The video generation model that produced the job.
         status:
           $ref: '#/components/schemas/VideoStatus'
-          description: Current lifecycle status of the video job.     
+          description: Current lifecycle status of the video job.
         created_at:
           type: number
           description: Unix timestamp (seconds) for when the job was created.
@@ -9132,9 +9150,9 @@ components:
           description: Error payload that explains why generation failed, if applicable.
           type: object
           properties:
-            code: 
+            code:
               type: string
-            message: 
+            message:
               type: string
           required:
             - message
