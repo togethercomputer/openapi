@@ -7728,7 +7728,6 @@ components:
           description: Whether time estimate is available
         seconds_remaining:
           type: integer
-          format: int64
           description: Estimated time remaining in seconds for the fine-tuning job to next state
     FinetuneListCheckpoints:
       type: object
