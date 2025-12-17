@@ -9944,14 +9944,14 @@ components:
       properties:
         content:
           allOf:
-            - $ref: "#/components/schemas/volumes.VolumeContent"
+            - $ref: "#/components/schemas/VolumeContent"
           description: Content specifies the content configuration for this volume
         name:
           description: Name is the unique identifier for the volume within the project
           type: string
         type:
           allOf:
-            - $ref: "#/components/schemas/volumes.VolumeType"
+            - $ref: "#/components/schemas/VolumeType"
           description: Type is the volume type (currently only "readOnly" is supported)
       required:
         - content
@@ -10412,7 +10412,7 @@ components:
       properties:
         content:
           allOf:
-            - $ref: "#/components/schemas/volumes.VolumeContent"
+            - $ref: "#/components/schemas/VolumeContent"
           description: Content specifies the new content that will be preloaded to this
             volume
         name:
@@ -10420,7 +10420,7 @@ components:
           type: string
         type:
           allOf:
-            - $ref: "#/components/schemas/volumes.VolumeType"
+            - $ref: "#/components/schemas/VolumeType"
           description: Type is the new volume type (currently only "readOnly" is supported)
       type: object
     VolumeMount:
@@ -10441,7 +10441,7 @@ components:
       properties:
         content:
           allOf:
-            - $ref: "#/components/schemas/volumes.VolumeContent"
+            - $ref: "#/components/schemas/VolumeContent"
           description: Content specifies the content that will be preloaded to this volume
         created_at:
           description: CreatedAt is the ISO8601 timestamp when this volume was created
@@ -10457,7 +10457,7 @@ components:
           type: string
         type:
           allOf:
-            - $ref: "#/components/schemas/volumes.VolumeType"
+            - $ref: "#/components/schemas/VolumeType"
           description: Type is the volume type (e.g., "readOnly")
         updated_at:
           description: UpdatedAt is the ISO8601 timestamp when this volume was last updated
