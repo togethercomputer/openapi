@@ -3369,6 +3369,12 @@ paths:
       tags: ['GPUClusterService']
       summary: Update a GPU Cluster.
       operationId: GPUClusterService_Update
+      parameters:
+        - name: cluster_id
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
