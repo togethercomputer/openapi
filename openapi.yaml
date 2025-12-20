@@ -3317,35 +3317,6 @@ paths:
             curl -X GET \
                   -H "Authorization Bearer $TOGETHER_API_KEY" \
                   https://api.together.ai/v1/clusters
-    put:
-      tags: ['GPUClusterService']
-      summary: Update a GPU Cluster.
-      operationId: GPUClusterService_Update
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GPUClusterUpdateRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GPUClusterUpdateResponse'
-      x-codeSamples:
-          - lang: TypeScript
-            label: Together AI SDK (TypeScript)
-            source: | 
-              client.clusters.create()
-          - lang: Shell
-            label: cURL
-            source: |
-              curl -X PUT \
-                    -H "Authorization Bearer $TOGETHER_API_KEY" \
-                    --data '{ "cluster_id": "cluster id", "cluster_type": "kubernetes", "num_gpus": 24 }' \
-                    https://api.together.ai/v1/clusters
     post:
       tags: ['GPUClusterService']
       summary: Create GPU Cluster
@@ -3396,6 +3367,35 @@ paths:
             curl -X GET \
                   -H "Authorization Bearer $TOGETHER_API_KEY" \
                   https://api.together.ai/v1/clusters/${CLUSTER_ID}
+    put:
+      tags: ['GPUClusterService']
+      summary: Update a GPU Cluster.
+      operationId: GPUClusterService_Update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GPUClusterUpdateRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GPUClusterUpdateResponse'
+      x-codeSamples:
+          - lang: TypeScript
+            label: Together AI SDK (TypeScript)
+            source: | 
+              client.clusters.create()
+          - lang: Shell
+            label: cURL
+            source: |
+              curl -X PUT \
+                    -H "Authorization Bearer $TOGETHER_API_KEY" \
+                    --data '{ "cluster_id": "cluster id", "cluster_type": "kubernetes", "num_gpus": 24 }' \
+                    https://api.together.ai/v1/clusters
     delete:
       tags: ['GPUClusterService']
       summary: Delete GPU cluster by cluster ID
@@ -5771,10 +5771,7 @@ components:
           type: integer
     GPUClusterUpdateRequest:
         type: object
-        required: [cluster_id]
         properties:
-          cluster_id:
-            type: string
           cluster_type:
             enum: [KUBERNETES, SLURM]
           num_gpus:
