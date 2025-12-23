@@ -1684,6 +1684,8 @@ paths:
                   oneOf:
                     - $ref: '#/components/schemas/FullTrainingType'
                     - $ref: '#/components/schemas/LoRATrainingType'
+                multimodal_params:
+                  $ref: '#/components/schemas/MultimodalParams'
                 from_checkpoint:
                   type: string
                   description: The checkpoint identifier to continue training from a previous fine-tuning job. Format is `{$JOB_ID}` or `{$OUTPUT_MODEL_NAME}` or `{$JOB_ID}:{$STEP}` or `{$OUTPUT_MODEL_NAME}:{$STEP}`. The step value is optional; without it, the final checkpoint will be used.
@@ -1823,6 +1825,8 @@ paths:
                   oneOf:
                     - $ref: '#/components/schemas/FullTrainingType'
                     - $ref: '#/components/schemas/LoRATrainingType'
+                multimodal_params:
+                  $ref: '#/components/schemas/MultimodalParams'
                 from_checkpoint:
                   type: string
                   description: The checkpoint identifier to continue training from a previous fine-tuning job. Format is `{$JOB_ID}` or `{$OUTPUT_MODEL_NAME}` or `{$JOB_ID}:{$STEP}` or `{$OUTPUT_MODEL_NAME}:{$STEP}`. The step value is optional; without it, the final checkpoint will be used.
@@ -7436,6 +7440,8 @@ components:
           oneOf:
             - $ref: '#/components/schemas/FullTrainingType'
             - $ref: '#/components/schemas/LoRATrainingType'
+        multimodal_params:
+          $ref: '#/components/schemas/MultimodalParams'
         status:
           $ref: '#/components/schemas/FinetuneJobStatus'
         job_id:
@@ -7831,6 +7837,13 @@ components:
           default: 0.0
       required:
         - method
+
+    MultimodalParams:
+      type: object
+      properties:
+        train_vision:
+          type: boolean
+          description: Whether to train the vision encoder of the model. Only available for multimodal models.
 
     LRScheduler:
       type: object
