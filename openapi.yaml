@@ -3298,6 +3298,271 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
+  /clusters:
+    get:
+      tags: ['GPUClusterService']
+      summary: List all GPU clusters.
+      operationId: GPUClusterService_List
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GPUClusters'
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/clusters
+    post:
+      tags: ['GPUClusterService']
+      summary: Create GPU Cluster
+      operationId: GPUClusterService_Create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GPUClusterCreateRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GPUClusterCreateResponse'
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST \
+                  -H "Authorization Bearer $TOGETHER_API_KEY" \
+                  --data '{ "region": "us-west-2", "gpu_type": "H100_SXM", "num_gpus": 8, "cluster_name": "my-gpu-cluster", "duration_days": 7, "driver_version": "CUDA_12_6_560" }' \
+                  https://api.together.ai/v1/clusters
+  /clusters/{cluster_id}:
+    get:
+      tags: ['GPUClusterService']
+      summary: Get GPU cluster by cluster ID
+      operationId: GPUClusterService_Get
+      parameters:
+        - name: cluster_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GPUClusterInfo'
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/clusters/${CLUSTER_ID}
+    put:
+      tags: ['GPUClusterService']
+      summary: Update a GPU Cluster.
+      operationId: GPUClusterService_Update
+      parameters:
+        - name: cluster_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GPUClusterUpdateRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GPUClusterUpdateResponse'
+      x-codeSamples:
+          - lang: TypeScript
+            label: Together AI SDK (TypeScript)
+            source: | 
+              client.clusters.create()
+          - lang: Shell
+            label: cURL
+            source: |
+              curl -X PUT \
+                    -H "Authorization Bearer $TOGETHER_API_KEY" \
+                    --data '{ "cluster_id": "cluster id", "cluster_type": "kubernetes", "num_gpus": 24 }' \
+                    https://api.together.ai/v1/clusters
+    delete:
+      tags: ['GPUClusterService']
+      summary: Delete GPU cluster by cluster ID
+      operationId: GPUClusterService_Delete
+      parameters:
+        - name: cluster_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GPUCLusterDeleteResponse'
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X DELETE \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/clusters/${CLUSTER_ID}
+  /clusters/regions:
+    get:
+      tags: ['RegionService']
+      summary: List regions and corresponding supported driver versions
+      operationId: RegionService_List
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegionListResponse'
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/clusters/regions
+  /clusters/storages:
+    get:
+      tags: ['SharedVolumeService']
+      summary: List all shared volumes.
+      operationId: SharedVolumeService_List
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SharedVolumes'
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/clusters/storages
+    put:
+      tags: ['SharedVolumeService']
+      summary: Update a shared volume.
+      operationId: SharedVolumeService_Update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SharedVolumeUpdateRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SharedVolumeInfo'
+      x-codeSamples:
+          - lang: Shell
+            label: cURL
+            source: |
+              curl -X PUT \
+                    -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                    --data '{ "volume_id": "12345-67890-12345-67890", "size_tib": 3}' \
+                    https://api.together.ai/v1/clusters/storages
+    post:
+      tags: ['SharedVolumeService']
+      summary: Create a shared volume.
+      operationId: SharedVolumeService_Create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SharedVolumeCreateRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SharedVolumeCreateResponse'
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  --data '{ "volume_name": "my-shared-volume", "size_tib": 2, "region": "us-west-2" }' \
+                  https://api.together.ai/v1/clusters/storages
+  /clusters/storages/{volume_id}:
+    get:
+      tags: ['SharedVolumeService']
+      summary: Get shared volume by volume Id.
+      operationId: SharedVolumeService_Get
+      parameters:
+        - name: volume_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+          "200":
+              description: OK
+              content:
+                  application/json:
+                      schema:
+                          $ref: '#/components/schemas/SharedVolumeInfo'
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/clusters/storages/${VOLUME_ID}
+    delete:
+      tags: ['SharedVolumeService']
+      summary: Delete shared volume by volume id.
+      operationId: SharedVolumeService_Delete
+      parameters:
+        - name: volume_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SharedVolumeDeleteResponse'
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X DELETE \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/clusters/storages/${VOLUME_ID}
   /clusters/availability-zones:
     get:
       tags: ['endpoints']
@@ -5310,6 +5575,341 @@ components:
       x-default: default
 
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    GPUCLusterDeleteResponse:
+      type: object
+      required: ['cluster_id']
+      properties:
+        cluster_id:
+          type: string
+    GPUClusterControlPlaneNode:
+      type: object
+      required:
+        - node_id
+        - node_name
+        - status
+        - host_name
+        - num_cpu_cores
+        - memory_gib
+        - network
+      properties:
+        node_id:
+          type: string
+        node_name:
+          type: string
+        status:
+          type: string
+        host_name:
+          type: string
+        num_cpu_cores:
+          type: integer
+        memory_gib:
+          type: number
+        network:
+          type: string
+    GPUClusterCreateRequest:
+      description: GPU Cluster create request
+      required:
+        - region
+        - gpu_type
+        - num_gpus
+        - cluster_name
+        - duration_days
+        - driver_version
+        - billing_type
+      type: object
+      properties:
+          cluster_type:
+            type: string
+            enum: [KUBERNETES, SLURM]
+          region:
+            description: Region to create the GPU cluster in. Valid values are us-central-8 and us-central-4.
+            type: string
+            enum: [us-central-8, us-central-4]
+          gpu_type:
+            description: Type of GPU to use in the cluster
+            type: string
+            enum:
+              - H100_SXM
+              - H200_SXM
+              - RTX_6000_PCI
+              - L40_PCIE
+              - B200_SXM
+              - H100_SXM_INF
+          num_gpus:
+            description: Number of GPUs to allocate in the cluster. This must be multiple of 8. For example, 8, 16 or 24
+            type: integer
+          cluster_name:
+            description: Name of the GPU cluster.
+            type: string
+          duration_days:
+            description: Duration in days to keep the cluster running.
+            type: integer
+          driver_version:
+            description: NVIDIA driver version to use in the cluster.
+            type: string
+            enum:
+              - CUDA_12_5_555
+              - CUDA_12_6_560
+              - CUDA_12_6_565
+              - CUDA_12_8_570
+          shared_volume:
+            $ref: '#/components/schemas/SharedVolumeCreateRequest'
+          volume_id:
+            type: string
+          billing_type:
+            type: string
+            enum:
+              - RESERVED
+              - ON_DEMAND
+    GPUClusterCreateResponse:
+      type: object
+      required: ['cluster_id']
+      properties:
+        cluster_id:
+          type: string
+    GPUClusterGPUWorkerNode:
+      type: object
+      required:
+        - node_id
+        - node_name
+        - status
+        - host_name
+        - num_cpu_cores
+        - num_gpus
+        - memory_gib
+        - networks
+      properties:
+        node_id:
+          type: string
+        node_name:
+          type: string
+        status:
+          type: string
+        host_name:
+          type: string
+        num_cpu_cores:
+          type: integer
+        num_gpus:
+          type: integer
+        memory_gib:
+          type: number
+        networks:
+          type: array
+          items:
+            type: string
+    GPUClusterInfo:
+      type: object
+      required:
+        - cluster_id
+        - cluster_type
+        - region
+        - gpu_type
+        - cluster_name
+        - duration_hours
+        - driver_version
+        - volumes
+        - status
+        - control_plane_nodes
+        - gpu_worker_nodes
+        - kube_config
+        - num_gpus
+      properties:
+        cluster_id:
+          type: string
+        cluster_type:
+          enum: [KUBERNETES, SLURM]
+        region:
+          type: string
+        gpu_type:
+          enum:
+            - H100_SXM
+            - H200_SXM
+            - RTX_6000_PCI
+            - L40_PCIE
+            - B200_SXM
+            - H100_SXM_INF
+        cluster_name:
+          type: string
+        duration_hours:
+          type: integer
+        driver_version:
+          enum:
+            - CUDA_12_5_555
+            - CUDA_12_6_560
+            - CUDA_12_6_565
+            - CUDA_12_8_570
+        volumes:
+          type: array
+          items:
+            $ref: '#/components/schemas/GPUClusterVolume'
+        status:
+          description: Current status of the GPU cluster.
+          enum:
+            - WaitingForControlPlaneNodes
+            - WaitingForDataPlaneNodes
+            - WaitingForSubnet
+            - WaitingForSharedVolume
+            - InstallingDrivers
+            - RunningAcceptanceTests
+            - Paused
+            - OnDemandComputePaused
+            - Ready
+            - Degraded
+            - Deleting
+        control_plane_nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/GPUClusterControlPlaneNode'
+        gpu_worker_nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/GPUClusterGPUWorkerNode'
+        kube_config:
+          type: string
+        num_gpus:
+          type: integer
+    GPUClusterUpdateRequest:
+        type: object
+        properties:
+          cluster_type:
+            enum: [KUBERNETES, SLURM]
+          num_gpus:
+            type: integer
+    GPUClusterUpdateResponse:
+      type: object
+      required: [cluster_id]
+      properties:
+        cluster_id:
+            type: string
+    GPUClusterVolume:
+      type: object
+      required:
+        - volume_id
+        - volume_name
+        - size_tib
+        - status
+      properties:
+        volume_id:
+          type: string
+        volume_name:
+          type: string
+        size_tib:
+          type: integer
+        status:
+          type: string
+    GPUClusters:
+      type: object
+      required: [clusters]
+      properties:
+        clusters:
+            type: array
+            items:
+                $ref: '#/components/schemas/GPUClusterInfo'
+    InstanceTypesResponse:
+      type: object
+      properties:
+        types:
+          type: array
+          items:
+            enum:
+              - H100_SXM
+              - H200_SXM
+              - RTX_6000_PCI
+              - L40_PCIE
+              - B200_SXM
+              - H100_SXM_INF
+          error:
+            $ref: '#/components/schemas/ErrorResponse'
+    Region:
+      type: object
+      required:
+        - id
+        - name
+        - availability_zones
+        - driver_versions
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        availability_zones:
+          type: array
+          items:
+            type: string
+        driver_versions:
+          type: array
+          items:
+            type: string
+    RegionListResponse:
+      type: object
+      required: [regions]
+      properties:
+        regions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Region'
+    SharedVolumeCreateRequest:
+      type: object
+      required:
+        - volume_name
+        - size_tib
+        - region
+      properties:
+        volume_name:
+          type: string
+        size_tib:
+          description: Volume size in whole tebibytes (TiB).
+          type: integer
+        region:
+          type: string
+          description: Region name. Usable regions can be found from `client.clusters.list_regions()`
+    SharedVolumeCreateResponse:
+      type: object
+      required: [volume_id]
+      properties:
+        volume_id:
+            type: string
+    SharedVolumeDeleteResponse:
+      type: object
+      required: [success]
+      properties:
+        success:
+          type: boolean
+    SharedVolumeInfo: 
+      type: object
+      required:
+        - volume_id
+        - volume_name
+        - size_tib
+      properties:
+        volume_id:
+          type: string
+        volume_name:
+          type: string
+        size_tib:
+          type: integer
+    SharedVolumeUpdateRequest:
+      type: object
+      properties:
+        volume_id:
+          type: string
+        size_tib:
+          type: integer
+    SharedVolumes:
+      type: object
+      required: [volumes]
+      properties:
+        volumes:
+          type: array
+          items:
+            $ref: '#/components/schemas/SharedVolumeInfo'
     ListVoicesResponse:
       description: Response containing a list of models and their available voices.
       type: object
