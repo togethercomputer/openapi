@@ -15,6 +15,615 @@ servers:
 security:
   - bearerAuth: []
 paths:
+  /deployments:
+    get:
+      description: Get a list of all deployments in your project
+      responses:
+        "200":
+          description: List of deployments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeploymentListResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get the list of deployments
+      tags:
+        - Deployments
+    post:
+      description: Create a new deployment with specified configuration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDeploymentRequest"
+        description: Deployment configuration
+        required: true
+      responses:
+        "200":
+          description: Deployment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeploymentResponseItem"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Create a new deployment
+      tags:
+        - Deployments
+  /deployments/{id}:
+    delete:
+      description: Delete an existing deployment
+      parameters:
+        - description: Deployment ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deployment deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: Deployment not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Delete a deployment
+      tags:
+        - Deployments
+    get:
+      description: Retrieve details of a specific deployment by its ID or name
+      parameters:
+        - description: Deployment ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deployment details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeploymentResponseItem"
+        "404":
+          description: Deployment not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get a deployment by ID or name
+      tags:
+        - Deployments
+    patch:
+      description: Update an existing deployment configuration
+      parameters:
+        - description: Deployment ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDeploymentRequest"
+        description: Updated deployment configuration
+        required: true
+      responses:
+        "200":
+          description: Deployment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeploymentResponseItem"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: Deployment not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Update a deployment
+      tags:
+        - Deployments
+  /deployments/{id}/logs:
+    get:
+      description: Retrieve logs from a deployment, optionally filtered by replica ID.
+        Use follow=true to stream logs in real-time.
+      parameters:
+        - description: Deployment ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - description: Replica ID to filter logs
+          in: query
+          name: replica_id
+          schema:
+            type: string
+        - description: Stream logs in real-time (ndjson format)
+          in: query
+          name: follow
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Deployment logs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeploymentLogs"
+        "404":
+          description: Deployment not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get logs for a deployment
+      tags:
+        - Deployments
+  /image-repositories:
+    get:
+      description: Retrieve all container image repositories available in your project
+      responses:
+        "200":
+          description: List of repositories
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RepositoryListResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get the list of image repositories in your project
+      tags:
+        - Images
+  /image-repositories/{id}/images:
+    get:
+      description: Retrieve all container images (tags) available in a specific repository
+      parameters:
+        - description: Repository ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of images
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImageListResponse"
+        "404":
+          description: Repository not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get the list of images available under a repository
+      tags:
+        - Images
+  /secrets:
+    get:
+      description: Retrieve all secrets in your project
+      responses:
+        "200":
+          description: List of secrets
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListSecretsResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get the list of project secrets
+      tags:
+        - Secrets
+    post:
+      description: Create a new secret to store sensitive configuration values
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSecretRequest"
+        description: Secret configuration
+        required: true
+      responses:
+        "200":
+          description: Secret created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecretResponseItem"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Create a new secret
+      tags:
+        - Secrets
+  /secrets/{id}:
+    delete:
+      description: Delete an existing secret
+      parameters:
+        - description: Secret ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Secret deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: Secret not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Delete a secret
+      tags:
+        - Secrets
+    get:
+      description: Retrieve details of a specific secret by its ID or name
+      parameters:
+        - description: Secret ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Secret details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecretResponseItem"
+        "404":
+          description: Secret not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get a secret by ID or name
+      tags:
+        - Secrets
+    patch:
+      description: Update an existing secret's value or metadata
+      parameters:
+        - description: Secret ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSecretRequest"
+        description: Updated secret configuration
+        required: true
+      responses:
+        "200":
+          description: Secret updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecretResponseItem"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: Secret not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Update a secret
+      tags:
+        - Secrets
+  /storage/{filename}:
+    get:
+      description: Download a file by redirecting to a signed URL
+      parameters:
+        - description: Filename
+          in: path
+          name: filename
+          required: true
+          schema:
+            type: string
+      responses:
+        "307":
+          description: Redirect to signed download URL
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+        "404":
+          description: File not found
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+        "500":
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+      summary: Download a file
+      tags:
+        - files
+  /storage/volumes:
+    get:
+      description: Retrieve all volumes in your project
+      responses:
+        "200":
+          description: List of volumes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListVolumesResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get the list of project volumes
+      tags:
+        - Volumes
+    post:
+      description: Create a new volume to preload files in deployments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateVolumeRequest"
+        description: Volume configuration
+        required: true
+      responses:
+        "200":
+          description: Volume created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VolumeResponseItem"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Create a new volume
+      tags:
+        - Volumes
+  /storage/volumes/{id}:
+    delete:
+      description: Delete an existing volume
+      parameters:
+        - description: Volume ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Volume deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: Volume not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Delete a volume
+      tags:
+        - Volumes
+    get:
+      description: Retrieve details of a specific volume by its ID or name
+      parameters:
+        - description: Volume ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Volume details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VolumeResponseItem"
+        "404":
+          description: Volume not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get a volume by ID or name
+      tags:
+        - Volumes
+    patch:
+      description: Update an existing volume's configuration or contents
+      parameters:
+        - description: Volume ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateVolumeRequest"
+        description: Updated volume configuration
+        required: true
+      responses:
+        "200":
+          description: Volume updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VolumeResponseItem"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: Volume not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Update a volume
+      tags:
+        - Volumes
   /voices:
     get:
       tags: ['Voices']
@@ -5565,618 +6174,6 @@ paths:
               }
             }
             ```
-
-  /deployments:
-    get:
-      description: Get a list of all deployments in your project
-      responses:
-        "200":
-          description: List of deployments
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DeploymentListResponse"
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Get the list of deployments
-      tags:
-        - Deployments
-    post:
-      description: Create a new deployment with specified configuration
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateDeploymentRequest"
-        description: Deployment configuration
-        required: true
-      responses:
-        "200":
-          description: Deployment created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DeploymentResponseItem"
-        "400":
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Create a new deployment
-      tags:
-        - Deployments
-  /deployments/{id}:
-    delete:
-      description: Delete an existing deployment
-      parameters:
-        - description: Deployment ID or name
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Deployment deleted successfully
-          content:
-            application/json:
-              schema:
-                type: object
-        "404":
-          description: Deployment not found
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Delete a deployment
-      tags:
-        - Deployments
-    get:
-      description: Retrieve details of a specific deployment by its ID or name
-      parameters:
-        - description: Deployment ID or name
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Deployment details
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DeploymentResponseItem"
-        "404":
-          description: Deployment not found
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Get a deployment by ID or name
-      tags:
-        - Deployments
-    patch:
-      description: Update an existing deployment configuration
-      parameters:
-        - description: Deployment ID or name
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateDeploymentRequest"
-        description: Updated deployment configuration
-        required: true
-      responses:
-        "200":
-          description: Deployment updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DeploymentResponseItem"
-        "400":
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-        "404":
-          description: Deployment not found
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Update a deployment
-      tags:
-        - Deployments
-  /deployments/{id}/logs:
-    get:
-      description: Retrieve logs from a deployment, optionally filtered by replica ID.
-        Use follow=true to stream logs in real-time.
-      parameters:
-        - description: Deployment ID or name
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-        - description: Replica ID to filter logs
-          in: query
-          name: replica_id
-          schema:
-            type: string
-        - description: Stream logs in real-time (ndjson format)
-          in: query
-          name: follow
-          schema:
-            type: boolean
-      responses:
-        "200":
-          description: Deployment logs
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DeploymentLogs"
-        "404":
-          description: Deployment not found
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Get logs for a deployment
-      tags:
-        - Deployments
-  /image-repositories:
-    get:
-      description: Retrieve all container image repositories available in your project
-      responses:
-        "200":
-          description: List of repositories
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RepositoryListResponse"
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Get the list of image repositories in your project
-      tags:
-        - Images
-  /image-repositories/{id}/images:
-    get:
-      description: Retrieve all container images (tags) available in a specific repository
-      parameters:
-        - description: Repository ID
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: List of images
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ImageListResponse"
-        "404":
-          description: Repository not found
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Get the list of images available under a repository
-      tags:
-        - Images
-  /secrets:
-    get:
-      description: Retrieve all secrets in your project
-      responses:
-        "200":
-          description: List of secrets
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ListSecretsResponse"
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Get the list of project secrets
-      tags:
-        - Secrets
-    post:
-      description: Create a new secret to store sensitive configuration values
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateSecretRequest"
-        description: Secret configuration
-        required: true
-      responses:
-        "200":
-          description: Secret created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SecretResponseItem"
-        "400":
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Create a new secret
-      tags:
-        - Secrets
-  /secrets/{id}:
-    delete:
-      description: Delete an existing secret
-      parameters:
-        - description: Secret ID or name
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Secret deleted successfully
-          content:
-            application/json:
-              schema:
-                type: object
-        "404":
-          description: Secret not found
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Delete a secret
-      tags:
-        - Secrets
-    get:
-      description: Retrieve details of a specific secret by its ID or name
-      parameters:
-        - description: Secret ID or name
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Secret details
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SecretResponseItem"
-        "404":
-          description: Secret not found
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Get a secret by ID or name
-      tags:
-        - Secrets
-    patch:
-      description: Update an existing secret's value or metadata
-      parameters:
-        - description: Secret ID or name
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateSecretRequest"
-        description: Updated secret configuration
-        required: true
-      responses:
-        "200":
-          description: Secret updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SecretResponseItem"
-        "400":
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-        "404":
-          description: Secret not found
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Update a secret
-      tags:
-        - Secrets
-  /storage/{filename}:
-    get:
-      description: Download a file by redirecting to a signed URL
-      parameters:
-        - description: Filename
-          in: path
-          name: filename
-          required: true
-          schema:
-            type: string
-      responses:
-        "307":
-          description: Redirect to signed download URL
-          content:
-            application/json:
-              schema:
-                type: string
-        "400":
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                additionalProperties:
-                  type: string
-                type: object
-        "404":
-          description: File not found
-          content:
-            application/json:
-              schema:
-                additionalProperties:
-                  type: string
-                type: object
-        "500":
-          description: Internal error
-          content:
-            application/json:
-              schema:
-                additionalProperties:
-                  type: string
-                type: object
-      summary: Download a file
-      tags:
-        - files
-  /storage/volumes:
-    get:
-      description: Retrieve all volumes in your project
-      responses:
-        "200":
-          description: List of volumes
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ListVolumesResponse"
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Get the list of project volumes
-      tags:
-        - Volumes
-    post:
-      description: Create a new volume to preload files in deployments
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateVolumeRequest"
-        description: Volume configuration
-        required: true
-      responses:
-        "200":
-          description: Volume created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/VolumeResponseItem"
-        "400":
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Create a new volume
-      tags:
-        - Volumes
-  /storage/volumes/{id}:
-    delete:
-      description: Delete an existing volume
-      parameters:
-        - description: Volume ID or name
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Volume deleted successfully
-          content:
-            application/json:
-              schema:
-                type: object
-        "404":
-          description: Volume not found
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Delete a volume
-      tags:
-        - Volumes
-    get:
-      description: Retrieve details of a specific volume by its ID or name
-      parameters:
-        - description: Volume ID or name
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Volume details
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/VolumeResponseItem"
-        "404":
-          description: Volume not found
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Get a volume by ID or name
-      tags:
-        - Volumes
-    patch:
-      description: Update an existing volume's configuration or contents
-      parameters:
-        - description: Volume ID or name
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateVolumeRequest"
-        description: Updated volume configuration
-        required: true
-      responses:
-        "200":
-          description: Volume updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/VolumeResponseItem"
-        "400":
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-        "404":
-          description: Volume not found
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Update a volume
-      tags:
-        - Volumes
-
-
 
 components:
   securitySchemes:
