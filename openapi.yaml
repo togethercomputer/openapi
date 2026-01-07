@@ -15,6 +15,615 @@ servers:
 security:
   - bearerAuth: []
 paths:
+  /deployments:
+    get:
+      description: Get a list of all deployments in your project
+      responses:
+        "200":
+          description: List of deployments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeploymentListResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get the list of deployments
+      tags:
+        - Deployments
+    post:
+      description: Create a new deployment with specified configuration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDeploymentRequest"
+        description: Deployment configuration
+        required: true
+      responses:
+        "200":
+          description: Deployment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeploymentResponseItem"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Create a new deployment
+      tags:
+        - Deployments
+  /deployments/{id}:
+    delete:
+      description: Delete an existing deployment
+      parameters:
+        - description: Deployment ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deployment deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: Deployment not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Delete a deployment
+      tags:
+        - Deployments
+    get:
+      description: Retrieve details of a specific deployment by its ID or name
+      parameters:
+        - description: Deployment ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deployment details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeploymentResponseItem"
+        "404":
+          description: Deployment not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get a deployment by ID or name
+      tags:
+        - Deployments
+    patch:
+      description: Update an existing deployment configuration
+      parameters:
+        - description: Deployment ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDeploymentRequest"
+        description: Updated deployment configuration
+        required: true
+      responses:
+        "200":
+          description: Deployment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeploymentResponseItem"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: Deployment not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Update a deployment
+      tags:
+        - Deployments
+  /deployments/{id}/logs:
+    get:
+      description: Retrieve logs from a deployment, optionally filtered by replica ID.
+        Use follow=true to stream logs in real-time.
+      parameters:
+        - description: Deployment ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - description: Replica ID to filter logs
+          in: query
+          name: replica_id
+          schema:
+            type: string
+        - description: Stream logs in real-time (ndjson format)
+          in: query
+          name: follow
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Deployment logs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeploymentLogs"
+        "404":
+          description: Deployment not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get logs for a deployment
+      tags:
+        - Deployments
+  /image-repositories:
+    get:
+      description: Retrieve all container image repositories available in your project
+      responses:
+        "200":
+          description: List of repositories
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RepositoryListResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get the list of image repositories in your project
+      tags:
+        - Images
+  /image-repositories/{id}/images:
+    get:
+      description: Retrieve all container images (tags) available in a specific repository
+      parameters:
+        - description: Repository ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of images
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImageListResponse"
+        "404":
+          description: Repository not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get the list of images available under a repository
+      tags:
+        - Images
+  /secrets:
+    get:
+      description: Retrieve all secrets in your project
+      responses:
+        "200":
+          description: List of secrets
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListSecretsResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get the list of project secrets
+      tags:
+        - Secrets
+    post:
+      description: Create a new secret to store sensitive configuration values
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSecretRequest"
+        description: Secret configuration
+        required: true
+      responses:
+        "200":
+          description: Secret created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecretResponseItem"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Create a new secret
+      tags:
+        - Secrets
+  /secrets/{id}:
+    delete:
+      description: Delete an existing secret
+      parameters:
+        - description: Secret ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Secret deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: Secret not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Delete a secret
+      tags:
+        - Secrets
+    get:
+      description: Retrieve details of a specific secret by its ID or name
+      parameters:
+        - description: Secret ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Secret details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecretResponseItem"
+        "404":
+          description: Secret not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get a secret by ID or name
+      tags:
+        - Secrets
+    patch:
+      description: Update an existing secret's value or metadata
+      parameters:
+        - description: Secret ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSecretRequest"
+        description: Updated secret configuration
+        required: true
+      responses:
+        "200":
+          description: Secret updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecretResponseItem"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: Secret not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Update a secret
+      tags:
+        - Secrets
+  /storage/{filename}:
+    get:
+      description: Download a file by redirecting to a signed URL
+      parameters:
+        - description: Filename
+          in: path
+          name: filename
+          required: true
+          schema:
+            type: string
+      responses:
+        "307":
+          description: Redirect to signed download URL
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+        "404":
+          description: File not found
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+        "500":
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+      summary: Download a file
+      tags:
+        - files
+  /storage/volumes:
+    get:
+      description: Retrieve all volumes in your project
+      responses:
+        "200":
+          description: List of volumes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListVolumesResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get the list of project volumes
+      tags:
+        - Volumes
+    post:
+      description: Create a new volume to preload files in deployments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateVolumeRequest"
+        description: Volume configuration
+        required: true
+      responses:
+        "200":
+          description: Volume created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VolumeResponseItem"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Create a new volume
+      tags:
+        - Volumes
+  /storage/volumes/{id}:
+    delete:
+      description: Delete an existing volume
+      parameters:
+        - description: Volume ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Volume deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: Volume not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Delete a volume
+      tags:
+        - Volumes
+    get:
+      description: Retrieve details of a specific volume by its ID or name
+      parameters:
+        - description: Volume ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Volume details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VolumeResponseItem"
+        "404":
+          description: Volume not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Get a volume by ID or name
+      tags:
+        - Volumes
+    patch:
+      description: Update an existing volume's configuration or contents
+      parameters:
+        - description: Volume ID or name
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateVolumeRequest"
+        description: Updated volume configuration
+        required: true
+      responses:
+        "200":
+          description: Volume updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VolumeResponseItem"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: Volume not found
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+      summary: Update a volume
+      tags:
+        - Volumes
   /voices:
     get:
       tags: ['Voices']
@@ -9796,3 +10405,697 @@ components:
         - created_at
       title: Video job
       description: Structured information describing a generated video job.
+    ContainerStatus:
+      properties:
+        finishedAt:
+          description: FinishedAt is the timestamp when the container finished execution
+            (if terminated)
+          type: string
+        message:
+          description: Message provides a human-readable message with details about the
+            container's status
+          type: string
+        name:
+          description: Name is the name of the container
+          type: string
+        reason:
+          description: Reason provides a brief machine-readable reason for the container's
+            current status
+          type: string
+        startedAt:
+          description: StartedAt is the timestamp when the container started execution
+          type: string
+        status:
+          description: Status is the current state of the container (e.g., "Running",
+            "Terminated", "Waiting")
+          type: string
+      type: object
+    CreateDeploymentRequest:
+      properties:
+        args:
+          description: Args overrides the container's CMD. Provide as an array of
+            arguments (e.g., ["python", "app.py"])
+          items:
+            type: string
+          type: array
+        autoscaling:
+          additionalProperties:
+            type: string
+          description: 'Autoscaling configuration as key-value pairs. Example: {"metric":
+            "QueueBacklogPerWorker", "target": "10"} to scale based on queue
+            backlog'
+          type: object
+        command:
+          description: Command overrides the container's ENTRYPOINT. Provide as an array
+            (e.g., ["/bin/sh", "-c"])
+          items:
+            type: string
+          type: array
+        cpu:
+          description: CPU is the number of CPU cores to allocate per container instance
+            (e.g., 0.1 = 100 milli cores)
+          minimum: 0.1
+          type: number
+        description:
+          description: Description is an optional human-readable description of your
+            deployment
+          type: string
+        environment_variables:
+          description: EnvironmentVariables is a list of environment variables to set in
+            the container. Each must have a name and either a value or
+            value_from_secret
+          items:
+            $ref: "#/components/schemas/EnvironmentVariable"
+          type: array
+        gpu_count:
+          description: GPUCount is the number of GPUs to allocate per container instance.
+            Defaults to 0 if not specified
+          type: integer
+        gpu_type:
+          description: GPUType specifies the GPU hardware to use (e.g., "h100-80gb").
+          enum:
+            - h100-80gb
+            - " a100-80gb"
+          type: string
+        health_check_path:
+          description: HealthCheckPath is the HTTP path for health checks (e.g.,
+            "/health"). If set, the platform will check this endpoint to
+            determine container health
+          type: string
+        image:
+          description: Image is the container image to deploy from registry.together.ai.
+          type: string
+        max_replicas:
+          description: MaxReplicas is the maximum number of container instances that can
+            be scaled up to. If not set, will be set to MinReplicas
+          type: integer
+        memory:
+          description: Memory is the amount of RAM to allocate per container instance in
+            GiB (e.g., 0.5 = 512MiB)
+          minimum: 0.1
+          type: number
+        min_replicas:
+          description: MinReplicas is the minimum number of container instances to run.
+            Defaults to 1 if not specified
+          type: integer
+        name:
+          description: Name is the unique identifier for your deployment. Must contain
+            only alphanumeric characters, underscores, or hyphens (1-100
+            characters)
+          maxLength: 100
+          minLength: 1
+          type: string
+        port:
+          description: Port is the container port your application listens on (e.g., 8080
+            for web servers). Required if your application serves traffic
+          type: integer
+        storage:
+          description: Storage is the amount of ephemeral disk storage to allocate per
+            container instance (e.g., 10 = 10GiB)
+          type: integer
+        termination_grace_period_seconds:
+          description: TerminationGracePeriodSeconds is the time in seconds to wait for
+            graceful shutdown before forcefully terminating the replica
+          type: integer
+        volumes:
+          description: Volumes is a list of volume mounts to attach to the container. Each
+            mount must reference an existing volume by name
+          items:
+            $ref: "#/components/schemas/VolumeMount"
+          type: array
+      required:
+        - gpu_type
+        - image
+        - name
+      type: object
+    CreateSecretRequest:
+      properties:
+        description:
+          description: Description is an optional human-readable description of the
+            secret's purpose (max 500 characters)
+          maxLength: 500
+          type: string
+        name:
+          description: Name is the unique identifier for the secret. Can contain
+            alphanumeric characters, underscores, hyphens, forward slashes, and
+            periods (1-100 characters)
+          maxLength: 100
+          minLength: 1
+          type: string
+        project_id:
+          description: ProjectID is ignored - the project is automatically determined from
+            your authentication
+          type: string
+        value:
+          description: Value is the sensitive data to store securely (e.g., API keys,
+            passwords, tokens). This value will be encrypted at rest
+          minLength: 1
+          type: string
+      required:
+        - name
+        - value
+      type: object
+    CreateVolumeRequest:
+      properties:
+        content:
+          allOf:
+            - $ref: "#/components/schemas/VolumeContent"
+          description: Content specifies the content configuration for this volume
+        name:
+          description: Name is the unique identifier for the volume within the project
+          type: string
+        type:
+          allOf:
+            - $ref: "#/components/schemas/VolumeType"
+          description: Type is the volume type (currently only "readOnly" is supported)
+      required:
+        - content
+        - name
+        - type
+      type: object
+    DeploymentListResponse:
+      properties:
+        data:
+          description: Data is the array of deployment items
+          items:
+            $ref: "#/components/schemas/DeploymentResponseItem"
+          type: array
+        object:
+          description: Object is the type identifier for this response (always "list")
+          type: string
+      type: object
+    DeploymentLogs:
+      properties:
+        lines:
+          items:
+            type: string
+          type: array
+      type: object
+    DeploymentResponseItem:
+      properties:
+        args:
+          description: Args are the arguments passed to the container's command
+          items:
+            type: string
+          type: array
+        autoscaling:
+          additionalProperties:
+            type: string
+          description: Autoscaling contains autoscaling configuration parameters for this
+            deployment
+          type: object
+        command:
+          description: Command is the entrypoint command run in the container
+          items:
+            type: string
+          type: array
+        cpu:
+          description: CPU is the amount of CPU resource allocated to each replica in
+            cores (fractional value is allowed)
+          type: number
+        created_at:
+          description: CreatedAt is the ISO8601 timestamp when this deployment was created
+          type: string
+        description:
+          description: Description provides a human-readable explanation of the
+            deployment's purpose or content
+          type: string
+        desired_replicas:
+          description: DesiredReplicas is the number of replicas that the orchestrator is
+            targeting
+          type: integer
+        environment_variables:
+          description: EnvironmentVariables is a list of environment variables set in the
+            container
+          items:
+            $ref: "#/components/schemas/EnvironmentVariable"
+          type: array
+        gpu_count:
+          description: GPUCount is the number of GPUs allocated to each replica in this
+            deployment
+          type: integer
+        gpu_type:
+          description: GPUType specifies the type of GPU requested (if any) for this
+            deployment
+          enum:
+            - h100-80gb
+            - " a100-80gb"
+          type: string
+        health_check_path:
+          description: HealthCheckPath is the HTTP path used for health checks of the
+            application
+          type: string
+        id:
+          description: ID is the unique identifier of the deployment
+          type: string
+        image:
+          description: Image specifies the container image used for this deployment
+          type: string
+        max_replicas:
+          description: MaxReplicas is the maximum number of replicas to run for this
+            deployment
+          type: integer
+        memory:
+          description: Memory is the amount of memory allocated to each replica in GiB
+            (fractional value is allowed)
+          type: number
+        min_replicas:
+          description: MinReplicas is the minimum number of replicas to run for this
+            deployment
+          type: integer
+        name:
+          description: Name is the name of the deployment
+          type: string
+        object:
+          description: Object is the type identifier for this response (always "deployment")
+          type: string
+        port:
+          description: Port is the container port that the deployment exposes
+          type: integer
+        ready_replicas:
+          description: ReadyReplicas is the current number of replicas that are in the
+            Ready state
+          type: integer
+        replica_events:
+          additionalProperties:
+            $ref: "#/components/schemas/ReplicaEvent"
+          description: ReplicaEvents is a mapping of replica names or IDs to their status
+            events
+          type: object
+        status:
+          allOf:
+            - $ref: "#/components/schemas/DeploymentStatus"
+          description: Status represents the overall status of the deployment (e.g.,
+            Updating, Scaling, Ready, Failed)
+          enum:
+            - Updating
+            - Scaling
+            - Ready
+            - Failed
+        storage:
+          description: Storage is the amount of storage (in MB or units as defined by the
+            platform) allocated to each replica
+          type: integer
+        updated_at:
+          description: UpdatedAt is the ISO8601 timestamp when this deployment was last
+            updated
+          type: string
+        volumes:
+          description: Volumes is a list of volume mounts for this deployment
+          items:
+            $ref: "#/components/schemas/VolumeMount"
+          type: array
+      type: object
+    DeploymentStatus:
+      enum:
+        - Updating
+        - Scaling
+        - Ready
+        - Failed
+      type: string
+      x-enum-varnames:
+        - DeploymentStatusUpdating
+        - DeploymentStatusScaling
+        - DeploymentStatusReady
+        - DeploymentStatusFailed
+    EnvironmentVariable:
+      properties:
+        name:
+          description: Name is the environment variable name (e.g., "DATABASE_URL"). Must
+            start with a letter or underscore, followed by letters, numbers, or
+            underscores
+          type: string
+        value:
+          description: Value is the plain text value for the environment variable. Use
+            this for non-sensitive values. Either Value or ValueFromSecret must
+            be set, but not both
+          type: string
+        value_from_secret:
+          description: ValueFromSecret references a secret by name or ID to use as the
+            value. Use this for sensitive values like API keys or passwords.
+            Either Value or ValueFromSecret must be set, but not both
+          type: string
+      required:
+        - name
+      type: object
+    ImageListResponse:
+      properties:
+        data:
+          description: Data is the array of image items
+          items:
+            $ref: "#/components/schemas/ImageResponseItem"
+          type: array
+        object:
+          description: Object is the type identifier for this response (always "list")
+          type: string
+      type: object
+    ImageResponseItem:
+      properties:
+        object:
+          description: Object is the type identifier for this response (always "image")
+          type: string
+        tag:
+          description: Tag is the image tag/version identifier (e.g., "latest", "v1.0.0")
+          type: string
+        url:
+          description: URL is the full registry URL for this image including tag (e.g.,
+            "registry.together.ai/project-id/repository:tag")
+          type: string
+      type: object
+    KubernetesEvent:
+      properties:
+        action:
+          description: Action is the action taken or reported by this event
+          type: string
+        count:
+          description: Count is the number of times this event has occurred
+          type: integer
+        first_seen:
+          description: FirstSeen is the timestamp when this event was first observed
+          type: string
+        last_seen:
+          description: LastSeen is the timestamp when this event was last observed
+          type: string
+        message:
+          description: Message is a human-readable description of the event
+          type: string
+        reason:
+          description: Reason is a brief machine-readable reason for this event (e.g.,
+            "Pulling", "Started", "Failed")
+          type: string
+      type: object
+    ListSecretsResponse:
+      properties:
+        data:
+          description: Data is the array of secret items
+          items:
+            $ref: "#/components/schemas/SecretResponseItem"
+          type: array
+        object:
+          description: Object is the type identifier for this response (always "list")
+          type: string
+      type: object
+    ListVolumesResponse:
+      properties:
+        data:
+          description: Data is the array of volume items
+          items:
+            $ref: "#/components/schemas/VolumeResponseItem"
+          type: array
+        object:
+          description: Object is the type identifier for this response (always "list")
+          type: string
+      type: object
+    ReplicaEvent:
+      properties:
+        container_status:
+          allOf:
+            - $ref: "#/components/schemas/ContainerStatus"
+          description: ContainerStatus provides detailed status information about the
+            container within this replica
+        events:
+          description: Events is a list of Kubernetes events related to this replica for
+            troubleshooting
+          items:
+            $ref: "#/components/schemas/KubernetesEvent"
+          type: array
+        replica_completed_at:
+          description: ReplicaCompletedAt is the timestamp when the replica finished
+            execution
+          type: string
+        replica_marked_for_termination_at:
+          description: ReplicaMarkedForTerminationAt is the timestamp when the replica was
+            marked for termination
+          type: string
+        replica_ready_since:
+          description: ReplicaReadySince is the timestamp when the replica became ready to
+            serve traffic
+          type: string
+        replica_running_since:
+          description: ReplicaRunningSince is the timestamp when the replica entered the
+            running state
+          type: string
+        replica_started_at:
+          description: ReplicaStartedAt is the timestamp when the replica was created
+          type: string
+        replica_status:
+          description: ReplicaStatus is the current status of the replica (e.g.,
+            "Running", "Pending", "Failed")
+          type: string
+        replica_status_message:
+          description: ReplicaStatusMessage provides a human-readable message explaining
+            the replica's status
+          type: string
+        replica_status_reason:
+          description: ReplicaStatusReason provides a brief machine-readable reason for
+            the replica's status
+          type: string
+        scheduled_on_cluster:
+          description: ScheduledOnCluster identifies which cluster this replica is
+            scheduled on
+          type: string
+      type: object
+    RepositoryListResponse:
+      properties:
+        data:
+          description: Data is the array of repository items
+          items:
+            $ref: "#/components/schemas/RepositoryResponseItem"
+          type: array
+        object:
+          description: Object is the type identifier for this response (always "list")
+          type: string
+      type: object
+    RepositoryResponseItem:
+      properties:
+        id:
+          description: ID is the unique identifier for this repository (repository name
+            with slashes replaced by "___")
+          type: string
+        object:
+          description: Object is the type identifier for this response (always
+            "image-repository")
+          type: string
+        url:
+          description: URL is the full registry URL for this repository (e.g.,
+            "registry.together.ai/project-id/repository-name")
+          type: string
+      type: object
+    SecretResponseItem:
+      properties:
+        created_at:
+          description: CreatedAt is the ISO8601 timestamp when this secret was created
+          type: string
+        created_by:
+          description: CreatedBy is the identifier of the user who created this secret
+          type: string
+        description:
+          description: Description is a human-readable description of the secret's purpose
+          type: string
+        id:
+          description: ID is the unique identifier for this secret
+          type: string
+        last_updated_by:
+          description: LastUpdatedBy is the identifier of the user who last updated this
+            secret
+          type: string
+        name:
+          description: Name is the name/key of the secret
+          type: string
+        object:
+          description: Object is the type identifier for this response (always "secret")
+          type: string
+        updated_at:
+          description: UpdatedAt is the ISO8601 timestamp when this secret was last updated
+          type: string
+      type: object
+    UpdateDeploymentRequest:
+      properties:
+        args:
+          description: Args overrides the container's CMD. Provide as an array of
+            arguments (e.g., ["python", "app.py"])
+          items:
+            type: string
+          type: array
+        autoscaling:
+          additionalProperties:
+            type: string
+          description: 'Autoscaling configuration as key-value pairs. Example: {"metric":
+            "QueueBacklogPerWorker", "target": "10"} to scale based on queue
+            backlog'
+          type: object
+        command:
+          description: Command overrides the container's ENTRYPOINT. Provide as an array
+            (e.g., ["/bin/sh", "-c"])
+          items:
+            type: string
+          type: array
+        cpu:
+          description: CPU is the number of CPU cores to allocate per container instance
+            (e.g., 0.1 = 100 milli cores)
+          minimum: 0.1
+          type: number
+        description:
+          description: Description is an optional human-readable description of your
+            deployment
+          type: string
+        environment_variables:
+          description: EnvironmentVariables is a list of environment variables to set in
+            the container. This will replace all existing environment variables
+          items:
+            $ref: "#/components/schemas/EnvironmentVariable"
+          type: array
+        gpu_count:
+          description: GPUCount is the number of GPUs to allocate per container instance
+          type: integer
+        gpu_type:
+          description: GPUType specifies the GPU hardware to use (e.g., "h100-80gb")
+          enum:
+            - h100-80gb
+            - " a100-80gb"
+          type: string
+        health_check_path:
+          description: HealthCheckPath is the HTTP path for health checks (e.g.,
+            "/health"). Set to empty string to disable health checks
+          type: string
+        image:
+          description: Image is the container image to deploy from registry.together.ai.
+          type: string
+        max_replicas:
+          description: MaxReplicas is the maximum number of replicas that can be scaled up
+            to.
+          type: integer
+        memory:
+          description: Memory is the amount of RAM to allocate per container instance in
+            GiB (e.g., 0.5 = 512MiB)
+          minimum: 0.1
+          type: number
+        min_replicas:
+          description: MinReplicas is the minimum number of replicas to run
+          type: integer
+        name:
+          description: Name is the new unique identifier for your deployment. Must contain
+            only alphanumeric characters, underscores, or hyphens (1-100
+            characters)
+          maxLength: 100
+          minLength: 1
+          type: string
+        port:
+          description: Port is the container port your application listens on (e.g., 8080
+            for web servers)
+          type: integer
+        storage:
+          description: Storage is the amount of ephemeral disk storage to allocate per
+            container instance (e.g., 10 = 10GiB)
+          type: integer
+        termination_grace_period_seconds:
+          description: TerminationGracePeriodSeconds is the time in seconds to wait for
+            graceful shutdown before forcefully terminating the replica
+          type: integer
+        volumes:
+          description: Volumes is a list of volume mounts to attach to the container. This
+            will replace all existing volumes
+          items:
+            $ref: "#/components/schemas/VolumeMount"
+          type: array
+      type: object
+    UpdateSecretRequest:
+      properties:
+        description:
+          description: Description is an optional human-readable description of the
+            secret's purpose (max 500 characters)
+          maxLength: 500
+          type: string
+        name:
+          description: Name is the new unique identifier for the secret. Can contain
+            alphanumeric characters, underscores, hyphens, forward slashes, and
+            periods (1-100 characters)
+          maxLength: 100
+          minLength: 1
+          type: string
+        project_id:
+          description: ProjectID is ignored - the project is automatically determined from
+            your authentication
+          type: string
+        value:
+          description: Value is the new sensitive data to store securely. Updating this
+            will replace the existing secret value
+          minLength: 1
+          type: string
+      type: object
+    UpdateVolumeRequest:
+      properties:
+        content:
+          allOf:
+            - $ref: "#/components/schemas/VolumeContent"
+          description: Content specifies the new content that will be preloaded to this
+            volume
+        name:
+          description: Name is the new unique identifier for the volume within the project
+          type: string
+        type:
+          allOf:
+            - $ref: "#/components/schemas/VolumeType"
+          description: Type is the new volume type (currently only "readOnly" is supported)
+      type: object
+    VolumeMount:
+      properties:
+        mount_path:
+          description: MountPath is the path in the container where the volume will be
+            mounted (e.g., "/data")
+          type: string
+        name:
+          description: Name is the name of the volume to mount. Must reference an existing
+            volume by name or ID
+          type: string
+      required:
+        - mount_path
+        - name
+      type: object
+    VolumeResponseItem:
+      properties:
+        content:
+          allOf:
+            - $ref: "#/components/schemas/VolumeContent"
+          description: Content specifies the content that will be preloaded to this volume
+        created_at:
+          description: CreatedAt is the ISO8601 timestamp when this volume was created
+          type: string
+        id:
+          description: ID is the unique identifier for this volume
+          type: string
+        name:
+          description: Name is the name of the volume
+          type: string
+        object:
+          description: Object is the type identifier for this response (always "volume")
+          type: string
+        type:
+          allOf:
+            - $ref: "#/components/schemas/VolumeType"
+          description: Type is the volume type (e.g., "readOnly")
+        updated_at:
+          description: UpdatedAt is the ISO8601 timestamp when this volume was last updated
+          type: string
+      type: object
+    VolumeContent:
+      properties:
+        source_prefix:
+          description: SourcePrefix is the file path prefix for the content to be
+            preloaded into the volume
+          example: models/
+          type: string
+        type:
+          description: Type is the content type (currently only "files" is supported which
+            allows preloading files uploaded via Files API into the volume)
+          enum:
+            - files
+          example: files
+          type: string
+      type: object
+    VolumeType:
+      enum:
+        - readOnly
+      type: string
+      x-enum-varnames:
+        - VolumeTypeReadOnly
