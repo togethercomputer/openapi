@@ -4002,7 +4002,7 @@ paths:
       x-codeSamples:
           - lang: TypeScript
             label: Together AI SDK (TypeScript)
-            source: | 
+            source: |
               client.clusters.create()
           - lang: Shell
             label: cURL
@@ -6491,7 +6491,7 @@ components:
       properties:
         success:
           type: boolean
-    SharedVolumeInfo: 
+    SharedVolumeInfo:
       type: object
       required:
         - volume_id
@@ -8607,6 +8607,9 @@ components:
         updated_at:
           type: string
           format: date-time
+        started_at:
+          type: string
+          format: date-time
         n_epochs:
           type: integer
         n_checkpoints:
@@ -8722,6 +8725,10 @@ components:
           type: string
           format: date-time
           description: Last update timestamp of the fine-tune job
+        started_at:
+          type: string
+          format: date-time
+          description: Start timestamp of the current stage of the fine-tune job
         user_id:
           type: string
           description: Identifier for the user who created the job
