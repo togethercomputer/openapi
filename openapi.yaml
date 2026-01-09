@@ -3911,6 +3911,7 @@ paths:
     get:
       tags: ['GPUClusterService']
       summary: List all GPU clusters.
+      description: List all GPU clusters.
       operationId: GPUClusterService_List
       responses:
         "200":
@@ -3920,15 +3921,51 @@ paths:
               schema:
                 $ref: '#/components/schemas/GPUClusters'
       x-codeSamples:
-        - lang: Shell
-          label: cURL
+        - lang: Python
+          label: Together AI SDK (v2)
           source: |
-            curl -X GET \
-                  -H "Authorization Bearer $TOGETHER_API_KEY" \
-                  https://api.together.ai/v1/clusters
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.beta.clusters.list()
+
+            print(response.clusters)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.beta.clusters.list();
+
+            console.log(response.clusters);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together({
+              apiKey: process.env.TOGETHER_API_KEY,
+            });
+
+            const response = await client.beta.clusters.list();
+
+            console.log(response.clusters);
     post:
       tags: ['GPUClusterService']
       summary: Create GPU Cluster
+      description: |
+        Create an Instant Cluster on Together's high-performance GPU clusters.
+        With features like on-demand scaling, long-lived resizable high-bandwidth shared DC-local storage,
+        Kubernetes and Slurm cluster flavors, a REST API, and Terraform support,
+        you can run workloads flexibly without complex infrastructure management.
       operationId: GPUClusterService_Create
       requestBody:
         content:
@@ -3944,8 +3981,59 @@ paths:
               schema:
                 $ref: '#/components/schemas/GPUClusterCreateResponse'
       x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+
+            client = Together()
+
+            response = client.beta.clusters.create(
+              cluster_name="my-gpu-cluster",
+              region="us-central-8",
+              gpu_type="H100_SXM",
+              num_gpus=8,
+              driver_version="CUDA_12_6_560",
+              billint_type="ON_DEMAND",
+            )
+
+            print(response.cluster_id)
+        - lang: TypeScript
+          label: Together AI SDK (v2)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together();
+
+            const response = await client.beta.clusters.create({
+              cluster_name: "my-gpu-cluster",
+              region: "us-central-8",
+              gpu_type: "H100_SXM",
+              num_gpus: 8,
+              driver_version: "CUDA_12_6_560",
+              billint_type: "ON_DEMAND",
+            });
+
+            console.log(response.cluster_id)
+        - lang: JavaScript
+          label: Together AI SDK (v2)
+          source: |
+            import Together from "together-ai";
+
+            const client = new Together();
+
+            const response = await client.beta.clusters.create({
+              cluster_name: "my-gpu-cluster",
+              region: "us-central-8",
+              gpu_type: "H100_SXM",
+              num_gpus: 8,
+              driver_version: "CUDA_12_6_560",
+              billint_type: "ON_DEMAND",
+            });
+
+            console.log(response.cluster_id)
         - lang: Shell
-          label: cURL
+          label: CLI
           source: |
             curl -X POST \
                   -H "Authorization Bearer $TOGETHER_API_KEY" \
@@ -3955,6 +4043,7 @@ paths:
     get:
       tags: ['GPUClusterService']
       summary: Get GPU cluster by cluster ID
+      description: Retrieve information about a specific GPU cluster.
       operationId: GPUClusterService_Get
       parameters:
         - name: cluster_id
@@ -3970,15 +4059,34 @@ paths:
               schema:
                 $ref: '#/components/schemas/GPUClusterInfo'
       x-codeSamples:
-        - lang: Shell
-          label: cURL
+        - lang: Python
+          label: Together AI SDK (v2)
           source: |
-            curl -X GET \
-                  -H "Authorization Bearer $TOGETHER_API_KEY" \
-                  https://api.together.ai/v1/clusters/${CLUSTER_ID}
+            from together import Together
+            client = Together()
+
+            cluster = client.beta.clusters.retrieve("cluster_id")
+            print(cluster)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const cluster = await client.beta.clusters.retrieve("cluster_id");
+            console.log(cluster);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const cluster = await client.beta.clusters.retrieve("cluster_id");
+            console.log(cluster);
     put:
       tags: ['GPUClusterService']
       summary: Update a GPU Cluster.
+      description: Update the configuration of an existing GPU cluster.
       operationId: GPUClusterService_Update
       parameters:
         - name: cluster_id
@@ -4000,10 +4108,38 @@ paths:
               schema:
                 $ref: '#/components/schemas/GPUClusterUpdateResponse'
       x-codeSamples:
+          - lang: Python
+            label: Together AI SDK (v2)
+            source: |
+              from together import Together
+              client = Together()
+
+              cluster = client.beta.clusters.update("cluster_id", cluster_type="KUBERNETES", num_gpus=24)
+              print(cluster)
           - lang: TypeScript
             label: Together AI SDK (TypeScript)
             source: |
-              client.clusters.create()
+              import Together from "together-ai";
+              const client = new Together();
+
+              const cluster = await client.beta.clusters.update({
+                cluster_id: "cluster_id",
+                cluster_type: "kubernetes",
+                num_gpus: 24,
+              })
+              console.log(cluster)
+          - lang: JavaScript
+            label: Together AI SDK (JavaScript)
+            source: |
+              import Together from "together-ai";
+              const client = new Together();
+
+              const cluster = await client.beta.clusters.update({
+                cluster_id: "cluster_id",
+                cluster_type: "kubernetes",
+                num_gpus: 24,
+              })
+              console.log(cluster)
           - lang: Shell
             label: cURL
             source: |
@@ -4014,6 +4150,7 @@ paths:
     delete:
       tags: ['GPUClusterService']
       summary: Delete GPU cluster by cluster ID
+      description: Delete a GPU cluster by cluster ID.
       operationId: GPUClusterService_Delete
       parameters:
         - name: cluster_id
@@ -4029,6 +4166,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/GPUCLusterDeleteResponse'
       x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            cluster = client.beta.clusters.delete("cluster_id")
+            print(cluster)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const cluster = await client.beta.clusters.delete("cluster_id");
+            console.log(cluster);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const cluster = await client.beta.clusters.delete("cluster_id");
+            console.log(cluster);
         - lang: Shell
           label: cURL
           source: |
@@ -4058,6 +4219,7 @@ paths:
     get:
       tags: ['SharedVolumeService']
       summary: List all shared volumes.
+      description: List all shared volumes.
       operationId: SharedVolumeService_List
       responses:
         "200":
@@ -4067,6 +4229,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/SharedVolumes'
       x-codeSamples:
+        - lang: Python  
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            volumes = client.beta.clusters.storage.list()
+            print(volumes)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volumes = await client.beta.clusters.storage.list();
+            console.log(volumes);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volumes = await client.beta.clusters.storage.list();
+            console.log(volumes);
         - lang: Shell
           label: cURL
           source: |
@@ -4076,6 +4262,8 @@ paths:
     put:
       tags: ['SharedVolumeService']
       summary: Update a shared volume.
+      description: |
+        Update the configuration of an existing shared volume.
       operationId: SharedVolumeService_Update
       requestBody:
         content:
@@ -4091,6 +4279,39 @@ paths:
               schema:
                 $ref: '#/components/schemas/SharedVolumeInfo'
       x-codeSamples:
+          - lang: Python
+            label: Together AI SDK (v2)
+            source: |
+              from together import Together
+              client = Together()
+
+              volume = client.beta.clusters.storage.update(
+                volume_id="12345-67890-12345-67890",
+                size_tib=3
+              )
+              print(volume)
+          - lang: TypeScript
+            label: Together AI SDK (TypeScript)
+            source: |
+              import Together from "together-ai";
+              const client = new Together();
+
+              const volume = await client.beta.clusters.storage.update({
+                volume_id: "12345-67890-12345-67890",
+                size_tib: 3
+              });
+              console.log(volume);
+          - lang: JavaScript
+            label: Together AI SDK (JavaScript)
+            source: |
+              import Together from "together-ai";
+              const client = new Together();
+
+              const volume = await client.beta.clusters.storage.update({
+                volume_id: "12345-67890-12345-67890",
+                size_tib: 3
+              });
+              console.log(volume);
           - lang: Shell
             label: cURL
             source: |
@@ -4101,6 +4322,10 @@ paths:
     post:
       tags: ['SharedVolumeService']
       summary: Create a shared volume.
+      description: |
+        Instant Clusters supports long-lived, resizable in-DC shared storage with user data persistence.
+        You can dynamically create and attach volumes to your cluster at cluster creation time, and resize as your data grows.
+        All shared storage is backed by multi-NIC bare metal paths, ensuring high-throughput and low-latency performance for shared storage.
       operationId: SharedVolumeService_Create
       requestBody:
         content:
@@ -4116,6 +4341,39 @@ paths:
               schema:
                 $ref: '#/components/schemas/SharedVolumeCreateResponse'
       x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            volume = client.beta.clusters.storage.create(
+              volume_name="my-shared-volume",
+              size_tib=2,
+              region="us-west-2"
+            )
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volume = await client.beta.clusters.storage.create({
+              volume_name: "my-shared-volume",
+              size_tib: 2,
+              region: "us-west-2"
+            });
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volume = await client.beta.clusters.storage.create({
+              volume_name: "my-shared-volume",
+              size_tib: 2,
+              region: "us-west-2"
+            });
         - lang: Shell
           label: cURL
           source: |
@@ -4127,6 +4385,7 @@ paths:
     get:
       tags: ['SharedVolumeService']
       summary: Get shared volume by volume Id.
+      description: Retrieve information about a specific shared volume.
       operationId: SharedVolumeService_Get
       parameters:
         - name: volume_id
@@ -4142,6 +4401,30 @@ paths:
                       schema:
                           $ref: '#/components/schemas/SharedVolumeInfo'
       x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            volume = client.beta.clusters.storage.retrieve("volume_id")
+            print(volume)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volume = await client.beta.clusters.storage.retrieve("volume_id");
+            console.log(volume);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volume = await client.beta.clusters.storage.retrieve("volume_id");
+            console.log(volume);
         - lang: Shell
           label: cURL
           source: |
@@ -4151,6 +4434,8 @@ paths:
     delete:
       tags: ['SharedVolumeService']
       summary: Delete shared volume by volume id.
+      description: |
+        Delete a shared volume. Note that if this volume is attached to a cluster, deleting will fail.
       operationId: SharedVolumeService_Delete
       parameters:
         - name: volume_id
@@ -4166,6 +4451,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/SharedVolumeDeleteResponse'
       x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            volume = client.beta.clusters.storage.delete("volume_id")
+            print(volume)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volume = await client.beta.clusters.storage.delete("volume_id");
+            console.log(volume);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volume = await client.beta.clusters.storage.delete("volume_id");
+            console.log(volume);
         - lang: Shell
           label: cURL
           source: |
