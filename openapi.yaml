@@ -3979,7 +3979,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GPUClusterCreateResponse'
+                $ref: '#/components/schemas/GPUClusterInfo'
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (v2)
@@ -4106,7 +4106,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GPUClusterUpdateResponse'
+                $ref: '#/components/schemas/GPUClusterInfo'
       x-codeSamples:
           - lang: Python
             label: Together AI SDK (v2)
@@ -4164,7 +4164,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GPUCLusterDeleteResponse'
+                type: object
+                required: [cluster_id]
+                properties:
+                  cluster_id:
+                    type: string
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (v2)
@@ -4227,7 +4231,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SharedVolumes'
+                $ref: '#/components/schemas/GPUClustersSharedVolumes'
       x-codeSamples:
         - lang: Python  
           label: Together AI SDK (v2)
@@ -4269,7 +4273,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SharedVolumeUpdateRequest'
+              $ref: '#/components/schemas/GPUClustersSharedVolumeUpdateRequest'
         required: true
       responses:
         "200":
@@ -4277,7 +4281,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SharedVolumeInfo'
+                $ref: '#/components/schemas/GPUClustersSharedVolume'
       x-codeSamples:
           - lang: Python
             label: Together AI SDK (v2)
@@ -4331,7 +4335,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SharedVolumeCreateRequest'
+              $ref: '#/components/schemas/GPUClustersSharedVolumeCreateRequest'
         required: true
       responses:
         "200":
@@ -4339,7 +4343,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SharedVolumeCreateResponse'
+                $ref: '#/components/schemas/GPUClustersSharedVolume'
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (v2)
@@ -4399,7 +4403,7 @@ paths:
               content:
                   application/json:
                       schema:
-                          $ref: '#/components/schemas/SharedVolumeInfo'
+                          $ref: '#/components/schemas/GPUClustersSharedVolume'
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (v2)
@@ -4449,7 +4453,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SharedVolumeDeleteResponse'
+                $ref: '#/components/schemas/GPUClustersSharedVolumeDeleteResponse'
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (v2)
@@ -6500,12 +6504,6 @@ components:
           type: integer
         message:
           type: string
-    GPUCLusterDeleteResponse:
-      type: object
-      required: ['cluster_id']
-      properties:
-        cluster_id:
-          type: string
     GPUClusterControlPlaneNode:
       type: object
       required:
@@ -6538,7 +6536,6 @@ components:
         - gpu_type
         - num_gpus
         - cluster_name
-        - duration_days
         - driver_version
         - billing_type
       type: object
@@ -6578,7 +6575,7 @@ components:
               - CUDA_12_6_565
               - CUDA_12_8_570
           shared_volume:
-            $ref: '#/components/schemas/SharedVolumeCreateRequest'
+            $ref: '#/components/schemas/GPUClustersSharedVolumeCreateRequest'
           volume_id:
             type: string
           billing_type:
@@ -6586,12 +6583,6 @@ components:
             enum:
               - RESERVED
               - ON_DEMAND
-    GPUClusterCreateResponse:
-      type: object
-      required: ['cluster_id']
-      properties:
-        cluster_id:
-          type: string
     GPUClusterGPUWorkerNode:
       type: object
       required:
@@ -6700,12 +6691,6 @@ components:
             enum: [KUBERNETES, SLURM]
           num_gpus:
             type: integer
-    GPUClusterUpdateResponse:
-      type: object
-      required: [cluster_id]
-      properties:
-        cluster_id:
-            type: string
     GPUClusterVolume:
       type: object
       required:
@@ -6773,7 +6758,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Region'
-    SharedVolumeCreateRequest:
+    GPUClustersSharedVolumeCreateRequest:
       type: object
       required:
         - volume_name
@@ -6788,24 +6773,19 @@ components:
         region:
           type: string
           description: Region name. Usable regions can be found from `client.clusters.list_regions()`
-    SharedVolumeCreateResponse:
-      type: object
-      required: [volume_id]
-      properties:
-        volume_id:
-            type: string
-    SharedVolumeDeleteResponse:
+    GPUClustersSharedVolumeDeleteResponse:
       type: object
       required: [success]
       properties:
         success:
           type: boolean
-    SharedVolumeInfo:
+    GPUClustersSharedVolume:
       type: object
       required:
         - volume_id
         - volume_name
         - size_tib
+        - status
       properties:
         volume_id:
           type: string
@@ -6813,21 +6793,27 @@ components:
           type: string
         size_tib:
           type: integer
-    SharedVolumeUpdateRequest:
+        status:
+          type: string
+          enum:
+            - available
+            - bound
+            - provisioning
+    GPUClustersSharedVolumeUpdateRequest:
       type: object
       properties:
         volume_id:
           type: string
         size_tib:
           type: integer
-    SharedVolumes:
+    GPUClustersSharedVolumes:
       type: object
       required: [volumes]
       properties:
         volumes:
           type: array
           items:
-            $ref: '#/components/schemas/SharedVolumeInfo'
+            $ref: '#/components/schemas/GPUClustersSharedVolume'
     ListVoicesResponse:
       description: Response containing a list of models and their available voices.
       type: object
