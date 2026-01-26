@@ -7582,14 +7582,13 @@ components:
             strict:
               anyOf:
                 - type: boolean
-                  default: false
-                  description: |
-                    Whether to enable strict schema adherence when generating the output.
-                    If set to true, the model will always follow the exact schema defined
-                    in the `schema` field. Only a subset of JSON Schema is supported when
-                    `strict` is `true`. To learn more, read the [Structured Outputs
-                    guide](https://docs.together.ai/docs/json-mode).
+                  default: true
                 - type: 'null'
+              deprecated: true
+              description: |
+                Deprecated: This parameter is deprecated and has no effect. The API
+                always operates in strict mode, ensuring the model follows the exact
+                schema defined in the `schema` field.
           required:
             - name
       required:
