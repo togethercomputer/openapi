@@ -215,58 +215,7 @@ paths:
       summary: Get logs for a deployment
       tags:
         - Deployments
-  /image-repositories:
-    get:
-      description: Retrieve all container image repositories available in your project
-      responses:
-        "200":
-          description: List of repositories
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RepositoryListResponse"
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Get the list of image repositories in your project
-      tags:
-        - Images
-  /image-repositories/{id}/images:
-    get:
-      description: Retrieve all container images (tags) available in a specific repository
-      parameters:
-        - description: Repository ID
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: List of images
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ImageListResponse"
-        "404":
-          description: Repository not found
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Get the list of images available under a repository
-      tags:
-        - Images
-  /secrets:
+  /deployments/secrets:
     get:
       description: Retrieve all secrets in your project
       responses:
@@ -316,7 +265,7 @@ paths:
       summary: Create a new secret
       tags:
         - Secrets
-  /secrets/{id}:
+  /deployments/secrets/{id}:
     delete:
       description: Delete an existing secret
       parameters:
@@ -423,7 +372,7 @@ paths:
       summary: Update a secret
       tags:
         - Secrets
-  /storage/{filename}:
+  /deployments/storage/{filename}:
     get:
       description: Download a file by redirecting to a signed URL
       parameters:
@@ -467,7 +416,7 @@ paths:
       summary: Download a file
       tags:
         - files
-  /storage/volumes:
+  /deployments/storage/volumes:
     get:
       description: Retrieve all volumes in your project
       responses:
@@ -517,7 +466,7 @@ paths:
       summary: Create a new volume
       tags:
         - Volumes
-  /storage/volumes/{id}:
+  /deployments/storage/volumes/{id}:
     delete:
       description: Delete an existing volume
       parameters:
