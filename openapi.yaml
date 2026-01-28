@@ -6437,6 +6437,181 @@ paths:
             }
             ```
 
+  /queue/cancel:
+    post:
+      description: Cancel a pending or running job. Returns the job status after the
+        cancellation attempt.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QueueCancelRequest"
+        description: Cancel request
+        required: true
+      responses:
+        "200":
+          description: Successfully canceled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueCancelResponse"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "404":
+          description: Request not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "409":
+          description: Job could not be canceled (already completed/failed)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueCancelResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+      summary: Cancel a queued job
+      tags:
+        - Queue
+  /queue/metrics:
+    get:
+      description: Get the current queue statistics including pending and running job
+        counts.
+      parameters:
+        - description: Model name to get metrics for
+          in: query
+          name: model
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Queue metrics
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+      summary: Get queue metrics
+      tags:
+        - Queue
+  /queue/status:
+    get:
+      description: Check the status of a job using request_id and model query parameters.
+      parameters:
+        - description: Request ID
+          in: query
+          name: request_id
+          required: true
+          schema:
+            type: string
+        - description: Model name
+          in: query
+          name: model
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Status information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueJobStatusResponse"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "404":
+          description: Request not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+      summary: Get job status
+      tags:
+        - Queue
+  /queue/submit:
+    post:
+      description: Submit a new job to the queue. Returns a request ID that can be
+        used to check status.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QueueJobRequest"
+        description: Job request
+        required: true
+      responses:
+        "200":
+          description: Successfully queued request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueJobResponse"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+      summary: Submit a queued job
+      tags:
+        - Queue
+
 components:
   securitySchemes:
     bearerAuth:
@@ -11351,3 +11526,87 @@ components:
       type: string
       x-enum-varnames:
         - VolumeTypeReadOnly
+    QueueError:
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
+      type: object
+    QueueCancelRequest:
+      properties:
+        model:
+          type: string
+        request_id:
+          type: string
+      required:
+        - model
+        - request_id
+      type: object
+    QueueCancelResponse:
+      properties:
+        status:
+          type: string
+      type: object
+    QueueJobRequest:
+      properties:
+        info:
+          additionalProperties: true
+          type: object
+        model:
+          description: Required model identifier
+          type: string
+        payload:
+          additionalProperties: true
+          type: object
+        priority:
+          type: integer
+      required:
+        - model
+        - payload
+      type: object
+    QueueJobResponse:
+      properties:
+        error:
+          $ref: "#/components/schemas/QueueError"
+        requestId:
+          type: string
+      type: object
+    QueueJobStatusResponse:
+      properties:
+        claimed_at:
+          type: string
+        created_at:
+          type: string
+        done_at:
+          type: string
+        info:
+          additionalProperties: true
+          type: object
+        inputs:
+          additionalProperties: true
+          type: object
+        model:
+          type: string
+        outputs:
+          additionalProperties: true
+          type: object
+        priority:
+          description: Additional fields for test compatibility
+          type: integer
+        request_id:
+          type: string
+        retries:
+          type: integer
+        status:
+          description: this should be the enum, but isn't for backwards compatability
+          type: string
+        warnings:
+          items:
+            type: string
+          type: array
+      type: object
