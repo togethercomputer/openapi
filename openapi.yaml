@@ -11165,30 +11165,6 @@ components:
       required:
         - name
       type: object
-    ImageListResponse:
-      properties:
-        data:
-          description: Data is the array of image items
-          items:
-            $ref: "#/components/schemas/ImageResponseItem"
-          type: array
-        object:
-          description: Object is the type identifier for this response (always "list")
-          type: string
-      type: object
-    ImageResponseItem:
-      properties:
-        object:
-          description: Object is the type identifier for this response (always "image")
-          type: string
-        tag:
-          description: Tag is the image tag/version identifier (e.g., "latest", "v1.0.0")
-          type: string
-        url:
-          description: URL is the full registry URL for this image including tag (e.g.,
-            "registry.together.ai/project-id/repository:tag")
-          type: string
-      type: object
     KubernetesEvent:
       properties:
         action:
@@ -11280,32 +11256,6 @@ components:
         scheduled_on_cluster:
           description: ScheduledOnCluster identifies which cluster this replica is
             scheduled on
-          type: string
-      type: object
-    RepositoryListResponse:
-      properties:
-        data:
-          description: Data is the array of repository items
-          items:
-            $ref: "#/components/schemas/RepositoryResponseItem"
-          type: array
-        object:
-          description: Object is the type identifier for this response (always "list")
-          type: string
-      type: object
-    RepositoryResponseItem:
-      properties:
-        id:
-          description: ID is the unique identifier for this repository (repository name
-            with slashes replaced by "___")
-          type: string
-        object:
-          description: Object is the type identifier for this response (always
-            "image-repository")
-          type: string
-        url:
-          description: URL is the full registry URL for this repository (e.g.,
-            "registry.together.ai/project-id/repository-name")
           type: string
       type: object
     SecretResponseItem:
