@@ -11,7 +11,7 @@ info:
     name: MIT
     url: https://github.com/togethercomputer/openapi/blob/main/LICENSE
 servers:
-  - url: https://api.together.xyz/v1
+  - url: https://api.together.ai/v1
 security:
   - bearerAuth: []
 paths:
@@ -644,7 +644,7 @@ paths:
       summary: Fetch video metadata
       description: Fetch video metadata
       servers:
-        - url: https://api.together.xyz/v2
+        - url: https://api.together.ai/v2
       operationId: retrieveVideo
       x-codeSamples:
         - lang: Python
@@ -723,7 +723,7 @@ paths:
       description: Create a video
       operationId: createVideo
       servers:
-        - url: https://api.together.xyz/v2
+        - url: https://api.together.ai/v2
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (v1)
@@ -882,7 +882,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/chat/completions" \
+            curl -X POST "https://api.together.ai/v1/chat/completions" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json" \
                  -d '{
@@ -1021,7 +1021,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/completions" \
+            curl -X POST "https://api.together.ai/v1/completions" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json" \
                  -d '{
@@ -1154,7 +1154,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/embeddings" \
+            curl -X POST "https://api.together.ai/v1/embeddings" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json" \
                  -d '{
@@ -1277,7 +1277,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/models" \
+            curl "https://api.together.ai/v1/models" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       operationId: models
@@ -1396,7 +1396,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/models" \
+            curl -X POST "https://api.together.ai/v1/models" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json" \
                  -d '{
@@ -1528,7 +1528,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/images/generations" \
+            curl -X POST "https://api.together.ai/v1/images/generations" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json" \
                  -d '{
@@ -1700,7 +1700,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/files" \
+            curl "https://api.together.ai/v1/files" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       responses:
@@ -1770,7 +1770,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/files/ID" \
+            curl "https://api.together.ai/v1/files/ID" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       parameters:
@@ -1845,7 +1845,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X "DELETE" "https://api.together.xyz/v1/files/file-id" \
+            curl -X "DELETE" "https://api.together.ai/v1/files/file-id" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY"
       parameters:
         - name: id
@@ -1922,7 +1922,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/files/file-id/content" \
+            curl "https://api.together.ai/v1/files/file-id/content" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       parameters:
@@ -2010,7 +2010,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/files/upload" \
+            curl "https://api.together.ai/v1/files/upload" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -F "file=@/path/to/data.jsonl" \
                  -F "file_name=data.jsonl" \
@@ -2135,7 +2135,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/fine-tunes" \
+            curl -X POST "https://api.together.ai/v1/fine-tunes" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json" \
                  -d '{
@@ -2331,7 +2331,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/fine-tunes" \
+            curl "https://api.together.ai/v1/fine-tunes" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       responses:
@@ -2476,7 +2476,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/fine-tunes/ft-id" \
+            curl "https://api.together.ai/v1/fine-tunes/ft-id" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       parameters:
@@ -2551,7 +2551,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X "DELETE" "https://api.together.xyz/v1/fine-tunes/ft-id?force=false" \
+            curl -X "DELETE" "https://api.together.ai/v1/fine-tunes/ft-id?force=false" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       parameters:
@@ -2645,7 +2645,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/fine-tunes/ft-id/events" \
+            curl "https://api.together.ai/v1/fine-tunes/ft-id/events" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       parameters:
@@ -2721,7 +2721,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/fine-tunes/ft-id/checkpoints" \
+            curl "https://api.together.ai/v1/fine-tunes/ft-id/checkpoints" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       parameters:
@@ -2806,7 +2806,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/finetune/download?ft_id=ft-id&checkpoint=merged"
+            curl "https://api.together.ai/v1/finetune/download?ft_id=ft-id&checkpoint=merged"
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       parameters:
@@ -2903,7 +2903,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/fine-tunes/ft-id/cancel" \
+            curl -X POST "https://api.together.ai/v1/fine-tunes/ft-id/cancel" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       parameters:
@@ -3086,7 +3086,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/rerank" \
+            curl -X POST "https://api.together.ai/v1/rerank" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json" \
                  -d '{
@@ -3252,7 +3252,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/audio/speech" \
+            curl -X POST "https://api.together.ai/v1/audio/speech" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json" \
                  -d '{
@@ -3691,7 +3691,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/audio/transcriptions" \
+            curl -X POST "https://api.together.ai/v1/audio/transcriptions" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -F "file=@audio.wav" \
                  -F "model=openai/whisper-large-v3"
@@ -3819,7 +3819,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/audio/transcriptions" \
+            curl -X POST "https://api.together.ai/v1/audio/transcriptions" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -F "file=@audio.wav" \
                  -F "model=openai/whisper-large-v3" \
@@ -4488,7 +4488,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/clusters/availability-zones" \
+            curl "https://api.together.ai/v1/clusters/availability-zones" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
   /endpoints:
@@ -4557,7 +4557,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/endpoints" \
+            curl "https://api.together.ai/v1/endpoints" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       operationId: listEndpoints
@@ -4715,7 +4715,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/endpoints" \
+            curl -X POST "https://api.together.ai/v1/endpoints" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json" \
                  -d '{
@@ -4813,7 +4813,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/endpoints/endpoint-id" \
+            curl "https://api.together.ai/v1/endpoints/endpoint-id" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       operationId: getEndpoint
@@ -4904,7 +4904,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X PATCH "https://api.together.xyz/v1/endpoints/endpoint-id" \
+            curl -X PATCH "https://api.together.ai/v1/endpoints/endpoint-id" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json" \
                  -d '{
@@ -5019,7 +5019,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X "DELETE" "https://api.together.xyz/v1/endpoints/endpoint-id" \
+            curl -X "DELETE" "https://api.together.ai/v1/endpoints/endpoint-id" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY"
       operationId: deleteEndpoint
       parameters:
@@ -5117,7 +5117,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/hardware" \
+            curl "https://api.together.ai/v1/hardware" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       operationId: listHardware
@@ -5236,7 +5236,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/tci/execute" \
+            curl -X POST "https://api.together.ai/v1/tci/execute" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json" \
                  -d '{
@@ -5316,7 +5316,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/tci/sessions" \
+            curl "https://api.together.ai/v1/tci/sessions" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       operationId: sessions/list
@@ -5390,7 +5390,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/batches" \
+            curl "https://api.together.ai/v1/batches" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       security:
@@ -5481,7 +5481,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/batches" \
+            curl -X POST "https://api.together.ai/v1/batches" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json" \
                  -d '{
@@ -5588,7 +5588,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl "https://api.together.xyz/v1/batches/ID" \
+            curl "https://api.together.ai/v1/batches/ID" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       security:
@@ -5698,7 +5698,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/batches/ID/cancel" \
+            curl -X POST "https://api.together.ai/v1/batches/ID/cancel" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       security:
