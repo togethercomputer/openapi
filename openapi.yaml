@@ -3856,7 +3856,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /clusters:
+  /compute/clusters:
     get:
       tags: ['GPUClusterService']
       summary: List all GPU clusters.
@@ -3987,8 +3987,8 @@ paths:
             curl -X POST \
                   -H "Authorization Bearer $TOGETHER_API_KEY" \
                   --data '{ "region": "us-west-2", "gpu_type": "H100_SXM", "num_gpus": 8, "cluster_name": "my-gpu-cluster", "duration_days": 7, "driver_version": "CUDA_12_6_560" }' \
-                  https://api.together.ai/v1/clusters
-  /clusters/{cluster_id}:
+                  https://api.together.ai/v1/compute/clusters
+  /compute/clusters/{cluster_id}:
     get:
       tags: ['GPUClusterService']
       summary: Get GPU cluster by cluster ID
@@ -4095,7 +4095,7 @@ paths:
               curl -X PUT \
                     -H "Authorization Bearer $TOGETHER_API_KEY" \
                     --data '{ "cluster_id": "cluster id", "cluster_type": "kubernetes", "num_gpus": 24 }' \
-                    https://api.together.ai/v1/clusters
+                    https://api.together.ai/v1/compute/clusters
     delete:
       tags: ['GPUClusterService']
       summary: Delete GPU cluster by cluster ID
@@ -4148,8 +4148,8 @@ paths:
           source: |
             curl -X DELETE \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://api.together.ai/v1/clusters/${CLUSTER_ID}
-  /clusters/regions:
+                  https://api.together.ai/v1/compute/clusters/${CLUSTER_ID}
+  /compute/regions:
     get:
       tags: ['RegionService']
       summary: List regions and corresponding supported driver versions
@@ -4167,8 +4167,8 @@ paths:
           source: |
             curl -X GET \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://api.together.ai/v1/clusters/regions
-  /clusters/storages:
+                  https://api.together.ai/v1/compute/regions
+  /compute/clusters/storages:
     get:
       tags: ['SharedVolumeService']
       summary: List all shared volumes.
@@ -4211,7 +4211,7 @@ paths:
           source: |
             curl -X GET \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://api.together.ai/v1/clusters/storages
+                  https://api.together.ai/v1/compute/clusters/storages
     put:
       tags: ['SharedVolumeService']
       summary: Update a shared volume.
@@ -4271,7 +4271,7 @@ paths:
               curl -X PUT \
                     -H "Authorization: Bearer $TOGETHER_API_KEY" \
                     --data '{ "volume_id": "12345-67890-12345-67890", "size_tib": 3}' \
-                    https://api.together.ai/v1/clusters/storages
+                    https://api.together.ai/v1/compute/clusters/storages
     post:
       tags: ['SharedVolumeService']
       summary: Create a shared volume.
@@ -4333,8 +4333,8 @@ paths:
             curl -X POST \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
                   --data '{ "volume_name": "my-shared-volume", "size_tib": 2, "region": "us-west-2" }' \
-                  https://api.together.ai/v1/clusters/storages
-  /clusters/storages/{volume_id}:
+                  https://api.together.ai/v1/compute/clusters/storages
+  /compute/clusters/storages/{volume_id}:
     get:
       tags: ['SharedVolumeService']
       summary: Get shared volume by volume Id.
@@ -4383,7 +4383,7 @@ paths:
           source: |
             curl -X GET \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://api.together.ai/v1/clusters/storages/${VOLUME_ID}
+                  https://api.together.ai/v1/compute/clusters/storages/${VOLUME_ID}
     delete:
       tags: ['SharedVolumeService']
       summary: Delete shared volume by volume id.
@@ -4433,7 +4433,7 @@ paths:
           source: |
             curl -X DELETE \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://api.together.ai/v1/clusters/storages/${VOLUME_ID}
+                  https://api.together.ai/v1/compute/clusters/storages/${VOLUME_ID}
   /clusters/availability-zones:
     get:
       tags: ['endpoints']
