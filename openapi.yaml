@@ -2924,6 +2924,131 @@ paths:
           description: Invalid request parameters.
         '404':
           description: Fine-tune ID not found.
+  /fine-tunes/{id}/restart:
+    post:
+      tags: ['Fine-tuning']
+      summary: Restart job
+      description: Restart a fine-tuning job. Creates a new job with the same parameters as the original.
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.together.xyz/v1/fine-tunes/ft-id/restart" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                   "no_cancel_job": false,
+                   "refund_job": false
+                 }'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Fine-tune ID to restart. A string that starts with `ft-`.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                no_cancel_job:
+                  type: boolean
+                  description: If true, do not cancel the original job.
+                  default: false
+                refund_job:
+                  type: boolean
+                  description: If true, refund the original job (admin only).
+                  default: false
+      responses:
+        '200':
+          description: Successfully restarted the fine-tuning job.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestartJobResponse'
+        '400':
+          description: Invalid request parameters.
+        '404':
+          description: Fine-tune ID not found.
+  /fine-tunes/models/supported:
+    get:
+      tags: ['Fine-tuning']
+      summary: List supported models
+      description: List models supported for fine-tuning, or check if a specific model is supported.
+      x-codeSamples:
+        - lang: Shell
+          label: cURL (list all)
+          source: |
+            curl "https://api.together.xyz/v1/fine-tunes/models/supported" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY"
+        - lang: Shell
+          label: cURL (check specific model)
+          source: |
+            curl "https://api.together.xyz/v1/fine-tunes/models/supported?model_name=meta-llama/Meta-Llama-3.1-8B-Instruct-Reference" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY"
+      parameters:
+        - in: query
+          name: model_name
+          schema:
+            type: string
+          required: false
+          description: Optional model name to check support for. If omitted, returns all supported models.
+      responses:
+        '200':
+          description: Supported models or support status for a specific model.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      models:
+                        type: array
+                        items:
+                          type: string
+                        description: List of supported model names.
+                  - type: object
+                    properties:
+                      supported:
+                        type: boolean
+                        description: Whether the specified model is supported.
+  /fine-tunes/models/limits:
+    get:
+      tags: ['Fine-tuning']
+      summary: Get model limits
+      description: Get hyperparameter limits for a specific model.
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/fine-tunes/models/limits?model_name=meta-llama/Meta-Llama-3.1-8B-Instruct-Reference" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY"
+      parameters:
+        - in: query
+          name: model_name
+          schema:
+            type: string
+          required: true
+          description: The model name to get limits for.
+      responses:
+        '200':
+          description: Model hyperparameter limits.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HyperParameterLimits'
+        '404':
+          description: Model not found or not supported for fine-tuning.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message explaining the model is not available.
   /rerank:
     post:
       tags: ['Rerank']
@@ -9251,6 +9376,131 @@ components:
         message:
           type: string
           description: Message indicating the result of the deletion
+    RestartJobResponse:
+      type: object
+      description: Response from restarting a fine-tuning job.
+      properties:
+        request:
+          type: object
+          description: The original restart request parameters.
+          properties:
+            id:
+              type: string
+              description: The ID of the job to restart.
+            no_cancel_job:
+              type: boolean
+              description: Whether the original job should not be cancelled.
+            refund_job:
+              type: boolean
+              description: Whether to refund the original job.
+        restart_success:
+          type: boolean
+          description: Whether the restart was successful.
+        message:
+          type: string
+          description: A message describing the result.
+        original_job:
+          type: object
+          description: Information about the original job.
+          properties:
+            job_id:
+              type: string
+              description: The ID of the original job.
+            user_id:
+              type: string
+              description: The user ID of the original job owner.
+            status:
+              type: string
+              description: The status of the original job.
+            cancelled:
+              type: boolean
+              description: Whether the original job was cancelled.
+            cancelled_message:
+              type: string
+              description: Message about the cancellation status.
+            refunded:
+              type: boolean
+              description: Whether the original job was refunded.
+            refund_amount:
+              type: string
+              description: The amount refunded.
+            refund_message:
+              type: string
+              description: Message about the refund status.
+        job:
+          $ref: '#/components/schemas/FinetuneResponse'
+        error:
+          type: object
+          description: Error details if the restart failed.
+          properties:
+            code:
+              type: string
+              description: Error code.
+            message:
+              type: string
+              description: Error message.
+            param:
+              type: string
+              description: The parameter that caused the error.
+    HyperParameterLimits:
+      type: object
+      description: Hyperparameter limits for a fine-tuning model.
+      properties:
+        model_name:
+          type: string
+          description: The name of the model.
+        full_training:
+          type: object
+          description: Limits for full training.
+          properties:
+            max_batch_size:
+              type: integer
+              description: Maximum batch size for SFT full training.
+            max_batch_size_dpo:
+              type: integer
+              description: Maximum batch size for DPO full training.
+            min_batch_size:
+              type: integer
+              description: Minimum batch size for full training.
+        lora_training:
+          type: object
+          description: Limits for LoRA training.
+          properties:
+            max_batch_size:
+              type: integer
+              description: Maximum batch size for SFT LoRA training.
+            max_batch_size_dpo:
+              type: integer
+              description: Maximum batch size for DPO LoRA training.
+            min_batch_size:
+              type: integer
+              description: Minimum batch size for LoRA training.
+            max_rank:
+              type: integer
+              description: Maximum LoRA rank.
+            target_modules:
+              type: array
+              items:
+                type: string
+              description: Available target modules for LoRA.
+        max_num_epochs:
+          type: integer
+          description: Maximum number of training epochs.
+        max_num_evals:
+          type: integer
+          description: Maximum number of evaluations.
+        max_learning_rate:
+          type: number
+          description: Maximum learning rate.
+        min_learning_rate:
+          type: number
+          description: Minimum learning rate.
+        supports_vision:
+          type: boolean
+          description: Whether the model supports vision/multimodal inputs.
+        supports_tools:
+          type: boolean
+          description: Whether the model supports tool/function calling.
     FinetuneJobStatus:
       type: string
       enum:
