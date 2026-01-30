@@ -7640,6 +7640,12 @@ components:
           enum: ['low', 'medium', 'high']
           description: Controls the level of reasoning effort the model should apply when generating responses. Higher values may result in more thoughtful and detailed responses but may take longer to generate.
           example: 'medium'
+        reasoning:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              description: For models that support toggling reasoning functionality, this object can be used to control that functionality.
 
     ResponseFormatText:
       type: object
