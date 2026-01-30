@@ -4168,7 +4168,7 @@ paths:
             curl -X GET \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
                   https://api.together.ai/v1/compute/regions
-  /compute/clusters/storages:
+  /compute/clusters/storage/volumes:
     get:
       tags: ['SharedVolumeService']
       summary: List all shared volumes.
@@ -4271,7 +4271,7 @@ paths:
               curl -X PUT \
                     -H "Authorization: Bearer $TOGETHER_API_KEY" \
                     --data '{ "volume_id": "12345-67890-12345-67890", "size_tib": 3}' \
-                    https://api.together.ai/v1/compute/clusters/storages
+                    https://api.together.ai/v1/compute/clusters/storage/volumes
     post:
       tags: ['SharedVolumeService']
       summary: Create a shared volume.
@@ -4333,8 +4333,8 @@ paths:
             curl -X POST \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
                   --data '{ "volume_name": "my-shared-volume", "size_tib": 2, "region": "us-west-2" }' \
-                  https://api.together.ai/v1/compute/clusters/storages
-  /compute/clusters/storages/{volume_id}:
+                  https://api.together.ai/v1/compute/clusters/storage/volumes
+  /compute/clusters/storage/volumes/{volume_id}:
     get:
       tags: ['SharedVolumeService']
       summary: Get shared volume by volume Id.
@@ -4383,7 +4383,7 @@ paths:
           source: |
             curl -X GET \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://api.together.ai/v1/compute/clusters/storages/${VOLUME_ID}
+                  https://api.together.ai/v1/compute/clusters/storage/volumes/${VOLUME_ID}
     delete:
       tags: ['SharedVolumeService']
       summary: Delete shared volume by volume id.
@@ -4433,7 +4433,7 @@ paths:
           source: |
             curl -X DELETE \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://api.together.ai/v1/compute/clusters/storages/${VOLUME_ID}
+                  https://api.together.ai/v1/compute/clusters/storage/volumes/${VOLUME_ID}
   /clusters/availability-zones:
     get:
       tags: ['endpoints']
