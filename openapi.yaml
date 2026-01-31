@@ -18,6 +18,8 @@ paths:
   /deployments:
     get:
       description: Get a list of all deployments in your project
+      summary: Get the list of deployments
+      tags: ['Deployments']
       responses:
         "200":
           description: List of deployments
@@ -31,11 +33,78 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Get the list of deployments
-      tags:
-        - Deployments
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            deployments = client.beta.jig.list()
+            print(deployments)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployments = await client.beta.jig.list();
+            console.log(deployments);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployments = await client.beta.jig.list();
+            console.log(deployments);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/deployments
     post:
       description: Create a new deployment with specified configuration
+      summary: Create a new deployment
+      tags: ['Deployments']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            deployment = client.beta.jig.deploy(
+              name="my-deployment",
+              gpu_type="h100-80gb",
+              image="registry.together.xyz/proj_abcdefg1234567890/my-image:latest"
+            )
+            print(deployment)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.deploy({
+              name: "my-deployment",
+              gpu_type: "h100-80gb",
+              image: "registry.together.xyz/proj_abcdefg1234567890/my-image:latest"
+            });
+            console.log(deployment);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.deploy({
+              name: "my-deployment",
+              gpu_type: "h100-80gb",
+              image: "registry.together.xyz/proj_abcdefg1234567890/my-image:latest"
+            });
+            console.log(deployment);
       requestBody:
         content:
           application/json:
@@ -62,12 +131,11 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Create a new deployment
-      tags:
-        - Deployments
   /deployments/{id}:
     delete:
       description: Delete an existing deployment
+      summary: Delete a deployment
+      tags: ['Deployments']
       parameters:
         - description: Deployment ID or name
           in: path
@@ -75,6 +143,37 @@ paths:
           required: true
           schema:
             type: string
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            deployment = client.beta.jig.destroy("my-deployment")
+            print(deployment)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.destroy("my-deployment");
+            console.log(deployment);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.destroy("my-deployment");
+            console.log(deployment);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X DELETE \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/deployments/my-deployment
       responses:
         "200":
           description: Deployment deleted successfully
@@ -94,11 +193,10 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Delete a deployment
-      tags:
-        - Deployments
     get:
       description: Retrieve details of a specific deployment by its ID or name
+      summary: Get a deployment by ID or name
+      tags: ['Deployments']
       parameters:
         - description: Deployment ID or name
           in: path
@@ -106,6 +204,31 @@ paths:
           required: true
           schema:
             type: string
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            deployment = client.beta.jig.retrieve("my-deployment")
+            print(deployment)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.retrieve("my-deployment");
+            console.log(deployment);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.retrieve("my-deployment");
+            console.log(deployment);
       responses:
         "200":
           description: Deployment details
@@ -125,11 +248,42 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Get a deployment by ID or name
-      tags:
-        - Deployments
     patch:
       description: Update an existing deployment configuration
+      summary: Update a deployment
+      tags: ['Deployments']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            deployment = client.beta.jig.update("my-deployment", gpu_count=2)
+            print(deployment)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.update("my-deployment", { gpu_count: 2 });
+            console.log(deployment);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.update("my-deployment", { gpu_count: 2 });
+            console.log(deployment);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X PATCH \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  --data '{ "gpu_count": 2 }' \
+                  https://api.together.ai/v1/deployments/my-deployment
       parameters:
         - description: Deployment ID or name
           in: path
@@ -169,13 +323,42 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Update a deployment
-      tags:
-        - Deployments
   /deployments/{id}/logs:
     get:
       description: Retrieve logs from a deployment, optionally filtered by replica ID.
-        Use follow=true to stream logs in real-time.
+      summary: Get logs for a deployment
+      tags: ['Deployments']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            deployment = client.beta.jig.logs("my-deployment")
+            print(deployment)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.logs("my-deployment");
+            console.log(deployment);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.logs("my-deployment");
+            console.log(deployment);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/deployments/my-deployment/logs
       parameters:
         - description: Deployment ID or name
           in: path
@@ -188,11 +371,6 @@ paths:
           name: replica_id
           schema:
             type: string
-        - description: Stream logs in real-time (ndjson format)
-          in: query
-          name: follow
-          schema:
-            type: boolean
       responses:
         "200":
           description: Deployment logs
@@ -212,12 +390,36 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Get logs for a deployment
-      tags:
-        - Deployments
   /deployments/secrets:
     get:
       description: Retrieve all secrets in your project
+      summary: Get the list of project secrets
+      tags: ['Secrets']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            secrets = client.beta.jig.secrets.list()
+            print(secrets)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const secrets = await client.beta.jig.secrets.list();
+            console.log(secrets);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const secrets = await client.beta.jig.secrets.list();
+            console.log(secrets);
       responses:
         "200":
           description: List of secrets
@@ -231,11 +433,39 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Get the list of project secrets
-      tags:
-        - Secrets
     post:
       description: Create a new secret to store sensitive configuration values
+      summary: Create a new secret
+      tags: ['Secrets']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            client.beta.jig.secrets.create(name="my-secret", value="my-value")
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            await client.beta.jig.secrets.create({ name: "my-secret", value: "my-value" });
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            await client.beta.jig.secrets.create({ name: "my-secret", value: "my-value" });
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  --data '{ "name": "my-secret", "value": "my-value" }' \
+                  https://api.together.ai/v1/deployments/secrets
       requestBody:
         content:
           application/json:
@@ -262,12 +492,39 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Create a new secret
-      tags:
-        - Secrets
   /deployments/secrets/{id}:
     delete:
       description: Delete an existing secret
+      summary: Delete a secret
+      tags: ['Secrets']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            client.beta.jig.secrets.delete("my-secret")
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            await client.beta.jig.secrets.delete("my-secret");
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            await client.beta.jig.secrets.delete("my-secret");
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X DELETE \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/deployments/secrets/my-secret
       parameters:
         - description: Secret ID or name
           in: path
@@ -294,11 +551,41 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Delete a secret
-      tags:
-        - Secrets
     get:
       description: Retrieve details of a specific secret by its ID or name
+      summary: Get a secret by ID or name
+      tags: ['Secrets']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            secret = client.beta.jig.secrets.retrieve("my-secret")
+            print(secret)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const secret = await client.beta.jig.secrets.retrieve("my-secret");
+            console.log(secret);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const secret = await client.beta.jig.secrets.retrieve("my-secret");
+            console.log(secret);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/deployments/secrets/my-secret
       parameters:
         - description: Secret ID or name
           in: path
@@ -325,11 +612,40 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Get a secret by ID or name
-      tags:
-        - Secrets
     patch:
       description: Update an existing secret's value or metadata
+      summary: Update a secret
+      tags: ['Secrets']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            client.beta.jig.secrets.update("my-secret", value="my-new-value")
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            await client.beta.jig.secrets.update("my-secret", { value: "my-new-value" });
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            await client.beta.jig.secrets.update("my-secret", { value: "my-new-value" });
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X PATCH \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  --data '{ "value": "my-new-value" }' \
+                  https://api.together.ai/v1/deployments/secrets/my-secret
+
       parameters:
         - description: Secret ID or name
           in: path
@@ -369,12 +685,11 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Update a secret
-      tags:
-        - Secrets
   /deployments/storage/{filename}:
     get:
       description: Download a file by redirecting to a signed URL
+      summary: Download a file
+      tags: ['DeploymentsStorage']
       parameters:
         - description: Filename
           in: path
@@ -413,12 +728,42 @@ paths:
                 additionalProperties:
                   type: string
                 type: object
-      summary: Download a file
-      tags:
-        - files
   /deployments/storage/volumes:
     get:
       description: Retrieve all volumes in your project
+      summary: Get the list of project volumes
+      tags: ['DeploymentsVolumes']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            volumes = client.beta.jig.storage.volumes.list()
+            print(volumes)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volumes = await client.beta.jig.storage.volumes.list();
+            console.log(volumes);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volumes = await client.beta.jig.storage.volumes.list();
+            console.log(volumes);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/deployments/storage/volumes
       responses:
         "200":
           description: List of volumes
@@ -432,11 +777,42 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Get the list of project volumes
-      tags:
-        - Volumes
     post:
       description: Create a new volume to preload files in deployments
+      summary: Create a new volume
+      tags: ['DeploymentsVolumes']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            volumes = client.beta.jig.volumes.create(name="my-volume")
+            print(volumes)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volumes = await client.beta.jig.volumes.create({ name: "my-volume" });
+            console.log(volumes);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volumes = await client.beta.jig.volumes.create({ name: "my-volume" });
+            console.log(volumes);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  --data '{ "name": "my-volume" }' \
+                  https://api.together.ai/v1/deployments/storage/volumes
       requestBody:
         content:
           application/json:
@@ -463,9 +839,6 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Create a new volume
-      tags:
-        - Volumes
   /deployments/storage/volumes/{id}:
     delete:
       description: Delete an existing volume
@@ -3986,7 +4359,7 @@ paths:
           source: |
             curl -X POST \
                   -H "Authorization Bearer $TOGETHER_API_KEY" \
-                  --data '{ "region": "us-west-2", "gpu_type": "H100_SXM", "num_gpus": 8, "cluster_name": "my-gpu-cluster", "duration_days": 7, "driver_version": "CUDA_12_6_560" }' \
+                  --data '{ "region": "us-west-2", "gpu_type": "H100_SXM", "num_gpus": 8, "cluster_name": "my-gpu-cluster", "driver_version": "CUDA_12_6_560" }' \
                   https://api.together.ai/v1/compute/clusters
   /compute/clusters/{cluster_id}:
     get:
@@ -4162,6 +4535,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/RegionListResponse'
       x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            regions = client.beta.clusters.list_regions()
+            print(regions)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const regions = await client.beta.clusters.list_regions();
+            console.log(regions);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const regions = await client.beta.clusters.list_regions();
+            console.log(regions);
         - lang: Shell
           label: cURL
           source: |
@@ -5086,7 +5483,7 @@ paths:
                 api_key=os.environ.get("TOGETHER_API_KEY"),
             )
 
-            response = client.hardware.list()
+            response = client.endpoints.list_hardware()
 
             for hardware in response.data:
                 print(hardware.id)
@@ -5099,7 +5496,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const hardware = await client.hardware.list();
+            const hardware = await client.endpoints.list_hardware();
 
             console.log(hardware);
         - lang: JavaScript
@@ -5111,7 +5508,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const hardware = await client.hardware.list();
+            const hardware = await client.endpoints.list_hardware();
 
             console.log(hardware);
         - lang: Shell
@@ -10908,7 +11305,7 @@ components:
           description: GPUType specifies the GPU hardware to use (e.g., "h100-80gb").
           enum:
             - h100-80gb
-            - " a100-80gb"
+            - a100-80gb
           type: string
         health_check_path:
           description: HealthCheckPath is the HTTP path for health checks (e.g.,
