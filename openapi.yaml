@@ -7085,6 +7085,7 @@ components:
             description: Name of the GPU cluster.
             type: string
           duration_days:
+            x-stainless-terraform-configurability: computed
             description: Duration in days to keep the cluster running.
             type: integer
           driver_version:
@@ -7096,10 +7097,12 @@ components:
               - CUDA_12_6_565
               - CUDA_12_8_570
           shared_volume:
+            x-stainless-terraform-configurability: computed
             $ref: '#/components/schemas/GPUClustersSharedVolumeCreateRequest'
           volume_id:
             type: string
           billing_type:
+            x-stainless-terraform-configurability: computed
             type: string
             enum:
               - RESERVED
