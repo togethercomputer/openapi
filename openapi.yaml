@@ -7394,6 +7394,15 @@ components:
           description: Human-readable error message
           type: string
           example: Operation timed out
+    RL.TrainingOperationStatus:
+      type: string
+      enum:
+        - TRAINING_OPERATION_STATUS_UNSPECIFIED
+        - TRAINING_OPERATION_STATUS_PENDING
+        - TRAINING_OPERATION_STATUS_RUNNING
+        - TRAINING_OPERATION_STATUS_COMPLETED
+        - TRAINING_OPERATION_STATUS_FAILED
+      default: TRAINING_OPERATION_STATUS_UNSPECIFIED
     RL.StartTrainingSessionRequest:
       type: object
       required:
