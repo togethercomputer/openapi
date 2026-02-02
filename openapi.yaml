@@ -18,6 +18,8 @@ paths:
   /deployments:
     get:
       description: Get a list of all deployments in your project
+      summary: Get the list of deployments
+      tags: ['Deployments']
       responses:
         "200":
           description: List of deployments
@@ -31,11 +33,78 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Get the list of deployments
-      tags:
-        - Deployments
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            deployments = client.beta.jig.list()
+            print(deployments)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployments = await client.beta.jig.list();
+            console.log(deployments);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployments = await client.beta.jig.list();
+            console.log(deployments);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/deployments
     post:
       description: Create a new deployment with specified configuration
+      summary: Create a new deployment
+      tags: ['Deployments']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            deployment = client.beta.jig.deploy(
+              name="my-deployment",
+              gpu_type="h100-80gb",
+              image="registry.together.xyz/proj_abcdefg1234567890/my-image:latest"
+            )
+            print(deployment)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.deploy({
+              name: "my-deployment",
+              gpu_type: "h100-80gb",
+              image: "registry.together.xyz/proj_abcdefg1234567890/my-image:latest"
+            });
+            console.log(deployment);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.deploy({
+              name: "my-deployment",
+              gpu_type: "h100-80gb",
+              image: "registry.together.xyz/proj_abcdefg1234567890/my-image:latest"
+            });
+            console.log(deployment);
       requestBody:
         content:
           application/json:
@@ -62,12 +131,11 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Create a new deployment
-      tags:
-        - Deployments
   /deployments/{id}:
     delete:
       description: Delete an existing deployment
+      summary: Delete a deployment
+      tags: ['Deployments']
       parameters:
         - description: Deployment ID or name
           in: path
@@ -75,6 +143,37 @@ paths:
           required: true
           schema:
             type: string
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            deployment = client.beta.jig.destroy("my-deployment")
+            print(deployment)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.destroy("my-deployment");
+            console.log(deployment);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.destroy("my-deployment");
+            console.log(deployment);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X DELETE \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/deployments/my-deployment
       responses:
         "200":
           description: Deployment deleted successfully
@@ -94,11 +193,10 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Delete a deployment
-      tags:
-        - Deployments
     get:
       description: Retrieve details of a specific deployment by its ID or name
+      summary: Get a deployment by ID or name
+      tags: ['Deployments']
       parameters:
         - description: Deployment ID or name
           in: path
@@ -106,6 +204,31 @@ paths:
           required: true
           schema:
             type: string
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            deployment = client.beta.jig.retrieve("my-deployment")
+            print(deployment)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.retrieve("my-deployment");
+            console.log(deployment);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.retrieve("my-deployment");
+            console.log(deployment);
       responses:
         "200":
           description: Deployment details
@@ -125,11 +248,42 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Get a deployment by ID or name
-      tags:
-        - Deployments
     patch:
       description: Update an existing deployment configuration
+      summary: Update a deployment
+      tags: ['Deployments']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            deployment = client.beta.jig.update("my-deployment", gpu_count=2)
+            print(deployment)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.update("my-deployment", { gpu_count: 2 });
+            console.log(deployment);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.update("my-deployment", { gpu_count: 2 });
+            console.log(deployment);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X PATCH \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  --data '{ "gpu_count": 2 }' \
+                  https://api.together.ai/v1/deployments/my-deployment
       parameters:
         - description: Deployment ID or name
           in: path
@@ -169,13 +323,42 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Update a deployment
-      tags:
-        - Deployments
   /deployments/{id}/logs:
     get:
       description: Retrieve logs from a deployment, optionally filtered by replica ID.
-        Use follow=true to stream logs in real-time.
+      summary: Get logs for a deployment
+      tags: ['Deployments']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            deployment = client.beta.jig.logs("my-deployment")
+            print(deployment)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.logs("my-deployment");
+            console.log(deployment);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const deployment = await client.beta.jig.logs("my-deployment");
+            console.log(deployment);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/deployments/my-deployment/logs
       parameters:
         - description: Deployment ID or name
           in: path
@@ -188,11 +371,6 @@ paths:
           name: replica_id
           schema:
             type: string
-        - description: Stream logs in real-time (ndjson format)
-          in: query
-          name: follow
-          schema:
-            type: boolean
       responses:
         "200":
           description: Deployment logs
@@ -212,63 +390,36 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Get logs for a deployment
-      tags:
-        - Deployments
-  /image-repositories:
-    get:
-      description: Retrieve all container image repositories available in your project
-      responses:
-        "200":
-          description: List of repositories
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RepositoryListResponse"
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Get the list of image repositories in your project
-      tags:
-        - Images
-  /image-repositories/{id}/images:
-    get:
-      description: Retrieve all container images (tags) available in a specific repository
-      parameters:
-        - description: Repository ID
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: List of images
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ImageListResponse"
-        "404":
-          description: Repository not found
-          content:
-            application/json:
-              schema:
-                type: object
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-      summary: Get the list of images available under a repository
-      tags:
-        - Images
-  /secrets:
+  /deployments/secrets:
     get:
       description: Retrieve all secrets in your project
+      summary: Get the list of project secrets
+      tags: ['Secrets']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            secrets = client.beta.jig.secrets.list()
+            print(secrets)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const secrets = await client.beta.jig.secrets.list();
+            console.log(secrets);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const secrets = await client.beta.jig.secrets.list();
+            console.log(secrets);
       responses:
         "200":
           description: List of secrets
@@ -282,11 +433,39 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Get the list of project secrets
-      tags:
-        - Secrets
     post:
       description: Create a new secret to store sensitive configuration values
+      summary: Create a new secret
+      tags: ['Secrets']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            client.beta.jig.secrets.create(name="my-secret", value="my-value")
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            await client.beta.jig.secrets.create({ name: "my-secret", value: "my-value" });
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            await client.beta.jig.secrets.create({ name: "my-secret", value: "my-value" });
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  --data '{ "name": "my-secret", "value": "my-value" }' \
+                  https://api.together.ai/v1/deployments/secrets
       requestBody:
         content:
           application/json:
@@ -313,12 +492,39 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Create a new secret
-      tags:
-        - Secrets
-  /secrets/{id}:
+  /deployments/secrets/{id}:
     delete:
       description: Delete an existing secret
+      summary: Delete a secret
+      tags: ['Secrets']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            client.beta.jig.secrets.delete("my-secret")
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            await client.beta.jig.secrets.delete("my-secret");
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            await client.beta.jig.secrets.delete("my-secret");
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X DELETE \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/deployments/secrets/my-secret
       parameters:
         - description: Secret ID or name
           in: path
@@ -345,11 +551,41 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Delete a secret
-      tags:
-        - Secrets
     get:
       description: Retrieve details of a specific secret by its ID or name
+      summary: Get a secret by ID or name
+      tags: ['Secrets']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            secret = client.beta.jig.secrets.retrieve("my-secret")
+            print(secret)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const secret = await client.beta.jig.secrets.retrieve("my-secret");
+            console.log(secret);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const secret = await client.beta.jig.secrets.retrieve("my-secret");
+            console.log(secret);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/deployments/secrets/my-secret
       parameters:
         - description: Secret ID or name
           in: path
@@ -376,11 +612,40 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Get a secret by ID or name
-      tags:
-        - Secrets
     patch:
       description: Update an existing secret's value or metadata
+      summary: Update a secret
+      tags: ['Secrets']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            client.beta.jig.secrets.update("my-secret", value="my-new-value")
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            await client.beta.jig.secrets.update("my-secret", { value: "my-new-value" });
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            await client.beta.jig.secrets.update("my-secret", { value: "my-new-value" });
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X PATCH \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  --data '{ "value": "my-new-value" }' \
+                  https://api.together.ai/v1/deployments/secrets/my-secret
+
       parameters:
         - description: Secret ID or name
           in: path
@@ -420,12 +685,11 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Update a secret
-      tags:
-        - Secrets
-  /storage/{filename}:
+  /deployments/storage/{filename}:
     get:
       description: Download a file by redirecting to a signed URL
+      summary: Download a file
+      tags: ['DeploymentsStorage']
       parameters:
         - description: Filename
           in: path
@@ -464,12 +728,42 @@ paths:
                 additionalProperties:
                   type: string
                 type: object
-      summary: Download a file
-      tags:
-        - files
-  /storage/volumes:
+  /deployments/storage/volumes:
     get:
       description: Retrieve all volumes in your project
+      summary: Get the list of project volumes
+      tags: ['DeploymentsVolumes']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            volumes = client.beta.jig.storage.volumes.list()
+            print(volumes)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volumes = await client.beta.jig.storage.volumes.list();
+            console.log(volumes);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volumes = await client.beta.jig.storage.volumes.list();
+            console.log(volumes);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  https://api.together.ai/v1/deployments/storage/volumes
       responses:
         "200":
           description: List of volumes
@@ -483,11 +777,42 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Get the list of project volumes
-      tags:
-        - Volumes
     post:
       description: Create a new volume to preload files in deployments
+      summary: Create a new volume
+      tags: ['DeploymentsVolumes']
+      x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            volumes = client.beta.jig.volumes.create(name="my-volume")
+            print(volumes)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volumes = await client.beta.jig.volumes.create({ name: "my-volume" });
+            console.log(volumes);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const volumes = await client.beta.jig.volumes.create({ name: "my-volume" });
+            console.log(volumes);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X POST \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  --data '{ "name": "my-volume" }' \
+                  https://api.together.ai/v1/deployments/storage/volumes
       requestBody:
         content:
           application/json:
@@ -514,10 +839,7 @@ paths:
             application/json:
               schema:
                 type: object
-      summary: Create a new volume
-      tags:
-        - Volumes
-  /storage/volumes/{id}:
+  /deployments/storage/volumes/{id}:
     delete:
       description: Delete an existing volume
       parameters:
@@ -3907,7 +4229,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorData'
-  /clusters:
+  /compute/clusters:
     get:
       tags: ['GPUClusterService']
       summary: List all GPU clusters.
@@ -4037,9 +4359,9 @@ paths:
           source: |
             curl -X POST \
                   -H "Authorization Bearer $TOGETHER_API_KEY" \
-                  --data '{ "region": "us-west-2", "gpu_type": "H100_SXM", "num_gpus": 8, "cluster_name": "my-gpu-cluster", "duration_days": 7, "driver_version": "CUDA_12_6_560" }' \
-                  https://api.together.ai/v1/clusters
-  /clusters/{cluster_id}:
+                  --data '{ "region": "us-west-2", "gpu_type": "H100_SXM", "num_gpus": 8, "cluster_name": "my-gpu-cluster", "driver_version": "CUDA_12_6_560" }' \
+                  https://api.together.ai/v1/compute/clusters
+  /compute/clusters/{cluster_id}:
     get:
       tags: ['GPUClusterService']
       summary: Get GPU cluster by cluster ID
@@ -4146,7 +4468,7 @@ paths:
               curl -X PUT \
                     -H "Authorization Bearer $TOGETHER_API_KEY" \
                     --data '{ "cluster_id": "cluster id", "cluster_type": "kubernetes", "num_gpus": 24 }' \
-                    https://api.together.ai/v1/clusters
+                    https://api.together.ai/v1/compute/clusters
     delete:
       tags: ['GPUClusterService']
       summary: Delete GPU cluster by cluster ID
@@ -4199,8 +4521,8 @@ paths:
           source: |
             curl -X DELETE \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://api.together.ai/v1/clusters/${CLUSTER_ID}
-  /clusters/regions:
+                  https://api.together.ai/v1/compute/clusters/${CLUSTER_ID}
+  /compute/regions:
     get:
       tags: ['RegionService']
       summary: List regions and corresponding supported driver versions
@@ -4213,13 +4535,37 @@ paths:
               schema:
                 $ref: '#/components/schemas/RegionListResponse'
       x-codeSamples:
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
+
+            regions = client.beta.clusters.list_regions()
+            print(regions)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const regions = await client.beta.clusters.list_regions();
+            console.log(regions);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
+
+            const regions = await client.beta.clusters.list_regions();
+            console.log(regions);
         - lang: Shell
           label: cURL
           source: |
             curl -X GET \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://api.together.ai/v1/clusters/regions
-  /clusters/storages:
+                  https://api.together.ai/v1/compute/regions
+  /compute/clusters/storage/volumes:
     get:
       tags: ['SharedVolumeService']
       summary: List all shared volumes.
@@ -4262,7 +4608,7 @@ paths:
           source: |
             curl -X GET \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://api.together.ai/v1/clusters/storages
+                  https://api.together.ai/v1/compute/clusters/storages
     put:
       tags: ['SharedVolumeService']
       summary: Update a shared volume.
@@ -4322,7 +4668,7 @@ paths:
               curl -X PUT \
                     -H "Authorization: Bearer $TOGETHER_API_KEY" \
                     --data '{ "volume_id": "12345-67890-12345-67890", "size_tib": 3}' \
-                    https://api.together.ai/v1/clusters/storages
+                    https://api.together.ai/v1/compute/clusters/storage/volumes
     post:
       tags: ['SharedVolumeService']
       summary: Create a shared volume.
@@ -4384,8 +4730,8 @@ paths:
             curl -X POST \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
                   --data '{ "volume_name": "my-shared-volume", "size_tib": 2, "region": "us-west-2" }' \
-                  https://api.together.ai/v1/clusters/storages
-  /clusters/storages/{volume_id}:
+                  https://api.together.ai/v1/compute/clusters/storage/volumes
+  /compute/clusters/storage/volumes/{volume_id}:
     get:
       tags: ['SharedVolumeService']
       summary: Get shared volume by volume Id.
@@ -4434,7 +4780,7 @@ paths:
           source: |
             curl -X GET \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://api.together.ai/v1/clusters/storages/${VOLUME_ID}
+                  https://api.together.ai/v1/compute/clusters/storage/volumes/${VOLUME_ID}
     delete:
       tags: ['SharedVolumeService']
       summary: Delete shared volume by volume id.
@@ -4484,7 +4830,7 @@ paths:
           source: |
             curl -X DELETE \
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                  https://api.together.ai/v1/clusters/storages/${VOLUME_ID}
+                  https://api.together.ai/v1/compute/clusters/storage/volumes/${VOLUME_ID}
   /clusters/availability-zones:
     get:
       tags: ['endpoints']
@@ -5137,7 +5483,7 @@ paths:
                 api_key=os.environ.get("TOGETHER_API_KEY"),
             )
 
-            response = client.hardware.list()
+            response = client.endpoints.list_hardware()
 
             for hardware in response.data:
                 print(hardware.id)
@@ -5150,7 +5496,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const hardware = await client.hardware.list();
+            const hardware = await client.endpoints.list_hardware();
 
             console.log(hardware);
         - lang: JavaScript
@@ -5162,7 +5508,7 @@ paths:
               apiKey: process.env.TOGETHER_API_KEY,
             });
 
-            const hardware = await client.hardware.list();
+            const hardware = await client.endpoints.list_hardware();
 
             console.log(hardware);
         - lang: Shell
@@ -6488,196 +6834,382 @@ paths:
             }
             ```
 
-  /rl/sessions/start_session:
+  /queue/cancel:
     post:
-      operationId: sessionStart
+      description: Cancel a pending or running job. Returns the job status after the
+        cancellation attempt.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QueueCancelRequest"
+        description: Cancel request
+        required: true
+      responses:
+        "200":
+          description: Successfully canceled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueCancelResponse"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "404":
+          description: Request not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "409":
+          description: Job could not be canceled (already completed/failed)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueCancelResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+      summary: Cancel a queued job
+      tags:
+        - Queue
+  /queue/metrics:
+    get:
+      description: Get the current queue statistics including pending and running job
+        counts.
+      parameters:
+        - description: Model name to get metrics for
+          in: query
+          name: model
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Queue metrics
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+      summary: Get queue metrics
+      tags:
+        - Queue
+  /queue/status:
+    get:
+      description: Check the status of a job using request_id and model query parameters.
+      parameters:
+        - description: Request ID
+          in: query
+          name: request_id
+          required: true
+          schema:
+            type: string
+        - description: Model name
+          in: query
+          name: model
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Status information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueJobStatusResponse"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "404":
+          description: Request not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+      summary: Get job status
+      tags:
+        - Queue
+  /queue/submit:
+    post:
+      description: Submit a new job to the queue. Returns a request ID that can be
+        used to check status.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QueueJobRequest"
+        description: Job request
+        required: true
+      responses:
+        "200":
+          description: Successfully queued request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueJobResponse"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueError"
+      summary: Submit a queued job
+      tags:
+        - Queue
+  /rl/training-sessions:
+    get:
+      summary: List training sessions
+      description: Lists all training sessions.
+      operationId: listTrainingSessions
+      tags: [RL]
+      responses:
+        "200":
+          description: List of training sessions
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/components/schemas/RL.TrainingSession'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: status
+          in: query
+          required: false
+          type: 
+            $ref: '#/components/schemas/RL.TrainingSessionStatus'
+        - name: limit
+          description: Maximum number of sessions to return (1-100)
+          in: query
+          required: false
+          type: integer
+          default: 20
+        - name: offset
+          description: Number of sessions to skip
+          in: query
+          required: false
+          type: integer
+          default: 0
+    post:
       summary: Create training session
-      x-codeSamples:
-        - lang: Python
-          label: Python API Client
-          source: |
-            from together import Together
-            client = Together()
-
-            session = client.beta.rl.sessions.create_session()
-            print(session)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RL.SessionCreateParams'
+      description: Creates a training session and returns its details.
+      operationId: startTrainingSession
+      tags: [RL]
       responses:
-        '200':
-          description: Created training session and initial LoRA adapter
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RL.SessionStartResponse'
-  /rl/retrieve_future:
-    post:
-      summary: Retrieve future result
-      description: Retrieves the result of a future by its ID
-      operationId: retrieveFuture
-      x-codeSamples:
-        - lang: Python
-          label: Python WebSocket Client
-          source: |
-            from together import Together
-            client = Together()
-
-            future = client.beta.rl.futures.retrieve()
-            print(future)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RL.UntypedAPIFuture'
+        "200":
+          description: Training session details
+          schema:
+            $ref: '#/components/schemas/RL.TrainingSession'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/components/schemas/RL.StartTrainingSessionRequest'
+  /rl/training-sessions/{session_id}:
+    get:
+      summary: Get training session
+      description: Gets a training session by its ID and returns its details.
+      operationId: getTrainingSession
+      tags: [RL]
       responses:
-        '200':
-          description: Future result
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/RL.TryAgainResponse'
-                  - $ref: '#/components/schemas/RL.ForwardBackwardOutput'
-                  - $ref: '#/components/schemas/RL.OptimStepResponse'
-                  - $ref: '#/components/schemas/RL.SaveTrainingStateResponse'
-        '400':
-          description: Bad request (invalid future ID)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RL.ErrorResponse'
-        '404':
-          description: Future not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RL.ErrorResponse'
-        '408':
-          description: Timeout, try again
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RL.TryAgainResponse'
-  /rl/forward:
-    post:
-      summary: Forward pass
-      description: Performs a forward pass through the model
-      operationId: forward
-      x-codeSamples:
-        - lang: Python
-          label: Python API Client
-          source: |
-            from together import Together
-            client = Together()
-
-            future = client.beta.rl.training.forward()
-            print(future)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - training_session_id
-                - forward_input
-              properties:
-                training_session_id:
-                  $ref: '#/components/schemas/RL.TrainingId'
-                forward_input:
-                  $ref: '#/components/schemas/RL.ForwardBackwardInput'
+        "200":
+          description: Training session details
+          schema:
+            $ref: '#/components/schemas/RL.TrainingSession'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: session_id
+          description: ID of the training session
+          in: path
+          required: true
+          type: string
+  /v1/rl/training-sessions/{session_id}/operations/forward-backward/{operation_id}:
+    get:
+      summary: Get forward-backward operation
+      description: Retrieves the current status and result of a forward-backward operation.
+      operationId: getForwardBackwardOperation
+      tags: [RL]
       responses:
-        '200':
-          description: API future for forward completion
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RL.UntypedAPIFuture'
-  /rl/forward_backward:
+        "200":
+          description: Forward-backward operation details
+          schema:
+            $ref: '#/components/schemas/RL.ForwardBackwardOperation'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: session_id
+          description: Training session ID
+          in: path
+          required: true
+          type: string
+        - name: operation_id
+          description: Operation ID
+          in: path
+          required: true
+          type: string
+  /rl/training-sessions/{session_id}/operations/optim-step/{operation_id}:
+    get:
+      summary: Get optim-step operation
+      description: Retrieves the current status and result of an optim-step operation.
+      operationId: getOptimStepOperation
+      tags: [RL]
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/components/schemas/RL.OptimStepOperation'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: session_id
+          description: Training session ID
+          in: path
+          required: true
+          type: string
+        - name: operation_id
+          description: Operation ID
+          in: path
+          required: true
+          type: string
+  /rl/training-sessions/{session_id}/forward-backward:
     post:
-      summary: Forward and backward pass
-      description: Performs a forward and backward pass through the model
+      summary: Forward-backward pass
+      description: Submits a forward-backward pass operation that will asynchronously compute gradients via backpropagation.
       operationId: forwardBackward
-      x-codeSamples:
-        - lang: Python
-          label: Python API Client
-          source: |
-            from together import Together
-            client = Together()
-
-            future = client.beta.rl.training.forward_backward()
-            print(future)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - training_session_id
-                - forward_backward_input
-              properties:
-                training_session_id:
-                  $ref: '#/components/schemas/RL.TrainingId'
-                forward_backward_input:
-                  $ref: '#/components/schemas/RL.ForwardBackwardInput'
+      tags: [RL]
       responses:
-        '200':
-          description: API future for forward/backward completion
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RL.UntypedAPIFuture'
-  /rl/save_training_state:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/components/schemas/RL.ForwardBackwardOperation'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/components/schemas/rpcStatus'
+      parameters:
+        - name: session_id
+          description: Training session ID
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/components/schemas/RL.ForwardBackwardBody'
+  /rl/training-sessions/{session_id}:optim-step:
     post:
-      description: Saves the full checkpoint (weights + optimizer state) of the training session and returns a handle that can be used for inference.
-      operationId: saveTrainingState
-      summary: Save training state
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RL.SaveTrainingStateRequest'
+      summary: Optimizer step
+      description: Submits an optimizer step operation that will asynchronously apply accumulated gradients to update model parameters.
+      operationId: OptimStep
+      tags: [RL]
       responses:
-        '200':
-          description: API future for save training state completion
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RL.UntypedAPIFuture'
-  /rl/optim_step:
+        "200":
+          description: Optimizer step operation details
+          schema:
+            $ref: '#/components/schemas/RL.OptimStepOperation'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: session_id
+          description: Training session ID
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/components/schemas/RL.OptimStepBody'
+  /rl/training-sessions/{session_id}:stop:
     post:
-      summary: Optimization step
-      description: Performs an optimization step using AdamW optimizer
-      operationId: optimStep
-      x-codeSamples:
-        - lang: Python
-          label: Python API Client
-          source: |
-            from together import Together
-            client = Together()
-
-            future = client.beta.rl.training.optim_step()
-            print(future)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RL.OptimStepRequest'
+      summary: Stop training session
+      description: Stops a training session.
+      operationId: stopTrainingSession
+      tags: [RL]
       responses:
-        '200':
-          description: API future for optimization step completion
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RL.UntypedAPIFuture'
+        "200":
+          description: Training session details
+          schema:
+            $ref: '#/components/schemas/RL.TrainingSession'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: session_id
+          description: ID of the training session
+          in: path
+          required: true
+          type: string
 
 components:
   securitySchemes:
@@ -6688,6 +7220,316 @@ components:
       x-default: default
 
   schemas:
+    RL.OptimStepBody:
+      type: object
+    RL.ForwardBackwardBody:
+      type: object
+      required:
+        - samples
+        - loss_fn
+      properties:
+        samples:
+          description: Batch of training samples to process
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/RL.TrainingSample'
+        loss_fn:
+          description: Loss function to use for gradient computation
+          $ref: '#/components/schemas/RL.LossFn'
+          example: LOSS_FN_GRPO
+    RL.ModelInput:
+      type: object
+      required:
+        - chunks
+      properties:
+        chunks:
+          description: Input chunks for the model
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/RL.InputChunk'
+    RL.InputChunk:
+      type: object
+      properties:
+        encoded_text:
+          $ref: '#/components/schemas/RL.EncodedText'
+    RL.EncodedText:
+      type: object
+      properties:
+        tokens:
+          description: Pre-tokenized text input
+          type: array
+          example:
+            - 123
+            - 456
+            - 789
+          items:
+            type: integer
+    RL.DType:
+      type: string
+      enum:
+        - D_TYPE_UNSPECIFIED
+        - D_TYPE_INT64
+        - D_TYPE_FLOAT32
+        - D_TYPE_BFLOAT16
+      default: D_TYPE_UNSPECIFIED
+    RL.LossFn:
+      type: string
+      default: LOSS_FN_UNSPECIFIED
+      enum:
+        - LOSS_FN_UNSPECIFIED
+        - LOSS_FN_GRPO
+    RL.LossFnInputs:
+      type: object
+      required:
+        - weights
+        - target_tokens
+      properties:
+        weights:
+          $ref: '#/components/schemas/RL.LossFnWeights'
+          description: Per-token weights
+        target_tokens:
+          $ref: '#/components/schemas/RL.LossFnTargetTokens'
+          description: Target tokens for loss computation
+    RL.LossFnTargetTokens:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          description: Integer array of target tokens
+          type: array
+          example:
+            - 123
+            - 456
+            - 789
+          items:
+            type: number
+        dtype:
+          description: Data type of the integer array
+          $ref: '#/components/schemas/RL.DType'
+          example: D_TYPE_INT64
+    RL.LossFnWeights:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          description: Float array of per-token weights
+          type: array
+          example:
+            - 0.1
+            - 0.2
+            - 0.3
+          items:
+            type: number
+            format: float
+        dtype:
+          description: Data type of the float array
+          $ref: '#/components/schemas/RL.DType'
+          example: D_TYPE_FLOAT32
+    RL.TrainingSample:
+      type: object
+      required:
+        - model_input
+        - loss_fn_inputs
+      properties:
+        model_input:
+          description: Model input
+          $ref: '#/components/schemas/RL.ModelInput'
+        loss_fn_inputs:
+          description: Loss function inputs
+          $ref: '#/components/schemas/RL.LossFnInputs'
+    RL.OptimStepOperation:
+      type: object
+      properties:
+        operation_id:
+          type: string
+          example: 550e8400-e29b-41d4-a716-446655440000
+          description: Operation ID
+        status:
+          $ref: '#/components/schemas/RL.TrainingOperationStatus'
+          description: Current operation status
+        data:
+          $ref: '#/components/schemas/RL.OptimStepResult'
+        error:
+          $ref: '#/components/schemas/RL.TrainingOperationError'
+    RL.OptimStepResult:
+      type: object
+      properties:
+        step:
+          description: Step number
+          type: integer
+          example: 100
+    RL.ForwardBackwardOperation:
+      type: object
+      properties:
+        operation_id:
+          type: string
+          description: Operation ID
+        status:
+          $ref: '#/components/schemas/RL.TrainingOperationStatus'
+          example: TRAINING_OPERATION_STATUS_PENDING
+          description: Operation status
+        data:
+          $ref: '#/components/schemas/RL.ForwardBackwardResult'
+        error:
+          $ref: '#/components/schemas/RL.TrainingOperationError'
+    RL.ForwardBackwardResult:
+      type: object
+      properties:
+        loss:
+          type: number
+          example: 2.345
+          description: Loss value
+    RL.TrainingOperationError:
+      type: object
+      properties:
+        code:
+          description: Application error code
+          type: string
+          example: OPERATION_TIMEOUT
+        message:
+          description: Human-readable error message
+          type: string
+          example: Operation timed out
+    RL.StartTrainingSessionRequest:
+      type: object
+      required:
+        - base_model
+      properties:
+        base_model:
+          description: Base model to use for the training session
+          type: string
+          example: meta-llama/Meta-Llama-3-8B-Instruct
+        checkpoint_id:
+          description: Checkpoint ID to use for the training session
+          type: string
+          example: checkpoint-123
+        lora_config:
+          $ref: '#/components/schemas/RL.LoraConfig'
+        optimizer_config:
+          $ref: '#/components/schemas/RL.OptimizerConfig'
+        lr_scheduler_config:
+          $ref: '#/components/schemas/RL.LRSchedulerConfig'
+    RL.TrainingSessionStatus:
+      description: Status of the training session
+      default: TRAINING_SESSION_STATUS_UNSPECIFIED
+      type: string
+      enum:
+        - TRAINING_SESSION_STATUS_UNSPECIFIED
+        - TRAINING_SESSION_STATUS_CREATING
+        - TRAINING_SESSION_STATUS_RUNNING
+        - TRAINING_SESSION_STATUS_STOPPED
+        - TRAINING_SESSION_STATUS_STOPPING
+        - TRAINING_SESSION_STATUS_ERROR
+    RL.TrainingSession:
+      type: object
+      properties:
+        session_id:
+          type: string
+          description: ID of the training session
+        status:
+          $ref: '#/components/schemas/RL.TrainingSessionStatus'
+        base_model:
+          type: string
+          example: meta-llama/Meta-Llama-3-8B-Instruct
+          description: Base model used for the training session
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the training session was created
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the training session was last updated
+        lora_config:
+          $ref: '#/components/schemas/RL.LoraConfig'
+        optimizer_config:
+          $ref: '#/components/schemas/RL.OptimizerConfig'
+        lr_scheduler_config:
+          $ref: '#/components/schemas/RL.LRSchedulerConfig'
+    RL.LRSchedulerConfig:
+      description: Learning rate scheduler configuration
+      type: object
+      properties:
+        linear:
+          $ref: '#/components/schemas/RL.LinearLRScheduler'
+    RL.LinearLRScheduler:
+      description: Linear learning rate scheduler configuration
+      type: object
+      properties:
+        params:
+          $ref: '#/components/schemas/RL.LinearSchedulerParams'
+    RL.LinearSchedulerParams:
+      description: Linear learning rate scheduler parameters
+      type: object
+      properties:
+        warmup_steps:
+          description: Number of warmup steps
+          type: integer
+          default: 100
+        lr_min:
+          description: Minimum learning rate at the end of linear decay
+          type: number
+          default: 0.0
+    RL.OptimizerConfig:
+      description: Optimizer configuration. If omitted, defaults to AdamW with default parameters.
+      type: object
+      properties:
+        adamw:
+          $ref: '#/components/schemas/RL.AdamWOptimizer'
+        max_grad_norm:
+          description: Maximum gradient norm for gradient clipping. Applies to all optimizer types.
+          type: number
+          default: 1.0
+    RL.LoraConfig:
+      type: object
+      description: LoRA adapter configuration
+      properties:
+        rank:
+          type: integer
+          default: 8
+          description: Rank of the LoRA adapter
+        alpha:
+          type: integer
+          default: 16
+          description: Alpha of the LoRA adapter
+        dropout:
+          type: number
+          default: 0.05
+          description: Dropout of the LoRA adapter
+    RL.AdamWOptimizer:
+      description: AdamW optimizer configuration
+      type: object
+      properties:
+        params:
+          $ref: '#/components/schemas/RL.AdamWOptimizerParams'
+    RL.AdamWOptimizerParams:
+      description: AdamW optimizer parameters
+      type: object
+      properties:
+        lr:
+          description: Learning rate
+          type: number
+          default: 0.0001
+        beta1:
+          description: First moment decay rate
+          type: number
+          default: 0.9
+        beta2:
+          description: Second moment decay rate
+          type: number
+          default: 0.95
+        eps:
+          description: Epsilon for numerical stability
+          type: number
+          default: 1e-8
+        weight_decay:
+          description: Weight decay coefficient
+          type: number
+          default: 0.1
     ErrorResponse:
       type: object
       properties:
@@ -7707,6 +8549,12 @@ components:
           enum: ['low', 'medium', 'high']
           description: Controls the level of reasoning effort the model should apply when generating responses. Higher values may result in more thoughtful and detailed responses but may take longer to generate.
           example: 'medium'
+        reasoning:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              description: For models that support toggling reasoning functionality, this object can be used to control that functionality.
 
     ResponseFormatText:
       type: object
@@ -10969,7 +11817,7 @@ components:
           description: GPUType specifies the GPU hardware to use (e.g., "h100-80gb").
           enum:
             - h100-80gb
-            - " a100-80gb"
+            - a100-80gb
           type: string
         health_check_path:
           description: HealthCheckPath is the HTTP path for health checks (e.g.,
@@ -11232,30 +12080,6 @@ components:
       required:
         - name
       type: object
-    ImageListResponse:
-      properties:
-        data:
-          description: Data is the array of image items
-          items:
-            $ref: "#/components/schemas/ImageResponseItem"
-          type: array
-        object:
-          description: Object is the type identifier for this response (always "list")
-          type: string
-      type: object
-    ImageResponseItem:
-      properties:
-        object:
-          description: Object is the type identifier for this response (always "image")
-          type: string
-        tag:
-          description: Tag is the image tag/version identifier (e.g., "latest", "v1.0.0")
-          type: string
-        url:
-          description: URL is the full registry URL for this image including tag (e.g.,
-            "registry.together.ai/project-id/repository:tag")
-          type: string
-      type: object
     KubernetesEvent:
       properties:
         action:
@@ -11347,32 +12171,6 @@ components:
         scheduled_on_cluster:
           description: ScheduledOnCluster identifies which cluster this replica is
             scheduled on
-          type: string
-      type: object
-    RepositoryListResponse:
-      properties:
-        data:
-          description: Data is the array of repository items
-          items:
-            $ref: "#/components/schemas/RepositoryResponseItem"
-          type: array
-        object:
-          description: Object is the type identifier for this response (always "list")
-          type: string
-      type: object
-    RepositoryResponseItem:
-      properties:
-        id:
-          description: ID is the unique identifier for this repository (repository name
-            with slashes replaced by "___")
-          type: string
-        object:
-          description: Object is the type identifier for this response (always
-            "image-repository")
-          type: string
-        url:
-          description: URL is the full registry URL for this repository (e.g.,
-            "registry.together.ai/project-id/repository-name")
           type: string
       type: object
     SecretResponseItem:
@@ -11593,388 +12391,87 @@ components:
       type: string
       x-enum-varnames:
         - VolumeTypeReadOnly
-
-    RL.ModelId:
-      type: string
-      format: uuid
-      description: Identifier of the current version of the model associated with a training session, that can be used for inference.
-      example: 123e4567-e89b-12d3-a456-426614174000
-    RL.TrainingId:
-      type: string
-      format: uuid
-      description: Identifier for a high-level training session that can be resumed or referenced later
-      example: 123e4567-e89b-12d3-a456-426614174111
-    RL.RequestId:
-      type: string
-      format: uuid
-      example: 123e4567-e89b-12d3-a456-426614174999
-    RL.ErrorData:
-      type: object
+    QueueError:
       properties:
-        error:
+        code:
           type: string
-          description: Error code
         message:
           type: string
-          description: Human-readable error message
-        details:
-          type: object
-          additionalProperties: true
-          description: Additional details for debugging
-      required:
-        - error
-        - message
-    RL.ErrorResponse:
+        param:
+          type: string
+        type:
+          type: string
       type: object
+    QueueCancelRequest:
+      properties:
+        model:
+          type: string
+        request_id:
+          type: string
+      required:
+        - model
+        - request_id
+      type: object
+    QueueCancelResponse:
+      properties:
+        status:
+          type: string
+      type: object
+    QueueJobRequest:
+      properties:
+        info:
+          additionalProperties: true
+          type: object
+        model:
+          description: Required model identifier
+          type: string
+        payload:
+          additionalProperties: true
+          type: object
+        priority:
+          type: integer
+      required:
+        - model
+        - payload
+      type: object
+    QueueJobResponse:
       properties:
         error:
-          $ref: '#/components/schemas/RL.ErrorData'
-      required:
-        - error
-    RL.ForwardBackwardInput:
-      type: object
-      required:
-        - data
-        - loss_fn
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/RL.Datum'
-          description: Array of input data for the forward/backward pass
-        loss_fn:
-          $ref: '#/components/schemas/RL.LossFnType'
-    RL.LossFnType:
-      type: string
-      description: Fully qualified function path for the loss function
-      example: grpo
-      enum:
-        - grpo
-    RL.SessionCreateParams:
-      type: object
-      description: |
-        Specify `base_model` with `lora_config` to create a new LoRA adapter.
-        Optionally provide `checkpoint_id` to initialize from an existing checkpoint.
-      properties:
-        base_model:
+          $ref: "#/components/schemas/QueueError"
+        requestId:
           type: string
-        lora_config:
-          $ref: '#/components/schemas/RL.LoraConfigParam'
-        user_metadata:
+      type: object
+    QueueJobStatusResponse:
+      properties:
+        claimed_at:
+          type: string
+        created_at:
+          type: string
+        done_at:
+          type: string
+        info:
+          additionalProperties: true
           type: object
-          additionalProperties: {}
-          nullable: true
-        type:
-          type: string
-          enum: [create_model]
-        checkpoint_id:
-          type: string
-          description: Optional checkpoint handle/URI to initialize weights from
-      required: [base_model, lora_config]
-
-    RL.LoraConfigParam:
-      type: object
-      description: LoRA configuration parameters.
-      properties:
-        type:
-          type: string
-          enum: ['Lora']
-        lora_r:
-          type: integer
-        lora_alpha:
-          type: integer
-        lora_dropout:
-          type: number
-          format: float
-          default: 0.0
-        lora_trainable_modules:
-          type: string
-          default: 'all-linear'
-      required:
-        - type
-        - lora_r
-        - lora_alpha
-
-    RL.ModelInput:
-      type: object
-      required:
-        - chunks
-      properties:
-        chunks:
-          type: array
-          items:
-            $ref: '#/components/schemas/RL.ModelInputChunk'
-          description: Sequence of input chunks
-
-    RL.ModelInputChunk:
-      oneOf:
-        - $ref: '#/components/schemas/RL.EncodedTextChunk'
-        - $ref: '#/components/schemas/RL.ImageAssetPointerChunk'
-      discriminator:
-        propertyName: type
-        mapping:
-          encoded_text: '#/components/schemas/RL.EncodedTextChunk'
-          image_asset_pointer: '#/components/schemas/RL.ImageAssetPointerChunk'
-    RL.EncodedTextChunk:
-      type: object
-      required:
-        - type
-        - tokens
-      properties:
-        type:
-          type: string
-          enum:
-            - encoded_text
-        tokens:
-          type: array
-          items:
-            type: integer
-            format: int32
-          description: Array of token IDs
-          example:
-            - 1234
-            - 5678
-            - 9012
-    RL.ImageAssetPointerChunk:
-      type: object
-      required:
-        - type
-        - location
-        - format
-        - width
-        - height
-        - tokens
-        - process_image_function_name
-      properties:
-        type:
-          type: string
-          enum:
-            - image_asset_pointer
-        location:
-          type: string
-          description: Path or URL to the image asset
-          example: /path/to/image.jpg
-        format:
-          type: string
-          enum:
-            - png
-            - jpeg
-          description: Image format
-        width:
-          type: integer
-          format: int32
-          description: Image width in pixels
-        height:
-          type: integer
-          format: int32
-          description: Image height in pixels
-        tokens:
-          type: integer
-          format: int32
-          description: Number of tokens this image represents
-        process_image_function_name:
-          type: string
-          description: Name of the function to process this image
-          example: process_image_default
-
-    RL.Datum:
-      type: object
-      required:
-        - model_input
-        - loss_fn_inputs
-      properties:
-        model_input:
-          $ref: '#/components/schemas/RL.ModelInput'
-        loss_fn_inputs:
-          $ref: '#/components/schemas/RL.LossFnInputs'
-
-    RL.LossFnInputs:
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/RL.TensorData'
-      description: Dictionary mapping field names to tensor data
-      example:
-        weights:
-          data:
-            - 1
-            - 1
-            - 1
-            - 0.5
-            - 0
-          dtype: float32
-        target_tokens:
-          data:
-            - 123
-            - 456
-            - 789
-            - 101
-            - 202
-          dtype: int64
-    RL.TensorDType:
-      type: string
-      enum:
-        - int64
-        - float32
-    RL.TensorData:
-      type: object
-      required:
-        - data
-        - dtype
-      properties:
-        data:
-          description: Flattened tensor data as array of numbers.
-          oneOf:
-            - type: array
-              items:
-                type: integer
-            - type: array
-              items:
-                type: number
-        dtype:
-          $ref: '#/components/schemas/RL.TensorDType'
-        shape:
-          type: array
-          description: >-
-            Optional. The shape of the tensor (see PyTorch tensor.shape). The shape of a one-dimensional list
-            of length N is `(N,)`. Can usually be inferred if not provided, and is generally inferred as a 1D
-            tensor.
-          example:
-            - 10
-          items:
-            type: integer
-          nullable: true
-
-    RL.UntypedAPIFuture:
-      type: object
-      required:
-        - request_id
-        - training_session_id
-      properties:
-        request_id:
-          $ref: '#/components/schemas/RL.RequestId'
-        training_session_id:
-          $ref: '#/components/schemas/RL.TrainingId'
-    RL.SaveTrainingStateRequest:
-      type: object
-      required:
-        - training_session_id
-      properties:
-        type:
-          type: string
-          enum:
-            - save_training_state
-        training_session_id:
-          $ref: '#/components/schemas/RL.TrainingId'
-    RL.OptimStepRequest:
-      type: object
-      required:
-        - training_session_id
-        - adam_params
-      properties:
-        type:
-          type: string
-          enum:
-            - optim_step
-        training_session_id:
-          $ref: '#/components/schemas/RL.TrainingId'
-        adam_params:
-          $ref: '#/components/schemas/RL.RL.AdamParams'
-    RL.RL.AdamParams:
-      type: object
-      required:
-        - learning_rate
-      properties:
-        learning_rate:
-          type: number
-          format: float
-          description: Learning rate for the optimizer
-          default: 0.0001
-          x-stainless-useDefault: true
-        beta1:
-          type: number
-          format: float
-          description: Coefficient used for computing running averages of gradient
-          default: 0.9
-          x-stainless-useDefault: true
-        beta2:
-          type: number
-          format: float
-          description: Coefficient used for computing running averages of gradient square
-          default: 0.95
-          x-stainless-useDefault: true
-        eps:
-          type: number
-          format: float
-          description: Term added to the denominator to improve numerical stability
-          default: 1e-12
-          x-stainless-useDefault: true
-    RL.ForwardBackwardOutput:
-      type: object
-      required:
-        - metrics
-        - loss_fn_outputs
-        - loss_fn_output_type
-      properties:
-        metrics:
+        inputs:
+          additionalProperties: true
           type: object
-          additionalProperties:
-            oneOf:
-              - type: number
-              - type: integer
-          description: Training metrics as key-value pairs
-          example:
-            loss: 2.345
-      loss_fn_output_type:
-        $ref: '#/components/schemas/RL.LossFnType'
-        description: Identifier of the loss function used to compute outputs
-      loss_fn_outputs:
-        type: object
-        additionalProperties:
-          $ref: '#/components/schemas/RL.TensorData'
-        description: Dictionary mapping field names to tensor data
-    RL.SessionStartResponse:
-      type: object
-      properties:
-        training_session_id:
-          $ref: '#/components/schemas/RL.TrainingId'
-        model_id:
+        model:
           type: string
-          $ref: '#/components/schemas/RL.ModelId'
-      required: [training_session_id, model_id]
-    RL.TryAgainResponse:
-      type: object
-      description: This response is sent when the client has waited too long and the request is still pending. Client should retry retrieve_future.
-      required:
-        - type
-        - request_id
-      properties:
-        type:
-          type: string
-          enum:
-            - try_again
-          default: try_again
+        outputs:
+          additionalProperties: true
+          type: object
+        priority:
+          description: Additional fields for test compatibility
+          type: integer
         request_id:
           type: string
-          description: Request ID that is still pending
-    RL.OptimStepResponse:
-      type: object
-      additionalProperties:
-        oneOf:
-          - type: integer
-          - type: number
-          - type: string
-      description: Optimization step results with arbitrary key-value pairs
-      example:
-        step: 1000
-        learning_rate: 0.00001
-        gradient_norm: 0.456
-        status: completed
-    RL.SaveTrainingStateResponse:
-      type: object
-      required:
-        - path
-      properties:
-        path:
+        retries:
+          type: integer
+        status:
+          description: this should be the enum, but isn't for backwards compatability
           type: string
-          description: A handle or URI to the saved training state (weights + optimizer)
-          example: s3://bucket/checkpoints/session-12345/state-000042.pt
+        warnings:
+          items:
+            type: string
+          type: array
+      type: object
