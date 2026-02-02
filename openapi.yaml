@@ -7137,7 +7137,7 @@ paths:
           in: path
           required: true
           type: string
-  /rl/training-sessions/{session_id}/forward-backward:
+  /rl/training-sessions/{session_id}:forward-backward:
     post:
       summary: Forward-backward pass
       description: Submits a forward-backward pass operation that will asynchronously compute gradients via backpropagation.
