@@ -7085,7 +7085,7 @@ paths:
           in: path
           required: true
           type: string
-  /v1/rl/training-sessions/{session_id}/operations/forward-backward/{operation_id}:
+  /rl/training-sessions/{session_id}/operations/forward-backward/{operation_id}:
     get:
       summary: Get forward-backward operation
       description: Retrieves the current status and result of a forward-backward operation.
