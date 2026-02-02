@@ -7151,7 +7151,7 @@ paths:
         default:
           description: An unexpected error response.
           schema:
-            $ref: '#/components/schemas/rpcStatus'
+            $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
           description: Training session ID
