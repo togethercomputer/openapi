@@ -6633,6 +6633,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RL.UntypedAPIFuture'
+  /rl/save_training_state:
+    post:
+      description: Saves the full checkpoint (weights + optimizer state) of the training session and returns a handle that can be used for inference.
+      operationId: saveTrainingState
+      summary: Save training state
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RL.SaveTrainingStateRequest'
+      responses:
+        '200':
+          description: API future for save training state completion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RL.UntypedAPIFuture'
   /rl/optim_step:
     post:
       summary: Optimization step
@@ -11834,6 +11852,17 @@ components:
       properties:
         request_id:
           $ref: '#/components/schemas/RL.RequestId'
+        training_session_id:
+          $ref: '#/components/schemas/RL.TrainingId'
+    RL.SaveTrainingStateRequest:
+      type: object
+      required:
+        - training_session_id
+      properties:
+        type:
+          type: string
+          enum:
+            - save_training_state
         training_session_id:
           $ref: '#/components/schemas/RL.TrainingId'
     RL.OptimStepRequest:
