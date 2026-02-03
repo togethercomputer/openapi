@@ -7084,7 +7084,8 @@ paths:
           description: ID of the training session
           in: path
           required: true
-          type: string
+          schema:
+            type: string
   /rl/training-sessions/{session_id}/operations/forward-backward/{operation_id}:
     get:
       summary: Get forward-backward operation
@@ -7105,12 +7106,14 @@ paths:
           description: Training session ID
           in: path
           required: true
-          type: string
+          schema:
+            type: string
         - name: operation_id
           description: Operation ID
           in: path
           required: true
-          type: string
+          schema:
+            type: string
   /rl/training-sessions/{session_id}/operations/optim-step/{operation_id}:
     get:
       summary: Get optim-step operation
@@ -7131,12 +7134,14 @@ paths:
           description: Training session ID
           in: path
           required: true
-          type: string
+          schema:
+            type: string
         - name: operation_id
           description: Operation ID
           in: path
           required: true
-          type: string
+          schema:
+            type: string
   /rl/training-sessions/{session_id}:forward-backward:
     post:
       summary: Forward-backward pass
@@ -7157,7 +7162,8 @@ paths:
           description: Training session ID
           in: path
           required: true
-          type: string
+          schema:
+            type: string
         - name: body
           in: body
           required: true
@@ -7183,7 +7189,8 @@ paths:
           description: Training session ID
           in: path
           required: true
-          type: string
+          schema:
+            type: string
         - name: body
           in: body
           required: true
@@ -7209,7 +7216,8 @@ paths:
           description: ID of the training session
           in: path
           required: true
-          type: string
+          schema:
+            type: string
 
 components:
   securitySchemes:
