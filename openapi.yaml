@@ -12143,39 +12143,16 @@ components:
       type: object
     ReplicaEvent:
       properties:
-        container_status:
-          allOf:
-            - $ref: "#/components/schemas/ContainerStatus"
-          description: ContainerStatus provides detailed status information about the
-            container within this replica
-        events:
-          description: Events is a list of Kubernetes events related to this replica for
-            troubleshooting
-          items:
-            $ref: "#/components/schemas/KubernetesEvent"
-          type: array
-        replica_completed_at:
-          description: ReplicaCompletedAt is the timestamp when the replica finished
-            execution
-          type: string
-        replica_marked_for_termination_at:
-          description: ReplicaMarkedForTerminationAt is the timestamp when the replica was
-            marked for termination
+        image:
+          description: Image is the container image used for this replica
           type: string
         replica_ready_since:
           description: ReplicaReadySince is the timestamp when the replica became ready to
             serve traffic
           type: string
-        replica_running_since:
-          description: ReplicaRunningSince is the timestamp when the replica entered the
-            running state
-          type: string
-        replica_started_at:
-          description: ReplicaStartedAt is the timestamp when the replica was created
-          type: string
         replica_status:
           description: ReplicaStatus is the current status of the replica (e.g.,
-            "Running", "Pending", "Failed")
+            "Running", "Waiting", "Terminated")
           type: string
         replica_status_message:
           description: ReplicaStatusMessage provides a human-readable message explaining
@@ -12185,9 +12162,20 @@ components:
           description: ReplicaStatusReason provides a brief machine-readable reason for
             the replica's status
           type: string
-        scheduled_on_cluster:
-          description: ScheduledOnCluster identifies which cluster this replica is
-            scheduled on
+        revision_id:
+          description: RevisionID is the deployment revision ID associated with this replica
+          type: string
+        volume_preload_completed_at:
+          description: VolumePreloadCompletedAt is the timestamp when the volume preload
+            completed
+          type: string
+        volume_preload_started_at:
+          description: VolumePreloadStartedAt is the timestamp when the volume preload
+            started
+          type: string
+        volume_preload_status:
+          description: VolumePreloadStatus is the status of the volume preload (e.g.,
+            "InProgress", "Completed", "Failed")
           type: string
       type: object
     SecretResponseItem:
