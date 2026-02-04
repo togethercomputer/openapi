@@ -7017,53 +7017,62 @@ paths:
       responses:
         "200":
           description: List of training sessions
-          schema:
-            type: array
-            items:
-              type: object
-              $ref: '#/components/schemas/RL.TrainingSession'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  $ref: '#/components/schemas/RL.TrainingSession'
         default:
           description: An unexpected error response.
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: status
           in: query
           required: false
-          type: 
+          schema:
             $ref: '#/components/schemas/RL.TrainingSessionStatus'
         - name: limit
-          description: Maximum number of sessions to return (1-100)
+          description: Maximum number of sessions to return (1-100), defaults to 20
           in: query
           required: false
-          type: integer
-          default: 20
+          schema:
+            type: integer
         - name: offset
           description: Number of sessions to skip
           in: query
           required: false
-          type: integer
-          default: 0
+          schema:
+            type: integer
     post:
       summary: Create training session
       description: Creates a training session and returns its details.
       operationId: startTrainingSession
       tags: [RL]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RL.StartTrainingSessionRequest'
+        required: true
       responses:
         "200":
           description: Training session details
-          schema:
-            $ref: '#/components/schemas/RL.TrainingSession'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RL.TrainingSession'
         default:
           description: An unexpected error response.
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/components/schemas/RL.StartTrainingSessionRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        
   /rl/training-sessions/{session_id}:
     get:
       summary: Get training session
@@ -7073,12 +7082,16 @@ paths:
       responses:
         "200":
           description: Training session details
-          schema:
-            $ref: '#/components/schemas/RL.TrainingSession'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RL.TrainingSession'
         default:
           description: An unexpected error response.
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
           description: ID of the training session
@@ -7095,12 +7108,16 @@ paths:
       responses:
         "200":
           description: Forward-backward operation details
-          schema:
-            $ref: '#/components/schemas/RL.ForwardBackwardOperation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RL.ForwardBackwardOperation'
         default:
           description: An unexpected error response.
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
           description: Training session ID
@@ -7123,12 +7140,16 @@ paths:
       responses:
         "200":
           description: ""
-          schema:
-            $ref: '#/components/schemas/RL.OptimStepOperation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RL.OptimStepOperation'
         default:
           description: An unexpected error response.
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
           description: Training session ID
@@ -7148,15 +7169,25 @@ paths:
       description: Submits a forward-backward pass operation that will asynchronously compute gradients via backpropagation.
       operationId: forwardBackward
       tags: [RL]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RL.ForwardBackwardBody'
+        required: true
       responses:
         "200":
           description: ""
-          schema:
-            $ref: '#/components/schemas/RL.ForwardBackwardOperation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RL.ForwardBackwardOperation'
         default:
           description: An unexpected error response.
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
           description: Training session ID
@@ -7164,26 +7195,31 @@ paths:
           required: true
           schema:
             type: string
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/components/schemas/RL.ForwardBackwardBody'
   /rl/training-sessions/{session_id}:optim-step:
     post:
       summary: Optimizer step
       description: Submits an optimizer step operation that will asynchronously apply accumulated gradients to update model parameters.
       operationId: OptimStep
       tags: [RL]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RL.OptimStepBody'
+        required: true
       responses:
         "200":
           description: Optimizer step operation details
-          schema:
-            $ref: '#/components/schemas/RL.OptimStepOperation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RL.OptimStepOperation'
         default:
           description: An unexpected error response.
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
           description: Training session ID
@@ -7191,26 +7227,31 @@ paths:
           required: true
           schema:
             type: string
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/components/schemas/RL.OptimStepBody'
   /rl/training-sessions/{session_id}:stop:
     post:
       summary: Stop training session
       description: Stops a training session.
       operationId: stopTrainingSession
       tags: [RL]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RL.StopTrainingSessionBody'
+        required: true
       responses:
         "200":
           description: Training session details
-          schema:
-            $ref: '#/components/schemas/RL.TrainingSession'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RL.TrainingSession'
         default:
           description: An unexpected error response.
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
           description: ID of the training session
@@ -7230,6 +7271,7 @@ components:
   schemas:
     RL.OptimStepBody:
       type: object
+      properties: []
     RL.ForwardBackwardBody:
       type: object
       required:
