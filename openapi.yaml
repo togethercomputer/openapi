@@ -7265,7 +7265,13 @@ components:
   schemas:
     RL.OptimStepBody:
       type: object
-      properties: {}
+      properties:
+        learning_rate:
+          description: Learning rate for this step.
+          type: number
+          default: 0.0001
+        adamw_params:
+          $ref: '#/components/schemas/RL.AdamWOptimizerParams'
     RL.ForwardBackwardBody:
       type: object
       required:
@@ -7462,10 +7468,6 @@ components:
           example: checkpoint-123
         lora_config:
           $ref: '#/components/schemas/RL.LoraConfig'
-        optimizer_config:
-          $ref: '#/components/schemas/RL.OptimizerConfig'
-        lr_scheduler_config:
-          $ref: '#/components/schemas/RL.LRSchedulerConfig'
     RL.TrainingSessionStatus:
       description: Status of the training session
       default: TRAINING_SESSION_STATUS_UNSPECIFIED
@@ -7499,44 +7501,6 @@ components:
           description: Timestamp when the training session was last updated
         lora_config:
           $ref: '#/components/schemas/RL.LoraConfig'
-        optimizer_config:
-          $ref: '#/components/schemas/RL.OptimizerConfig'
-        lr_scheduler_config:
-          $ref: '#/components/schemas/RL.LRSchedulerConfig'
-    RL.LRSchedulerConfig:
-      description: Learning rate scheduler configuration
-      type: object
-      properties:
-        linear:
-          $ref: '#/components/schemas/RL.LinearLRScheduler'
-    RL.LinearLRScheduler:
-      description: Linear learning rate scheduler configuration
-      type: object
-      properties:
-        params:
-          $ref: '#/components/schemas/RL.LinearSchedulerParams'
-    RL.LinearSchedulerParams:
-      description: Linear learning rate scheduler parameters
-      type: object
-      properties:
-        warmup_steps:
-          description: Number of warmup steps
-          type: integer
-          default: 100
-        lr_min:
-          description: Minimum learning rate at the end of linear decay
-          type: number
-          default: 0.0
-    RL.OptimizerConfig:
-      description: Optimizer configuration. If omitted, defaults to AdamW with default parameters.
-      type: object
-      properties:
-        adamw:
-          $ref: '#/components/schemas/RL.AdamWOptimizer'
-        max_grad_norm:
-          description: Maximum gradient norm for gradient clipping. Applies to all optimizer types.
-          type: number
-          default: 1.0
     RL.LoraConfig:
       type: object
       description: LoRA adapter configuration
@@ -7553,20 +7517,10 @@ components:
           type: number
           default: 0.05
           description: Dropout of the LoRA adapter
-    RL.AdamWOptimizer:
-      description: AdamW optimizer configuration
-      type: object
-      properties:
-        params:
-          $ref: '#/components/schemas/RL.AdamWOptimizerParams'
     RL.AdamWOptimizerParams:
       description: AdamW optimizer parameters
       type: object
       properties:
-        lr:
-          description: Learning rate
-          type: number
-          default: 0.0001
         beta1:
           description: First moment decay rate
           type: number
