@@ -7491,6 +7491,12 @@ components:
           type: string
           example: meta-llama/Meta-Llama-3-8B-Instruct
           description: Base model used for the training session
+        checkpoint_id:
+          description: Checkpoint ID to use for the training session
+          type: string
+        step:
+          description: Current training step
+          type: integer
         created_at:
           type: string
           format: date-time
