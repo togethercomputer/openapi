@@ -7233,12 +7233,6 @@ paths:
       description: Stops a training session.
       operationId: stopTrainingSession
       tags: [RL]
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RL.StopTrainingSessionBody'
-        required: true
       responses:
         "200":
           description: Training session details
@@ -7271,7 +7265,7 @@ components:
   schemas:
     RL.OptimStepBody:
       type: object
-      properties: []
+      properties: {}
     RL.ForwardBackwardBody:
       type: object
       required:
