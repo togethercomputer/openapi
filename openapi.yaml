@@ -12495,6 +12495,10 @@ components:
           type: string
       type: object
     QueueJobStatusResponse:
+      required:
+        - request_id
+        - model
+        - status
       properties:
         claimed_at:
           description: Timestamp when a worker claimed the job
