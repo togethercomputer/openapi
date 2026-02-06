@@ -12541,7 +12541,8 @@ components:
             failed. Jobs explicitly failed by the model are not retried.
           type: integer
         status:
-          description: Current job status. Transitions: pending → running → done/failed. A pending job may also be canceled.
+          description: |
+            Current job status. Transitions: pending → running → done/failed. A pending job may also be canceled.
           enum:
             - pending
             - running
