@@ -6836,8 +6836,12 @@ paths:
 
   /queue/cancel:
     post:
-      description: Cancel a pending or running job. Returns the job status after the
-        cancellation attempt.
+      description: |
+        Cancel a pending job. Only jobs in pending status can be canceled.
+        Running jobs cannot be stopped. Returns the job status after the
+        attempt. If the job is not pending, returns 409 with the current status
+        unchanged.
+      operationId: cancelQueueJob
       requestBody:
         content:
           application/json:
@@ -6881,8 +6885,8 @@ paths:
         - Queue
   /queue/metrics:
     get:
-      description: Get the current queue statistics including pending and running job
-        counts.
+      description: Get the current queue statistics for a model, including pending and running job counts.
+      operationId: getQueueMetrics
       parameters:
         - description: Model name to get metrics for
           in: query
@@ -6896,8 +6900,7 @@ paths:
           content:
             application/json:
               schema:
-                additionalProperties: true
-                type: object
+                $ref: "#/components/schemas/QueueMetricsResponse"
         "400":
           description: Invalid request
           content:
@@ -6921,15 +6924,16 @@ paths:
         - Queue
   /queue/status:
     get:
-      description: Check the status of a job using request_id and model query parameters.
+      description: Poll the current status of a previously submitted job. Provide the request_id and model as query parameters.
+      operationId: getQueueJobStatus
       parameters:
-        - description: Request ID
+        - description: Request ID returned from the submit endpoint
           in: query
           name: request_id
           required: true
           schema:
             type: string
-        - description: Model name
+        - description: Model name the job was submitted to
           in: query
           name: model
           required: true
@@ -6971,8 +6975,12 @@ paths:
         - Queue
   /queue/submit:
     post:
-      description: Submit a new job to the queue. Returns a request ID that can be
-        used to check status.
+      description: |
+        Submit a new job to the queue for asynchronous processing. Jobs are
+        processed in strict priority order (higher priority first, FIFO within
+        the same priority). Returns a request ID that can be used to poll status
+        or cancel the job.
+      operationId: submitQueueJob
       requestBody:
         content:
           application/json:
@@ -12398,41 +12406,84 @@ components:
     QueueError:
       properties:
         code:
+          description: Machine-readable error code
           type: string
         message:
+          description: Human-readable error message
           type: string
         param:
+          description: The parameter that caused the error, if applicable
           type: string
         type:
+          description: Error category (e.g. "invalid_request_error", "not_found_error")
           type: string
       type: object
+    QueueMetricsResponse:
+      type: object
+      required:
+        - messages_running
+        - messages_waiting
+        - total_jobs
+      properties:
+        messages_running:
+          description: Number of jobs currently being processed
+          type: integer
+        messages_waiting:
+          description: Number of jobs waiting to be claimed by a worker
+          type: integer
+        total_jobs:
+          description: Total number of active jobs (waiting + running)
+          type: integer
     QueueCancelRequest:
       properties:
         model:
+          description: Model identifier the job was submitted to
           type: string
         request_id:
+          description: The request ID returned from the submit endpoint
           type: string
       required:
         - model
         - request_id
       type: object
     QueueCancelResponse:
+      type: object
+      required:
+        - status
       properties:
         status:
+          description: |
+            Job status after the cancel attempt. Only pending jobs can be
+            canceled. If the job is already running, done, or failed, the status
+            is returned unchanged.
           type: string
-      type: object
+          enum:
+            - canceled
+            - running
+            - done
+            - failed
     QueueJobRequest:
       properties:
         info:
+          description: |
+            Arbitrary JSON metadata stored with the job and returned in status
+            responses. The model and system may add or update keys during
+            processing.
           additionalProperties: true
           type: object
         model:
           description: Required model identifier
           type: string
         payload:
+          description: Freeform model input. Passed unchanged to the model. Contents are model-specific.
           additionalProperties: true
           type: object
         priority:
+          default: 0
+          description: |
+            Job priority. Higher values are processed first (strict priority
+            ordering). Jobs with equal priority are processed in submission
+            order (FIFO).
           type: integer
       required:
         - model
@@ -12443,38 +12494,71 @@ components:
         error:
           $ref: "#/components/schemas/QueueError"
         requestId:
+          description: Unique identifier for the submitted job. Use this to poll status or cancel.
           type: string
       type: object
     QueueJobStatusResponse:
+      required:
+        - request_id
+        - model
+        - status
       properties:
         claimed_at:
+          description: Timestamp when a worker claimed the job
+          format: date-time
           type: string
         created_at:
+          description: Timestamp when the job was created
+          format: date-time
           type: string
         done_at:
+          description: Timestamp when the job completed (done or failed)
+          format: date-time
           type: string
         info:
+          description: |
+            Job metadata. Contains keys from the submit request, plus any
+            modifications from the model or system (e.g. progress, retry
+            history).
           additionalProperties: true
           type: object
         inputs:
+          description: Freeform model input, as submitted
           additionalProperties: true
           type: object
         model:
+          description: Model identifier the job was submitted to
           type: string
         outputs:
+          description: Freeform model output, populated when the job reaches done status. Contents are model-specific.
           additionalProperties: true
           type: object
         priority:
-          description: Additional fields for test compatibility
+          description: Job priority. Higher values are processed first.
           type: integer
         request_id:
+          description: The request ID that was returned from the submit endpoint
           type: string
         retries:
+          description: |
+            Number of times this job has been retried. Workers set a claim
+            timeout and must send periodic status updates to keep the job alive.
+            If no update is received within the timeout, the job is returned to
+            the queue and retried. After 3 retries the job is permanently
+            failed. Jobs explicitly failed by the model are not retried.
           type: integer
         status:
-          description: this should be the enum, but isn't for backwards compatability
+          description: |
+            Current job status. Transitions: pending → running → done/failed. A pending job may also be canceled.
+          enum:
+            - pending
+            - running
+            - done
+            - failed
+            - canceled
           type: string
         warnings:
+          description: Non-fatal messages about the request (e.g. deprecation notices)
           items:
             type: string
           type: array
