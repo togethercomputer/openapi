@@ -7357,7 +7357,6 @@ components:
           description: Optional sampling parameters
         num_samples:
           type: integer
-          format: int64
           example: 1
           default: 1
           description: Number of completions to generate for this prompt
@@ -7392,25 +7391,21 @@ components:
       properties:
         max_tokens:
           type: integer
-          format: int32
           example: 100
           default: 100
           description: Maximum number of tokens to generate per completion
         temperature:
           type: number
-          format: float
           example: 1
           default: 1.0
           description: Sampling temperature
         top_p:
           type: number
-          format: float
           example: 1
           default: 1.0
           description: Nucleus sampling probability threshold
         top_k:
           type: integer
-          format: int32
           example: -1
           default: -1
           description: Top-k sampling limit
@@ -7423,8 +7418,7 @@ components:
             type: string
           description: Generation stops when any of these strings is produced
         seed:
-          type: string
-          format: int64
+          type: integer
           example: 42
           description: Random seed for reproducibility
     RL.InputChunk:
@@ -7468,17 +7462,14 @@ components:
       properties:
         clip_low:
           type: number
-          format: float
           example: 0.2
           description: Lower clip bound for importance ratio
         clip_high:
           type: number
-          format: float
           example: 0.28
           description: Upper clip bound for importance ratio
         beta:
           type: number
-          format: float
           example: 0.1
           description: KL penalty coefficient
         agg_type:
@@ -7548,7 +7539,6 @@ components:
             - 0.5
           items:
             type: number
-            format: float
         dtype:
           description: Data type of the float array (D_TYPE_FLOAT32 or D_TYPE_BFLOAT16)
           $ref: '#/components/schemas/RL.DType'
@@ -7566,7 +7556,6 @@ components:
             - -0.8
           items:
             type: number
-            format: float
         dtype:
           description: Data type of the float array (D_TYPE_FLOAT32 or D_TYPE_BFLOAT16)
           $ref: '#/components/schemas/RL.DType'
