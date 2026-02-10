@@ -7284,7 +7284,7 @@ components:
       type: object
       required:
         - samples
-        - loss_fn
+        - loss
       properties:
         samples:
           description: Batch of training samples to process
@@ -7292,10 +7292,9 @@ components:
           items:
             type: object
             $ref: '#/components/schemas/RL.TrainingSample'
-        loss_fn:
-          description: Loss function to use for gradient computation
-          $ref: '#/components/schemas/RL.LossFn'
-          example: LOSS_FN_GRPO
+        loss:
+          description: Loss function configuration
+          $ref: '#/components/schemas/RL.LossConfig'
     RL.ModelInput:
       type: object
       required:
@@ -7332,6 +7331,150 @@ components:
         - D_TYPE_FLOAT32
         - D_TYPE_BFLOAT16
       default: D_TYPE_UNSPECIFIED
+    RL.LossType:
+      type: string
+      enum:
+        - LOSS_TYPE_UNSPECIFIED
+        - LOSS_TYPE_CROSS_ENTROPY
+        - LOSS_TYPE_GRPO
+      default: LOSS_TYPE_UNSPECIFIED
+    RL.CrossEntropyLossParams:
+      type: object
+      description: Cross-entropy loss parameters (currently empty).
+    RL.GRPOLossParams:
+      type: object
+      properties:
+        clip_low:
+          type: number
+          format: float
+          example: 0.2
+          description: Lower clip bound for importance ratio
+        clip_high:
+          type: number
+          format: float
+          example: 0.28
+          description: Upper clip bound for importance ratio
+        beta:
+          type: number
+          format: float
+          example: 0.1
+          description: KL penalty coefficient
+        agg_type:
+          type: string
+          example: fixed_horizon
+          description: Aggregation type for loss computation
+    RL.LossConfig:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          $ref: '#/components/schemas/RL.LossType'
+          description: Type of loss function to use
+          example: LOSS_TYPE_GRPO
+        cross_entropy_params:
+          $ref: '#/components/schemas/RL.CrossEntropyLossParams'
+        grpo_params:
+          $ref: '#/components/schemas/RL.GRPOLossParams'
+    RL.LossTargetTokens:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          description: Integer array of target tokens
+          type: array
+          example:
+            - 123
+            - 456
+            - 789
+          items:
+            type: integer
+        dtype:
+          description: Data type of the integer array
+          $ref: '#/components/schemas/RL.DType'
+          example: D_TYPE_INT64
+    RL.LossMask:
+      type: object
+      required:
+        - data
+      description: Per-token loss mask (1=compute loss, 0=ignore)
+      properties:
+        data:
+          description: Integer array of per-token mask values (0s and 1s)
+          type: array
+          example:
+            - 0
+            - 0
+            - 1
+          items:
+            type: integer
+        dtype:
+          description: Data type of the integer array (must be D_TYPE_INT64)
+          $ref: '#/components/schemas/RL.DType'
+          example: D_TYPE_INT64
+    RL.LossAdvantages:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          description: Float array of per-token advantages
+          type: array
+          example:
+            - 0.5
+            - 0.5
+          items:
+            type: number
+            format: float
+        dtype:
+          description: Data type of the float array (D_TYPE_FLOAT32 or D_TYPE_BFLOAT16)
+          $ref: '#/components/schemas/RL.DType'
+          example: D_TYPE_FLOAT32
+    RL.LossLogprobs:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          description: Float array of per-token log probabilities
+          type: array
+          example:
+            - -1.2
+            - -0.8
+          items:
+            type: number
+            format: float
+        dtype:
+          description: Data type of the float array (D_TYPE_FLOAT32 or D_TYPE_BFLOAT16)
+          $ref: '#/components/schemas/RL.DType'
+          example: D_TYPE_FLOAT32
+    RL.GRPOLossInputs:
+      type: object
+      required:
+        - advantages
+        - generator_logprobs
+      properties:
+        advantages:
+          $ref: '#/components/schemas/RL.LossAdvantages'
+          description: Per-token advantages for GRPO
+        generator_logprobs:
+          $ref: '#/components/schemas/RL.LossLogprobs'
+          description: Generator log probabilities for GRPO
+        reference_logprobs:
+          $ref: '#/components/schemas/RL.LossLogprobs'
+          description: Reference model log probabilities (required if beta > 0)
+    RL.LossInputs:
+      type: object
+      properties:
+        target_tokens:
+          $ref: '#/components/schemas/RL.LossTargetTokens'
+          description: Target tokens for loss computation (optional, defaults to shifted input_ids)
+        loss_mask:
+          $ref: '#/components/schemas/RL.LossMask'
+          description: Per-token loss mask (1=compute loss, 0=ignore)
+        grpo_inputs:
+          $ref: '#/components/schemas/RL.GRPOLossInputs'
     RL.LossFn:
       type: string
       default: LOSS_FN_UNSPECIFIED
@@ -7391,14 +7534,14 @@ components:
       type: object
       required:
         - model_input
-        - loss_fn_inputs
+        - loss_inputs
       properties:
         model_input:
           description: Model input
           $ref: '#/components/schemas/RL.ModelInput'
-        loss_fn_inputs:
+        loss_inputs:
           description: Loss function inputs
-          $ref: '#/components/schemas/RL.LossFnInputs'
+          $ref: '#/components/schemas/RL.LossInputs'
     RL.OptimStepOperation:
       type: object
       properties:
@@ -7441,6 +7584,11 @@ components:
           type: number
           example: 2.345
           description: Loss value
+        metrics:
+          type: object
+          description: Loss-specific metrics (e.g., KL divergence, clip fraction for GRPO)
+          additionalProperties:
+            type: number
     RL.TrainingOperationError:
       type: object
       properties:
