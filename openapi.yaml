@@ -1177,7 +1177,7 @@ paths:
     post:
       tags: ['Chat']
       summary: Create chat completion
-      description: Query a chat model.
+      description: Generate a model response for a given chat conversation. Supports single queries and multi-turn conversations with system, user, and assistant messages.
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (v1)
@@ -1322,7 +1322,7 @@ paths:
     post:
       tags: ['Completion']
       summary: Create completion
-      description: Query a language, code, or image model.
+      description: Generate text completions for a given prompt using a language, code, or image model.
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (v1)
@@ -1459,7 +1459,7 @@ paths:
     post:
       tags: ['Embeddings']
       summary: Create embedding
-      description: Query an embedding model for a given string of text.
+      description: Generate vector embeddings for one or more text inputs. Returns numerical arrays representing semantic meaning, useful for search, classification, and retrieval.
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (v1)
@@ -3301,7 +3301,7 @@ paths:
     post:
       tags: ['Rerank']
       summary: Create a rerank request
-      description: Query a reranker model
+      description: Rerank a list of documents by relevance to a query. Returns a relevance score and ordering index for each document.
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (v1)
