@@ -7171,6 +7171,38 @@ paths:
           required: true
           schema:
             type: string
+  /rl/training-sessions/{session_id}/operations/sample/{operation_id}:
+    get:
+      summary: Get sample operation
+      description: Retrieves the current status and result of a sample operation.
+      operationId: GetSample
+      tags: [RL]
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RL.SampleOperation'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: session_id
+          description: Training session ID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: operation_id
+          description: Operation ID
+          in: path
+          required: true
+          schema:
+            type: string
   /rl/training-sessions/{session_id}:forward-backward:
     post:
       summary: Forward-backward pass
@@ -7235,6 +7267,38 @@ paths:
           required: true
           schema:
             type: string
+  /rl/training-sessions/{session_id}:sample:
+    post:
+      summary: Sample
+      description: Submits a sample operation that will asynchronously generate text completions with logprobs.
+      operationId: Sample
+      tags: [RL]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RL.SampleBody'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RL.SampleOperation'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: session_id
+          description: Training session ID
+          in: path
+          required: true
+          schema:
+            type: string
   /rl/training-sessions/{session_id}:stop:
     post:
       summary: Stop training session
@@ -7280,6 +7344,23 @@ components:
           default: 0.0001
         adamw_params:
           $ref: '#/components/schemas/RL.AdamWOptimizerParams'
+    RL.SampleBody:
+      type: object
+      required:
+        - prompt
+      properties:
+        prompt:
+          $ref: '#/components/schemas/RL.ModelInput'
+          description: Input prompt as tokenized chunks
+        sampling_params:
+          $ref: '#/components/schemas/RL.SamplingParams'
+          description: Optional sampling parameters
+        num_samples:
+          type: integer
+          format: int64
+          example: 1
+          default: 1
+          description: Number of completions to generate for this prompt
     RL.ForwardBackwardBody:
       type: object
       required:
@@ -7306,6 +7387,46 @@ components:
           items:
             type: object
             $ref: '#/components/schemas/RL.InputChunk'
+    RL.SamplingParams:
+      type: object
+      properties:
+        max_tokens:
+          type: integer
+          format: int32
+          example: 100
+          default: 100
+          description: Maximum number of tokens to generate per completion
+        temperature:
+          type: number
+          format: float
+          example: 1
+          default: 1.0
+          description: Sampling temperature
+        top_p:
+          type: number
+          format: float
+          example: 1
+          default: 1.0
+          description: Nucleus sampling probability threshold
+        top_k:
+          type: integer
+          format: int32
+          example: -1
+          default: -1
+          description: Top-k sampling limit
+        stop:
+          type: array
+          example:
+            - "\n"
+            - END
+          items:
+            type: string
+          description: Generation stops when any of these strings is produced
+        seed:
+          type: string
+          format: int64
+          example: 42
+          description: Random seed for reproducibility
     RL.InputChunk:
       type: object
       properties:
@@ -7556,6 +7677,21 @@ components:
           $ref: '#/components/schemas/RL.OptimStepResult'
         error:
           $ref: '#/components/schemas/RL.TrainingOperationError'
+    RL.SampleOperation:
+      type: object
+      properties:
+        operation_id:
+          type: string
+          example: 550e8400-e29b-41d4-a716-446655440000
+          description: Operation ID
+        status:
+          $ref: '#/components/schemas/RL.TrainingOperationStatus'
+          example: TRAINING_OPERATION_STATUS_PENDING
+          description: Operation status
+        data:
+          $ref: '#/components/schemas/RL.SampleResult'
+        error:
+          $ref: '#/components/schemas/RL.TrainingOperationError'
     RL.OptimStepResult:
       type: object
       properties:
@@ -7563,6 +7699,42 @@ components:
           description: Step number
           type: integer
           example: 100
+    RL.SampleResult:
+      type: object
+      properties:
+        sequences:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/RL.SampleSequence'
+          description: Generated completions
+    RL.SampleSequence:
+      type: object
+      properties:
+        tokens:
+          type: array
+          example:
+            - 123
+            - 456
+            - 789
+          items:
+            type: string
+            format: int64
+          description: Generated token IDs
+        logprobs:
+          type: array
+          example:
+            - -0.5
+            - -1.2
+            - -0.3
+          items:
+            type: number
+            format: double
+          description: Log probabilities for each generated token
+        stop_reason:
+          type: string
+          example: length
+          description: Reason for stopping generation
     RL.ForwardBackwardOperation:
       type: object
       properties:
