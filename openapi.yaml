@@ -7462,6 +7462,7 @@ components:
     RL.CrossEntropyLossParams:
       type: object
       description: Cross-entropy loss parameters (currently empty).
+      properties: {}
     RL.GRPOLossParams:
       type: object
       properties:
@@ -7596,61 +7597,6 @@ components:
           description: Per-token loss mask (1=compute loss, 0=ignore)
         grpo_inputs:
           $ref: '#/components/schemas/RL.GRPOLossInputs'
-    RL.LossFn:
-      type: string
-      default: LOSS_FN_UNSPECIFIED
-      enum:
-        - LOSS_FN_UNSPECIFIED
-        - LOSS_FN_GRPO
-    RL.LossFnInputs:
-      type: object
-      required:
-        - weights
-        - target_tokens
-      properties:
-        weights:
-          $ref: '#/components/schemas/RL.LossFnWeights'
-          description: Per-token weights
-        target_tokens:
-          $ref: '#/components/schemas/RL.LossFnTargetTokens'
-          description: Target tokens for loss computation
-    RL.LossFnTargetTokens:
-      type: object
-      required:
-        - data
-      properties:
-        data:
-          description: Integer array of target tokens
-          type: array
-          example:
-            - 123
-            - 456
-            - 789
-          items:
-            type: number
-        dtype:
-          description: Data type of the integer array
-          $ref: '#/components/schemas/RL.DType'
-          example: D_TYPE_INT64
-    RL.LossFnWeights:
-      type: object
-      required:
-        - data
-      properties:
-        data:
-          description: Float array of per-token weights
-          type: array
-          example:
-            - 0.1
-            - 0.2
-            - 0.3
-          items:
-            type: number
-            format: float
-        dtype:
-          description: Data type of the float array
-          $ref: '#/components/schemas/RL.DType'
-          example: D_TYPE_FLOAT32
     RL.TrainingSample:
       type: object
       required:
@@ -7718,8 +7664,7 @@ components:
             - 456
             - 789
           items:
-            type: string
-            format: int64
+            type: integer
           description: Generated token IDs
         logprobs:
           type: array
@@ -7728,8 +7673,7 @@ components:
             - -1.2
             - -0.3
           items:
-            type: number
-            format: double
+            type: integer
           description: Log probabilities for each generated token
         stop_reason:
           type: string
