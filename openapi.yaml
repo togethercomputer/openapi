@@ -4192,7 +4192,7 @@ paths:
         - lang: Shell
           label: cURL
           source: |
-            curl -X POST "https://api.together.xyz/v1/audio/transcriptions" \
+            curl -X POST "https://api.together.xyz/v1/audio/translations" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -F "file=@audio.wav" \
                  -F "model=openai/whisper-large-v3" \
