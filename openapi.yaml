@@ -137,11 +137,11 @@ paths:
       summary: Delete a deployment
       tags: ['Deployments']
       parameters:
-        - description: Deployment ID or name
+        - name: id
           in: path
-          name: id
           required: true
           schema:
+            description: Deployment ID or name
             type: string
       x-codeSamples:
         - lang: Python
@@ -198,11 +198,11 @@ paths:
       summary: Get a deployment by ID or name
       tags: ['Deployments']
       parameters:
-        - description: Deployment ID or name
+        - name: id
           in: path
-          name: id
           required: true
           schema:
+            description: Deployment ID or name
             type: string
       x-codeSamples:
         - lang: Python
@@ -285,11 +285,11 @@ paths:
                   --data '{ "gpu_count": 2 }' \
                   https://api.together.ai/v1/deployments/my-deployment
       parameters:
-        - description: Deployment ID or name
+        - name: id
           in: path
-          name: id
           required: true
           schema:
+            description: Deployment ID or name
             type: string
       requestBody:
         content:
@@ -360,16 +360,17 @@ paths:
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
                   https://api.together.ai/v1/deployments/my-deployment/logs
       parameters:
-        - description: Deployment ID or name
+        - name: id
           in: path
-          name: id
           required: true
           schema:
+            description: Deployment ID or name
             type: string
-        - description: Replica ID to filter logs
+        - name: replica_id
           in: query
-          name: replica_id
+          required: false
           schema:
+            description: Replica ID to filter logs
             type: string
       responses:
         "200":
@@ -526,11 +527,11 @@ paths:
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
                   https://api.together.ai/v1/deployments/secrets/my-secret
       parameters:
-        - description: Secret ID or name
+        - name: id
           in: path
-          name: id
           required: true
           schema:
+            description: Secret ID or name
             type: string
       responses:
         "200":
@@ -587,11 +588,11 @@ paths:
                   -H "Authorization: Bearer $TOGETHER_API_KEY" \
                   https://api.together.ai/v1/deployments/secrets/my-secret
       parameters:
-        - description: Secret ID or name
+        - name: id
           in: path
-          name: id
           required: true
           schema:
+            description: Secret ID or name
             type: string
       responses:
         "200":
@@ -647,11 +648,11 @@ paths:
                   https://api.together.ai/v1/deployments/secrets/my-secret
 
       parameters:
-        - description: Secret ID or name
+        - name: id
           in: path
-          name: id
           required: true
           schema:
+            description: Secret ID or name
             type: string
       requestBody:
         content:
@@ -691,11 +692,11 @@ paths:
       summary: Download a file
       tags: ['DeploymentsStorage']
       parameters:
-        - description: Filename
+        - name: filename
           in: path
-          name: filename
           required: true
           schema:
+            description: Filename
             type: string
       responses:
         "307":
@@ -843,11 +844,11 @@ paths:
     delete:
       description: Delete an existing volume
       parameters:
-        - description: Volume ID or name
+        - name: id
           in: path
-          name: id
           required: true
           schema:
+            description: Volume ID or name
             type: string
       responses:
         "200":
@@ -874,11 +875,11 @@ paths:
     get:
       description: Retrieve details of a specific volume by its ID or name
       parameters:
-        - description: Volume ID or name
+        - name: id
           in: path
-          name: id
           required: true
           schema:
+            description: Volume ID or name
             type: string
       responses:
         "200":
@@ -905,11 +906,11 @@ paths:
     patch:
       description: Update an existing volume's configuration or contents
       parameters:
-        - description: Volume ID or name
+        - name: id
           in: path
-          name: id
           required: true
           schema:
+            description: Volume ID or name.
             type: string
       requestBody:
         content:
@@ -1074,10 +1075,10 @@ paths:
       parameters:
         - in: path
           name: id
-          schema:
-            type: string
           required: true
-          description: Identifier of video from create response.
+          schema:
+            description: Identifier of video from create response.
+            type: string
       responses:
         '200':
           description: Success
@@ -1657,8 +1658,8 @@ paths:
       parameters:
         - name: dedicated
           in: query
-          description: Filter models to only return dedicated models
           schema:
+            description: Filter models to only return dedicated models
             type: boolean
       responses:
         '200':
@@ -1802,9 +1803,9 @@ paths:
           in: path
           required: true
           schema:
+            example: job-a15dad11-8d8e-4007-97c5-a211304de284
+            description: The ID of the job to retrieve
             type: string
-          description: The ID of the job to retrieve
-          example: job-a15dad11-8d8e-4007-97c5-a211304de284
       responses:
         '200':
           description: Job status retrieved successfully
@@ -2086,8 +2087,8 @@ paths:
   /files/{id}:
     get:
       tags: ['Files']
-      summary: List file
-      description: List the metadata for a single uploaded data file.
+      summary: Retrieve file metadata
+      description: Retrieve the metadata for a single uploaded data file.
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (v1)
@@ -2151,6 +2152,7 @@ paths:
           in: path
           required: true
           schema:
+            description: The ID of the file to retrieve
             type: string
       responses:
         '200':
@@ -2225,6 +2227,7 @@ paths:
           in: path
           required: true
           schema:
+            description: The ID of the file to delete
             type: string
       responses:
         '200':
@@ -2303,14 +2306,16 @@ paths:
           in: path
           required: true
           schema:
+            description: The ID of the file to get the content of
             type: string
       responses:
         '200':
           description: File content retrieved successfully
           content:
-            application/json:
+            text/plain:
               schema:
-                $ref: '#/components/schemas/FileObject'
+                type: string
+                format: binary
         '500':
           description: Internal Server Error
           content:
@@ -2857,6 +2862,7 @@ paths:
           in: path
           required: true
           schema:
+            description: The ID of the job to retrieve
             type: string
       responses:
         '200':
@@ -2932,10 +2938,13 @@ paths:
           in: path
           required: true
           schema:
+            description: The ID of the fine-tune job to delete
             type: string
         - name: force
+          deprecated: true
           in: query
           schema:
+            description: Deprecated and unused parameter.
             type: boolean
             default: false
       responses:
@@ -3026,6 +3035,7 @@ paths:
           in: path
           required: true
           schema:
+            description: The ID of the fine-tune job to list events for
             type: string
       responses:
         '200':
@@ -3102,6 +3112,7 @@ paths:
           in: path
           required: true
           schema:
+            description: The ID of the fine-tune job to list checkpoints for
             type: string
       responses:
         '200':
@@ -3185,25 +3196,25 @@ paths:
       parameters:
         - in: query
           name: ft_id
-          schema:
-            type: string
           required: true
-          description: Fine-tune ID to download. A string that starts with `ft-`.
+          schema:
+            description: Fine-tune ID to download. A string that starts with `ft-`.
+            type: string
         - in: query
           name: checkpoint_step
-          schema:
-            type: integer
           required: false
-          description: Specifies step number for checkpoint to download. Ignores `checkpoint` value if set.
+          schema:
+            description: Specifies step number for checkpoint to download. Ignores `checkpoint` value if set.
+            type: integer
         - in: query
           name: checkpoint
           schema:
+            description: Specifies checkpoint type to download - `merged` vs `adapter`. This field is required if the checkpoint_step is not set.
             type: string
             enum:
               - merged
               - adapter
               - model_output_path
-          description: Specifies checkpoint type to download - `merged` vs `adapter`. This field is required if the checkpoint_step is not set.
       responses:
         '200':
           description: Successfully downloaded the fine-tuned model or checkpoint.
@@ -3280,12 +3291,12 @@ paths:
                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
                  -H "Content-Type: application/json"
       parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
+        - name: id
+          in: path
           required: true
-          description: Fine-tune ID to cancel. A string that starts with `ft-`.
+          schema:
+            description: Fine-tune ID to cancel. A string that starts with `ft-`.
+            type: string
       responses:
         '200':
           description: Successfully cancelled the fine-tuning job.
@@ -3937,30 +3948,29 @@ paths:
           name: model
           required: false
           schema:
+            description: The TTS model to use for speech generation. Can also be set via `tts_session.updated` event.
             type: string
             enum:
               - hexgrad/Kokoro-82M
               - cartesia/sonic-english
             default: hexgrad/Kokoro-82M
-          description: The TTS model to use for speech generation. Can also be set via `tts_session.updated` event.
         - in: query
           name: voice
           required: false
           schema:
             type: string
-            default: tara
-          description: |
-            The voice to use for speech generation. Default is 'tara'.
-            Available voices vary by model. Can also be updated via `tts_session.updated` event.
+            description: |
+              The voice to use for speech generation. Default is 'tara'.
+              Available voices vary by model. Can also be updated via `tts_session.updated` event.
         - in: query
           name: max_partial_length
           required: false
           schema:
             type: integer
             default: 250
-          description: |
-            Maximum number of characters in partial text before forcing TTS generation
-            even without a sentence ending. Helps reduce latency for long text without punctuation.
+            description: |
+              Maximum number of characters in partial text before forcing TTS generation
+              even without a sentence ending. Helps reduce latency for long text without punctuation.
       responses:
         '101':
           description: |
@@ -4372,6 +4382,7 @@ paths:
           in: path
           required: true
           schema:
+            description: The ID of the cluster to retrieve
             type: string
       responses:
         "200":
@@ -4415,6 +4426,7 @@ paths:
           in: path
           required: true
           schema:
+            description: The ID of the cluster to update
             type: string
       requestBody:
         content:
@@ -4479,6 +4491,7 @@ paths:
           in: path
           required: true
           schema:
+            description: The ID of the cluster to delete
             type: string
       responses:
         "200":
@@ -4742,6 +4755,7 @@ paths:
           in: path
           required: true
           schema:
+            description: The ID of the volume to retrieve
             type: string
       responses:
           "200":
@@ -4792,6 +4806,7 @@ paths:
           in: path
           required: true
           schema:
+            description: The ID of the volume to delete
             type: string
       responses:
         "200":
@@ -4963,12 +4978,11 @@ paths:
           in: query
           required: false
           schema:
+            description: Filter endpoints by type
             type: string
             enum:
               - dedicated
               - serverless
-          description: Filter endpoints by type
-          example: dedicated
         - name: usage_type
           in: query
           required: false
@@ -4977,14 +4991,13 @@ paths:
             enum:
               - on-demand
               - reserved
-          description: Filter endpoints by usage type
-          example: on-demand
+            description: Filter endpoints by usage type
         - name: mine
           in: query
           required: false
           schema:
             type: boolean
-          description: If true, return only endpoints owned by the caller
+            description: If true, return only endpoints owned by the caller
       responses:
         '200':
           description: '200'
@@ -4997,9 +5010,8 @@ paths:
                   - data
                 properties:
                   object:
-                    type: string
-                    enum:
-                      - list
+                    description: The object type, which is always `list`.
+                    const: list
                   data:
                     type: array
                     items:
@@ -5220,8 +5232,8 @@ paths:
           required: true
           schema:
             type: string
-          description: The ID of the endpoint to retrieve
-          example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
+            description: The ID of the endpoint to retrieve
+            example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
       responses:
         '200':
           description: '200'
@@ -5314,8 +5326,8 @@ paths:
           required: true
           schema:
             type: string
-          description: The ID of the endpoint to update
-          example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
+            description: The ID of the endpoint to update
+            example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
       requestBody:
         required: true
         content:
@@ -5425,8 +5437,8 @@ paths:
           required: true
           schema:
             type: string
-          description: The ID of the endpoint to delete
-          example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
+            description: The ID of the endpoint to delete
+            example: endpoint-d23901de-ef8f-44bf-b3e7-de9c1ca8f2d7
       responses:
         '204':
           description: 'No Content - Endpoint successfully deleted'
@@ -5524,10 +5536,10 @@ paths:
           required: false
           schema:
             type: string
-          description: >
-            Filter hardware configurations by model compatibility. When provided,
-            the response includes availability status for each compatible configuration.
-          example: meta-llama/Llama-3-70b-chat-hf
+            description: |
+              Filter hardware configurations by model compatibility. When provided,
+              the response includes availability status for each compatible configuration.
+            example: meta-llama/Llama-3-70b-chat-hf
       responses:
         '200':
           description: 'List of available hardware configurations'
@@ -5540,9 +5552,8 @@ paths:
                   - data
                 properties:
                   object:
-                    type: string
-                    enum:
-                      - list
+                    description: The object type, which is always `list`.
+                    const: list
                   data:
                     type: array
                     items:
@@ -5994,10 +6005,10 @@ paths:
         - name: id
           in: path
           required: true
-          description: Job ID
           schema:
             type: string
-          example: 'batch_job_abc123def456'
+            description: The ID of the batch job to retrieve
+            example: batch_job_abc123def456
       responses:
         '200':
           description: OK
@@ -6104,10 +6115,10 @@ paths:
         - name: id
           in: path
           required: true
-          description: Job ID
           schema:
             type: string
-          example: 'batch_job_abc123def456'
+            description: The ID of the batch job to cancel
+            example: batch_job_abc123def456
       responses:
         '200':
           description: OK
@@ -6346,19 +6357,14 @@ paths:
           required: false
           schema:
             type: string
-            default: "pending"
+            description: Filter evaluation jobs by status
         - name: limit
           in: query
           required: false
           schema:
             type: integer
             default: 10
-        - name: userId
-          in: query
-          required: false
-          description: "Admin users can specify a user ID to filter jobs. Pass empty string to get all jobs."
-          schema:
-            type: string
+            description: Limit the number of results
       responses:
         "200":
           description: "evaluation jobs retrieved successfully"
@@ -6392,6 +6398,7 @@ paths:
           required: false
           schema:
             type: string
+            description: Filter models by source
             default: "all"
       responses:
         "200":
@@ -6481,6 +6488,7 @@ paths:
           in: path
           required: true
           schema:
+            description: The ID of the evaluation job to retrieve
             type: string
       responses:
         "200":
@@ -6569,6 +6577,7 @@ paths:
           in: path
           required: true
           schema:
+            description: The ID of the evaluation job to get the status of
             type: string
       responses:
         "200":
@@ -6803,10 +6812,7 @@ paths:
           required: true
           schema:
             type: string
-            enum:
-              - openai/whisper-large-v3
-            default: openai/whisper-large-v3
-          description: The Whisper model to use for transcription
+            description: The Whisper model to use for transcription
         - in: query
           name: input_audio_format
           required: true
@@ -6888,11 +6894,11 @@ paths:
       description: Get the current queue statistics for a model, including pending and running job counts.
       operationId: getQueueMetrics
       parameters:
-        - description: Model name to get metrics for
+        - name: model
           in: query
-          name: model
           required: true
           schema:
+            description: Model name to get metrics for
             type: string
       responses:
         "200":
@@ -6927,17 +6933,17 @@ paths:
       description: Poll the current status of a previously submitted job. Provide the request_id and model as query parameters.
       operationId: getQueueJobStatus
       parameters:
-        - description: Request ID returned from the submit endpoint
+        - name: request_id
           in: query
-          name: request_id
           required: true
           schema:
+            description: Request ID returned from the submit endpoint
             type: string
-        - description: Model name the job was submitted to
+        - name: model 
           in: query
-          name: model
           required: true
           schema:
+            description: Model name the job was submitted to
             type: string
       responses:
         "200":
@@ -7043,18 +7049,19 @@ paths:
           in: query
           required: false
           schema:
+            description: Status of the training sessions to list
             $ref: '#/components/schemas/RL.TrainingSessionStatus'
         - name: limit
-          description: Maximum number of sessions to return (1-100), defaults to 20
           in: query
           required: false
           schema:
+            description: Maximum number of sessions to return (1-100), defaults to 20
             type: integer
         - name: offset
-          description: Number of sessions to skip
           in: query
           required: false
           schema:
+            description: Number of sessions to skip
             type: integer
     post:
       summary: Create training session
@@ -7102,10 +7109,10 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
-          description: ID of the training session
           in: path
           required: true
           schema:
+            description: ID of the training session
             type: string
   /rl/training-sessions/{session_id}/operations/forward-backward/{operation_id}:
     get:
@@ -7128,16 +7135,16 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
-          description: Training session ID
           in: path
           required: true
           schema:
+            description: Training session ID
             type: string
         - name: operation_id
-          description: Operation ID
           in: path
           required: true
           schema:
+            description: Operation ID
             type: string
   /rl/training-sessions/{session_id}/operations/optim-step/{operation_id}:
     get:
@@ -7160,16 +7167,16 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
-          description: Training session ID
           in: path
           required: true
           schema:
+            description: Training session ID
             type: string
         - name: operation_id
-          description: Operation ID
           in: path
           required: true
           schema:
+            description: Operation ID
             type: string
   /rl/training-sessions/{session_id}/operations/sample/{operation_id}:
     get:
@@ -7192,16 +7199,16 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
-          description: Training session ID
           in: path
           required: true
           schema:
+            description: Training session ID
             type: string
         - name: operation_id
-          description: Operation ID
           in: path
           required: true
           schema:
+            description: Operation ID
             type: string
   /rl/training-sessions/{session_id}:forward-backward:
     post:
@@ -7230,10 +7237,10 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
-          description: Training session ID
           in: path
           required: true
           schema:
+            description: Training session ID
             type: string
   /rl/training-sessions/{session_id}:optim-step:
     post:
@@ -7262,10 +7269,10 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
-          description: Training session ID
           in: path
           required: true
           schema:
+            description: Training session ID
             type: string
   /rl/training-sessions/{session_id}:sample:
     post:
@@ -7294,10 +7301,10 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
-          description: Training session ID
           in: path
           required: true
           schema:
+            description: Training session ID
             type: string
   /rl/training-sessions/{session_id}:stop:
     post:
@@ -7320,10 +7327,10 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       parameters:
         - name: session_id
-          description: ID of the training session
           in: path
           required: true
           schema:
+            description: ID of the training session
             type: string
 
 components:
@@ -7848,12 +7855,12 @@ components:
       type: object
       properties:
           cluster_type:
+            description: Type of cluster to create.
             type: string
             enum: [KUBERNETES, SLURM]
           region:
-            description: Region to create the GPU cluster in. Valid values are us-central-8 and us-central-4.
+            description: Region to create the GPU cluster in. Usable regions can be found from `client.clusters.list_regions()`
             type: string
-            enum: [us-central-8, us-central-4]
           gpu_type:
             description: Type of GPU to use in the cluster
             type: string
@@ -7885,9 +7892,14 @@ components:
           shared_volume:
             x-stainless-terraform-configurability: computed
             $ref: '#/components/schemas/GPUClustersSharedVolumeCreateRequest'
+            description: Inline configuration to create a shared volume with the cluster creation.
           volume_id:
+            description: ID of an existing volume to use with the cluster creation.
             type: string
           billing_type:
+            description: |
+              RESERVED billing types allow you to specify the duration of the cluster reservation via the duration_days field.
+              ON_DEMAND billing types will give you ownership of the cluster until you delete it.
             x-stainless-terraform-configurability: computed
             type: string
             enum:
@@ -7943,6 +7955,7 @@ components:
         cluster_id:
           type: string
         cluster_type:
+          description: Type of cluster.
           enum: [KUBERNETES, SLURM]
         region:
           type: string
@@ -7998,8 +8011,10 @@ components:
         type: object
         properties:
           cluster_type:
+            description: Type of cluster to update.
             enum: [KUBERNETES, SLURM]
           num_gpus:
+            description: Number of GPUs to allocate in the cluster. This must be multiple of 8. For example, 8, 16 or 24
             type: integer
     GPUClusterVolume:
       type: object
@@ -8040,26 +8055,6 @@ components:
               - H100_SXM_INF
           error:
             $ref: '#/components/schemas/ErrorResponse'
-    Region:
-      type: object
-      required:
-        - id
-        - name
-        - availability_zones
-        - driver_versions
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        availability_zones:
-          type: array
-          items:
-            type: string
-        driver_versions:
-          type: array
-          items:
-            type: string
     RegionListResponse:
       type: object
       required: [regions]
@@ -8067,7 +8062,25 @@ components:
         regions:
           type: array
           items:
-            $ref: '#/components/schemas/Region'
+            type: object
+            required:
+              - name
+              - availability_zones
+              - driver_versions
+            properties:
+              name:
+                description: Identifiable name of the region.
+                type: string
+              driver_versions:
+                description: List of supported identifiable driver versions available in the region.
+                type: array
+                items:
+                  type: string
+              supported_instance_types:
+                description: List of supported identifiable gpus available in the region.
+                type: array
+                items:
+                  type: string
     GPUClustersSharedVolumeCreateRequest:
       type: object
       required:
@@ -8076,6 +8089,7 @@ components:
         - region
       properties:
         volume_name:
+          description: Customizable name of the volume to create.
           type: string
         size_tib:
           description: Volume size in whole tebibytes (TiB).
@@ -8098,12 +8112,16 @@ components:
         - status
       properties:
         volume_id:
+          description: ID of the volume.
           type: string
         volume_name:
+          description: Provided name of the volume.
           type: string
         size_tib:
+          description: Size of the volume in whole tebibytes (TiB).
           type: integer
         status:
+          description: Deployment status of the volume.
           type: string
           enum:
             - available
@@ -8113,8 +8131,10 @@ components:
       type: object
       properties:
         volume_id:
+          description: ID of the volume to update.
           type: string
         size_tib:
+          description: Size of the volume in whole tebibytes (TiB).
           type: integer
     GPUClustersSharedVolumes:
       type: object
@@ -8140,9 +8160,11 @@ components:
       required: ['model', 'voices']
       properties:
         model:
+          description: Model name.
           type: string
 
         voices:
+          description: List of available voices for the model.
           type: array
           items:
             type: object
@@ -8151,6 +8173,7 @@ components:
               id:
                 type: string
               name:
+                description: Voice name to be used for audio inference.
                 type: string
 
     ListAvailibilityZonesResponse:
@@ -8239,11 +8262,8 @@ components:
         - results
       properties:
         object:
-          type: string
-          description: Object type
-          enum:
-            - rerank
-          example: rerank
+          description: The object type, which is always `rerank`.
+          const: rerank
         id:
           type: string
           description: Request ID
@@ -8510,9 +8530,8 @@ components:
         model:
           type: string
         object:
-          type: string
-          enum:
-            - text.completion
+          description: The object type, which is always `text.completion`.
+          const: text.completion
       required:
         - id
         - choices
@@ -8544,9 +8563,8 @@ components:
         created:
           type: integer
         object:
-          type: string
-          enum:
-            - completion.chunk
+          description: The object type, which is always `completion.chunk`.
+          const: completion.chunk
         choices:
           title: CompletionChoices
           type: array
@@ -8815,6 +8833,7 @@ components:
         compliance:
           const: hipaa
         chat_template_kwargs:
+          description: Additional configuration to pass to model engine. 
           type: object
           additional_properties: true
         safety_model:
@@ -8827,11 +8846,11 @@ components:
           description: Controls the level of reasoning effort the model should apply when generating responses. Higher values may result in more thoughtful and detailed responses but may take longer to generate.
           example: 'medium'
         reasoning:
+          description: For models that support toggling reasoning functionality, this object can be used to control that functionality.
           type: object
           properties:
             enabled:
               type: boolean
-              description: For models that support toggling reasoning functionality, this object can be used to control that functionality.
 
     ResponseFormatText:
       type: object
@@ -9124,9 +9143,8 @@ components:
         model:
           type: string
         object:
-          type: string
-          enum:
-            - chat.completion
+          description: The object type, which is always `chat.completion`.
+          const: chat.completion
         warnings:
           type: array
           items:
@@ -9152,9 +9170,8 @@ components:
         id:
           type: string
         object:
-          type: string
-          enum:
-            - chat.completion.chunk
+          description: The object type, which is always `chat.completion.chunk`.
+          const: chat.completion.chunk
         created:
           type: integer
         system_fingerprint:
@@ -9673,9 +9690,8 @@ components:
       required: [object, model, b64]
       properties:
         object:
-          type: string
-          enum:
-            - audio.tts.chunk
+          description: The object type, which is always `audio.tts.chunk`.
+          const: audio.tts.chunk
         model:
           type: string
           example: cartesia/sonic
@@ -9790,9 +9806,8 @@ components:
         - data
       properties:
         object:
-          type: string
-          enum:
-            - list
+          description: The object type, which is always `list`.
+          const: list
         model:
           type: string
         data:
@@ -9802,9 +9817,8 @@ components:
             required: [index, object, embedding]
             properties:
               object:
-                type: string
-                enum:
-                  - embedding
+                description: The object type, which is always `embedding`.
+                const: embedding
               embedding:
                 type: array
                 items:
@@ -9824,8 +9838,8 @@ components:
           type: string
           example: 'Austism/chronos-hermes-13b'
         object:
-          type: string
-          example: 'model'
+          description: The object type, which is always `model`.
+          const: model
         created:
           type: integer
           example: 1692896905
@@ -9933,9 +9947,8 @@ components:
         model:
           type: string
         object:
-          enum:
-            - list
-          example: 'list'
+          description: The object type, which is always `list`.
+          const: list
         data:
           type: array
           items:
@@ -10107,6 +10120,7 @@ components:
               type: string
 
     FileResponse:
+      description: Structured information describing a file uploaded to Together.
       type: object
       required:
         - id
@@ -10120,26 +10134,32 @@ components:
         - LineCount
       properties:
         id:
+          description: ID of the file.
           type: string
         object:
-          type: string
-          example: 'file'
+          description: The object type, which is always `file`.
+          const: file
         created_at:
+          description: The timestamp when the file was created.
           type: integer
-          example: 1715021438
         filename:
+          description: The name of the file as it was uploaded.
           type: string
           example: 'my_file.jsonl'
         bytes:
+          description: The number of bytes in the file.
           type: integer
-          example: 2664
         purpose:
+          description: The purpose of the file as it was uploaded.
           $ref: '#/components/schemas/FilePurpose'
         Processed:
+          description: Whether the file has been parsed and analyzed for correctness for fine-tuning.
           type: boolean
         FileType:
+          description: The type of the file such as `jsonl`, `csv`, or `parquet`.
           $ref: '#/components/schemas/FileType'
         LineCount:
+          description: The number of lines in the file.
           type: integer
     FileList:
       required:
@@ -10150,17 +10170,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FileResponse'
-    FileObject:
-      type: object
-      properties:
-        object:
-          type: string
-        id:
-          type: string
-        filename:
-          type: string
-        size:
-          type: integer
     FilePurpose:
       type: string
       description: The purpose of the file
@@ -10525,8 +10534,8 @@ components:
         - hash
       properties:
         object:
-          type: string
-          enum: [fine-tune-event]
+          description: The object type, which is always `fine-tune-event`.
+          const: fine-tune-event
         created_at:
           type: string
         level:
@@ -10804,9 +10813,8 @@ components:
         - updated_at
       properties:
         object:
-          type: string
-          enum:
-            - hardware
+          description: The object type, which is always `hardware`.
+          const: hardware
         id:
           type: string
           description: Unique identifier for the hardware configuration
@@ -10891,11 +10899,8 @@ components:
         - created_at
       properties:
         object:
-          type: string
-          enum:
-            - endpoint
-          description: The type of object
-          example: endpoint
+          description: The object type, which is always `endpoint`.
+          const: endpoint
         id:
           type: string
           description: Unique identifier for the endpoint
@@ -10960,11 +10965,8 @@ components:
         - created_at
       properties:
         object:
-          type: string
-          enum:
-            - endpoint
-          description: The type of object
-          example: endpoint
+          description: The object type, which is always `endpoint`.
+          const: endpoint
         id:
           type: string
           description: Unique identifier for the endpoint
@@ -11970,9 +11972,7 @@ components:
           description: Unique identifier for the video job.
         object:
           description: The object type, which is always video.
-          type: string
-          enum:
-            - video
+          const: video
         model:
           type: string
           description: The video generation model that produced the job.
@@ -12200,8 +12200,8 @@ components:
             $ref: "#/components/schemas/DeploymentResponseItem"
           type: array
         object:
-          description: Object is the type identifier for this response (always "list")
-          type: string
+          description: The object type, which is always `list`.
+          const: list
       type: object
     DeploymentLogs:
       properties:
@@ -12286,8 +12286,8 @@ components:
           description: Name is the name of the deployment
           type: string
         object:
-          description: Object is the type identifier for this response (always "deployment")
-          type: string
+          description: The object type, which is always `deployment`.
+          const: deployment
         port:
           description: Port is the container port that the deployment exposes
           type: integer
@@ -12387,8 +12387,8 @@ components:
             $ref: "#/components/schemas/SecretResponseItem"
           type: array
         object:
-          description: Object is the type identifier for this response (always "list")
-          type: string
+          description: The object type, which is always `list`.
+          const: list
       type: object
     ListVolumesResponse:
       properties:
@@ -12398,8 +12398,8 @@ components:
             $ref: "#/components/schemas/VolumeResponseItem"
           type: array
         object:
-          description: Object is the type identifier for this response (always "list")
-          type: string
+          description: The object type, which is always `list`.
+          const: list
       type: object
     ReplicaEvent:
       properties:
@@ -12460,8 +12460,8 @@ components:
           description: Name is the name/key of the secret
           type: string
         object:
-          description: Object is the type identifier for this response (always "secret")
-          type: string
+          description: The object type, which is always `secret`.
+          const: secret
         updated_at:
           description: UpdatedAt is the ISO8601 timestamp when this secret was last updated
           type: string
@@ -12625,8 +12625,8 @@ components:
           description: Name is the name of the volume
           type: string
         object:
-          description: Object is the type identifier for this response (always "volume")
-          type: string
+          description: The object type, which is always `volume`.
+          const: volume
         type:
           allOf:
             - $ref: "#/components/schemas/VolumeType"
