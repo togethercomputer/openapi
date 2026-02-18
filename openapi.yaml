@@ -10131,7 +10131,6 @@ components:
         - purpose
         - FileType
         - Processed
-        - LineCount
       properties:
         id:
           description: ID of the file.
@@ -10158,9 +10157,6 @@ components:
         FileType:
           description: The type of the file such as `jsonl`, `csv`, or `parquet`.
           $ref: '#/components/schemas/FileType'
-        LineCount:
-          description: The number of lines in the file.
-          type: integer
     FileList:
       required:
         - data
