@@ -7034,16 +7034,13 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  $ref: '#/components/schemas/RL.TrainingSession'
+                $ref: '#/components/schemas/RL.TrainingSessionsListResponse'
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RpcStatus'
       parameters:
         - name: status
           in: query
@@ -7057,12 +7054,16 @@ paths:
           schema:
             description: Maximum number of sessions to return (1-100), defaults to 20
             type: integer
+            format: int32
+            default: "20"
         - name: offset
           in: query
           required: false
           schema:
             description: Number of sessions to skip
             type: integer
+            format: int32
+            default: "0"
     post:
       summary: Create training session
       description: Creates a training session and returns its details.
@@ -7086,7 +7087,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RpcStatus'
         
   /rl/training-sessions/{session_id}:
     get:
@@ -7106,7 +7107,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RpcStatus'
       parameters:
         - name: session_id
           in: path
@@ -7132,7 +7133,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RpcStatus'
       parameters:
         - name: session_id
           in: path
@@ -7164,7 +7165,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RpcStatus'
       parameters:
         - name: session_id
           in: path
@@ -7196,7 +7197,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RpcStatus'
       parameters:
         - name: session_id
           in: path
@@ -7210,7 +7211,7 @@ paths:
           schema:
             description: Operation ID
             type: string
-  /rl/training-sessions/{session_id}:forward-backward:
+  /rl/training-sessions/{session_id}/operations/forward-backward:
     post:
       summary: Forward-backward pass
       description: Submits a forward-backward pass operation that will asynchronously compute gradients via backpropagation.
@@ -7234,7 +7235,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RpcStatus'
       parameters:
         - name: session_id
           in: path
@@ -7242,7 +7243,7 @@ paths:
           schema:
             description: Training session ID
             type: string
-  /rl/training-sessions/{session_id}:optim-step:
+  /rl/training-sessions/{session_id}/operations/optim-step:
     post:
       summary: Optimizer step
       description: Submits an optimizer step operation that will asynchronously apply accumulated gradients to update model parameters.
@@ -7266,7 +7267,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RpcStatus'
       parameters:
         - name: session_id
           in: path
@@ -7274,7 +7275,7 @@ paths:
           schema:
             description: Training session ID
             type: string
-  /rl/training-sessions/{session_id}:sample:
+  /rl/training-sessions/{session_id}/operations/sample:
     post:
       summary: Sample
       description: Submits a sample operation that will asynchronously generate text completions with logprobs.
@@ -7298,7 +7299,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RpcStatus'
       parameters:
         - name: session_id
           in: path
@@ -7306,7 +7307,7 @@ paths:
           schema:
             description: Training session ID
             type: string
-  /rl/training-sessions/{session_id}:stop:
+  /rl/training-sessions/{session_id}/stop:
     post:
       summary: Stop training session
       description: Stops a training session.
@@ -7324,7 +7325,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RpcStatus'
       parameters:
         - name: session_id
           in: path
@@ -7348,7 +7349,9 @@ components:
         learning_rate:
           description: Learning rate for this step.
           type: number
-          default: 0.0001
+          format: float
+          example: 0.0001
+          default: "0.0001"
         adamw_params:
           $ref: '#/components/schemas/RL.AdamWOptimizerParams'
     RL.SampleBody:
@@ -7364,8 +7367,9 @@ components:
           description: Optional sampling parameters
         num_samples:
           type: integer
+          format: int64
           example: 1
-          default: 1
+          default: "1"
           description: Number of completions to generate for this prompt
     RL.ForwardBackwardBody:
       type: object
@@ -7398,23 +7402,27 @@ components:
       properties:
         max_tokens:
           type: integer
+          format: int32
           example: 100
-          default: 100
+          default: "100"
           description: Maximum number of tokens to generate per completion
         temperature:
           type: number
           example: 1
-          default: 1.0
+          format: float
+          default: "1.0"
           description: Sampling temperature
         top_p:
           type: number
           example: 1
-          default: 1.0
+          format: float
+          default: "1.0"
           description: Nucleus sampling probability threshold
         top_k:
           type: integer
+          format: int32
           example: -1
-          default: -1
+          default: "-1"
           description: Top-k sampling limit
         stop:
           type: array
@@ -7425,7 +7433,8 @@ components:
             type: string
           description: Generation stops when any of these strings is produced
         seed:
-          type: integer
+          type: string
+          format: int64
           example: 42
           description: Random seed for reproducibility
     RL.InputChunk:
@@ -7433,6 +7442,24 @@ components:
       properties:
         encoded_text:
           $ref: '#/components/schemas/RL.EncodedText'
+    RL.ListMeta:
+      type: object
+      properties:
+        total:
+          type: string
+          format: int64
+          example: 42
+          description: Total number of items matching the filter
+        limit:
+          type: integer
+          format: int32
+          example: 20
+          description: Maximum number of items returned per page
+        offset:
+          type: integer
+          format: int32
+          example: 0
+          description: Number of items skipped
     RL.EncodedText:
       type: object
       properties:
@@ -7444,7 +7471,8 @@ components:
             - 456
             - 789
           items:
-            type: integer
+            type: string
+            format: int64
     RL.DType:
       type: string
       enum:
@@ -7469,20 +7497,34 @@ components:
       properties:
         clip_low:
           type: number
+          format: float
           example: 0.2
+          default: "0.2"
           description: Lower clip bound for importance ratio
         clip_high:
           type: number
+          format: float
           example: 0.28
+          default: "0.28"
           description: Upper clip bound for importance ratio
         beta:
           type: number
+          format: float
           example: 0.1
+          default: "0.0"
           description: KL penalty coefficient
         agg_type:
-          type: string
-          example: fixed_horizon
+          $ref: '#/components/schemas/RL.GRPOLossAggregationType'
+          example: GRPO_LOSS_AGGREGATION_TYPE_FIXED_HORIZON
+          default: "GRPO_LOSS_AGGREGATION_TYPE_FIXED_HORIZON"
           description: Aggregation type for loss computation
+    RL.GRPOLossAggregationType:
+      type: string
+      enum:
+        - GRPO_LOSS_AGGREGATION_TYPE_UNSPECIFIED
+        - GRPO_LOSS_AGGREGATION_TYPE_FIXED_HORIZON
+        - GRPO_LOSS_AGGREGATION_TYPE_PER_TOKEN
+      default: GRPO_LOSS_AGGREGATION_TYPE_UNSPECIFIED
     RL.LossConfig:
       type: object
       required:
@@ -7509,7 +7551,8 @@ components:
             - 456
             - 789
           items:
-            type: integer
+            type: string
+            format: int64
         dtype:
           description: Data type of the integer array
           $ref: '#/components/schemas/RL.DType'
@@ -7528,7 +7571,8 @@ components:
             - 0
             - 1
           items:
-            type: integer
+            type: string
+            format: int64
         dtype:
           description: Data type of the integer array (must be D_TYPE_INT64)
           $ref: '#/components/schemas/RL.DType'
@@ -7546,6 +7590,7 @@ components:
             - 0.5
           items:
             type: number
+            format: float
         dtype:
           description: Data type of the float array (D_TYPE_FLOAT32 or D_TYPE_BFLOAT16)
           $ref: '#/components/schemas/RL.DType'
@@ -7563,6 +7608,7 @@ components:
             - -0.8
           items:
             type: number
+            format: float
         dtype:
           description: Data type of the float array (D_TYPE_FLOAT32 or D_TYPE_BFLOAT16)
           $ref: '#/components/schemas/RL.DType'
@@ -7608,21 +7654,21 @@ components:
     RL.OptimStepOperation:
       type: object
       properties:
-        operation_id:
+        id:
           type: string
           example: 550e8400-e29b-41d4-a716-446655440000
           description: Operation ID
         status:
           $ref: '#/components/schemas/RL.TrainingOperationStatus'
-          description: Current operation status
-        data:
+          description: Operation status
+        output:
           $ref: '#/components/schemas/RL.OptimStepResult'
         error:
           $ref: '#/components/schemas/RL.TrainingOperationError'
     RL.SampleOperation:
       type: object
       properties:
-        operation_id:
+        id:
           type: string
           example: 550e8400-e29b-41d4-a716-446655440000
           description: Operation ID
@@ -7630,7 +7676,7 @@ components:
           $ref: '#/components/schemas/RL.TrainingOperationStatus'
           example: TRAINING_OPERATION_STATUS_PENDING
           description: Operation status
-        data:
+        output:
           $ref: '#/components/schemas/RL.SampleResult'
         error:
           $ref: '#/components/schemas/RL.TrainingOperationError'
@@ -7639,7 +7685,8 @@ components:
       properties:
         step:
           description: Step number
-          type: integer
+          type: string
+          format: uint64
           example: 100
     RL.SampleResult:
       type: object
@@ -7660,7 +7707,8 @@ components:
             - 456
             - 789
           items:
-            type: integer
+            type: string
+            format: int64
           description: Generated token IDs
         logprobs:
           type: array
@@ -7669,7 +7717,8 @@ components:
             - -1.2
             - -0.3
           items:
-            type: integer
+            type: number
+            format: double
           description: Log probabilities for each generated token
         stop_reason:
           type: string
@@ -7678,14 +7727,15 @@ components:
     RL.ForwardBackwardOperation:
       type: object
       properties:
-        operation_id:
+        id:
           type: string
+          example: 550e8400-e29b-41d4-a716-446655440000
           description: Operation ID
         status:
           $ref: '#/components/schemas/RL.TrainingOperationStatus'
           example: TRAINING_OPERATION_STATUS_PENDING
           description: Operation status
-        data:
+        output:
           $ref: '#/components/schemas/RL.ForwardBackwardResult'
         error:
           $ref: '#/components/schemas/RL.TrainingOperationError'
@@ -7701,17 +7751,27 @@ components:
           description: Loss-specific metrics (e.g., KL divergence, clip fraction for GRPO)
           additionalProperties:
             type: number
+            format: double
     RL.TrainingOperationError:
       type: object
       properties:
         code:
           description: Application error code
-          type: string
-          example: OPERATION_TIMEOUT
+          $ref: '#/components/schemas/RL.TrainingOperationErrorCode'
+          example: TRAINING_OPERATION_ERROR_CODE_TIMEOUT
         message:
           description: Human-readable error message
           type: string
           example: Operation timed out
+    RL.TrainingOperationErrorCode:
+      type: string
+      enum:
+        - TRAINING_OPERATION_ERROR_CODE_UNSPECIFIED
+        - TRAINING_OPERATION_ERROR_CODE_RESOURCE_EXHAUSTED
+        - TRAINING_OPERATION_ERROR_CODE_TIMEOUT
+        - TRAINING_OPERATION_ERROR_CODE_INTERNAL_ERROR
+        - TRAINING_OPERATION_ERROR_CODE_SESSION_NOT_ACTIVE
+      default: TRAINING_OPERATION_ERROR_CODE_UNSPECIFIED
     RL.TrainingOperationStatus:
       type: string
       enum:
@@ -7747,6 +7807,7 @@ components:
         - TRAINING_SESSION_STATUS_STOPPED
         - TRAINING_SESSION_STATUS_STOPPING
         - TRAINING_SESSION_STATUS_ERROR
+        - TRAINING_SESSION_STATUS_EXPIRED
     RL.TrainingSession:
       type: object
       properties:
@@ -7764,7 +7825,9 @@ components:
           type: string
         step:
           description: Current training step
-          type: integer
+          type: string
+          format: uint64
+          default: "0"
         created_at:
           type: string
           format: date-time
@@ -7775,21 +7838,39 @@ components:
           description: Timestamp when the training session was last updated
         lora_config:
           $ref: '#/components/schemas/RL.LoraConfig'
+    RL.TrainingSessionsListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/RL.TrainingSession'
+          description: List of training sessions
+        meta:
+          $ref: '#/components/schemas/RL.ListMeta'
+          description: Pagination metadata
     RL.LoraConfig:
       type: object
       description: LoRA adapter configuration
       properties:
         rank:
           type: integer
-          default: 8
+          format: int64
+          example: 8
+          default: "8"
           description: Rank of the LoRA adapter
         alpha:
           type: integer
-          default: 16
+          format: int64
+          example: 16
+          default: "16"
           description: Alpha of the LoRA adapter
         dropout:
           type: number
-          default: 0.05
+          format: float
+          example: 0.05
+          default: "0.05"
           description: Dropout of the LoRA adapter
     RL.AdamWOptimizerParams:
       description: AdamW optimizer parameters
@@ -7798,19 +7879,27 @@ components:
         beta1:
           description: First moment decay rate
           type: number
-          default: 0.9
+          format: float
+          example: 0.9
+          default: "0.9"
         beta2:
           description: Second moment decay rate
           type: number
-          default: 0.95
+          format: float
+          example: 0.95
+          default: "0.95"
         eps:
           description: Epsilon for numerical stability
           type: number
-          default: 1e-8
+          format: float
+          example: 1e-08
+          default: "1e-8"
         weight_decay:
           description: Weight decay coefficient
           type: number
-          default: 0.1
+          format: float
+          example: 0.1
+          default: "0.1"
     ErrorResponse:
       type: object
       properties:
@@ -7818,6 +7907,25 @@ components:
           type: integer
         message:
           type: string
+    ProtobufAny:
+      type: object
+      properties:
+        '@type':
+          type: string
+      additionalProperties: {}
+    RpcStatus:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/ProtobufAny'
     GPUClusterControlPlaneNode:
       type: object
       required:
