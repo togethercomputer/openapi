@@ -962,9 +962,9 @@ paths:
                 $ref: '#/components/schemas/ListVoicesResponse'
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -976,7 +976,7 @@ paths:
 
             print(response.data)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -1022,9 +1022,9 @@ paths:
       operationId: retrieveVideo
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -1036,7 +1036,7 @@ paths:
 
             print(response.id)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -1100,9 +1100,9 @@ paths:
         - url: https://api.together.xyz/v2
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -1117,7 +1117,7 @@ paths:
 
             print(response.id)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -1181,9 +1181,26 @@ paths:
       description: Generate a model response for a given chat conversation. Supports single queries and multi-turn conversations with system, user, and assistant messages.
       x-codeSamples:
         - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            # Docs for v1 can be found by changing the above selector ^
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.chat.completions.create(
+                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": "What are some fun things to do in New York?"},
+                ]
+            )
+        - lang: Python
           label: Together AI SDK (v1)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -1200,23 +1217,6 @@ paths:
             )
 
             print(response.choices[0].message.content)
-        - lang: Python
-          label: Together AI SDK (v2)
-          source: |
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            response = client.chat.completions.create(
-                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": "What are some fun things to do in New York?"},
-                ]
-            )
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -1326,9 +1326,9 @@ paths:
       description: Generate text completions for a given prompt using a language, code, or image model.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -1344,7 +1344,7 @@ paths:
 
             print(response.choices[0].text)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -1463,9 +1463,9 @@ paths:
       description: Generate vector embeddings for one or more text inputs. Returns numerical arrays representing semantic meaning, useful for search, classification, and retrieval.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -1480,7 +1480,7 @@ paths:
 
             print(response.data[0].embedding)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -1592,9 +1592,9 @@ paths:
       description: Lists all of Together's open-source models
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -1607,7 +1607,7 @@ paths:
             for model in models:
                 print(model.id)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -1705,25 +1705,9 @@ paths:
       description: Upload a custom model or adapter from Hugging Face or S3
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            response = client.models.upload(
-                "My-Fine-Tuned-Model",
-                "https://ml-models.s3.us-west-2.amazonaws.com/models/my-fine-tuned-model.tar.gz",
-            )
-
-            print(response.job_id)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -1737,6 +1721,22 @@ paths:
             )
 
             print(response.data.job_id)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.models.upload(
+                "My-Fine-Tuned-Model",
+                "https://ml-models.s3.us-west-2.amazonaws.com/models/my-fine-tuned-model.tar.gz",
+            )
+
+            print(response.job_id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -1835,9 +1835,9 @@ paths:
       description: Use an image model to generate an image for a given prompt.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -1853,7 +1853,7 @@ paths:
 
             print(response.data[0].url)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -2015,9 +2015,9 @@ paths:
       description: List the metadata for all uploaded data files.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -2030,7 +2030,7 @@ paths:
             for file in response.data:
                 print(file.id)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -2091,9 +2091,9 @@ paths:
       description: Retrieve the metadata for a single uploaded data file.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -2105,7 +2105,7 @@ paths:
 
             print(file)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -2167,9 +2167,9 @@ paths:
       description: Delete a previously uploaded data file.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -2181,7 +2181,7 @@ paths:
 
             print(response)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -2243,22 +2243,9 @@ paths:
       description: Get the contents of a single uploaded data file.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            file = client.files.retrieve_content(id="file-id")
-
-            print(file.filename)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -2269,6 +2256,19 @@ paths:
             with client.files.with_streaming_response.content(id="file-id") as response:
               for line in response.iter_lines():
                 print(line)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            file = client.files.retrieve_content(id="file-id")
+
+            print(file.filename)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -2329,9 +2329,9 @@ paths:
       description: Upload a file with specified purpose, file name, and file type.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -2345,7 +2345,7 @@ paths:
 
             print(file.id)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -2448,9 +2448,9 @@ paths:
       description: Create a fine-tuning job with the provided model and training data.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -2465,7 +2465,7 @@ paths:
 
             print(response)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -2650,9 +2650,9 @@ paths:
       description: List the metadata for all fine-tuning jobs. Returns a list of FinetuneResponseTruncated objects.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -2665,7 +2665,7 @@ paths:
             for fine_tune in response.data:
                 print(f"ID: {fine_tune.id}, Status: {fine_tune.status}")
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -2801,9 +2801,9 @@ paths:
       description: List the metadata for a single fine-tuning job.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -2815,7 +2815,7 @@ paths:
 
             print(fine_tune)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -2877,9 +2877,9 @@ paths:
       description: Delete a fine-tuning job.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -2891,7 +2891,7 @@ paths:
 
             print(response)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -2973,22 +2973,9 @@ paths:
       description: List the events for a single fine-tuning job.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            events = client.fine_tuning.list_events(id="ft-id")
-
-            print(events)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -3000,6 +2987,19 @@ paths:
 
             for event in response.data:
                 print(event)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            events = client.fine_tuning.list_events(id="ft-id")
+
+            print(events)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -3051,9 +3051,9 @@ paths:
       description: List the checkpoints for a single fine-tuning job.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -3065,7 +3065,7 @@ paths:
 
             print(checkpoints)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -3128,23 +3128,9 @@ paths:
       description: Receive a compressed fine-tuned model or checkpoint.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            # This will download the content to a location on disk
-            response = client.fine_tuning.download(id="ft-id")
-
-            print(response)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -3159,6 +3145,20 @@ paths:
                 for line in response.iter_lines():
                     print(line)
 
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            # This will download the content to a location on disk
+            response = client.fine_tuning.download(id="ft-id")
+
+            print(response)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -3234,9 +3234,9 @@ paths:
       description: Cancel a currently running fine-tuning job. Returns a FinetuneResponseTruncated object.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -3248,7 +3248,7 @@ paths:
 
             print(response)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -3315,9 +3315,9 @@ paths:
       description: Rerank a list of documents by relevance to a query. Returns a relevance score and ordering index for each document.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -3355,7 +3355,7 @@ paths:
                 print(f"Title: {documents[result.index]['title']}")
                 print(f"Text: {documents[result.index]['text']}")
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -3550,26 +3550,9 @@ paths:
       description: Generate audio from input text
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            response = client.audio.speech.create(
-                model="cartesia/sonic-2",
-                input="The quick brown fox jumps over the lazy dog.",
-                voice="laidback woman",
-            )
-
-            response.stream_to_file("audio.wav")
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -3585,6 +3568,23 @@ paths:
 
             with response as stream:
               stream.stream_to_file("audio.wav")
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.audio.speech.create(
+                model="cartesia/sonic-2",
+                input="The quick brown fox jumps over the lazy dog.",
+                voice="laidback woman",
+            )
+
+            response.stream_to_file("audio.wav")
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -3995,9 +3995,9 @@ paths:
       description: Transcribes audio into text
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
 
             client = Together(
@@ -4013,7 +4013,7 @@ paths:
 
             print(response.text)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
 
@@ -4117,9 +4117,9 @@ paths:
       description: Translates audio into English
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -4137,7 +4137,7 @@ paths:
 
             print(response.text)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -4910,23 +4910,9 @@ paths:
       description: Returns a list of all endpoints associated with your account. You can filter the results by type (dedicated or serverless).
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            endpoints = client.endpoints.list()
-
-            for endpoint in endpoints:
-                print(endpoint.id)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -4937,6 +4923,20 @@ paths:
             response = client.endpoints.list()
 
             for endpoint in response.data:
+                print(endpoint.id)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            endpoints = client.endpoints.list()
+
+            for endpoint in endpoints:
                 print(endpoint.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
@@ -5045,27 +5045,9 @@ paths:
       description: Creates a new dedicated endpoint for serving models. The endpoint will automatically start after creation. You can deploy any supported model on hardware configurations that meet the model's requirements.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            endpoint = client.endpoints.create(
-                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
-                hardware="1x_nvidia_a100_80gb_sxm",
-                min_replicas=2,
-                max_replicas=5,
-            )
-
-            print(endpoint.id)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -5080,6 +5062,24 @@ paths:
                   "min_replicas": 2,
                   "max_replicas": 5,
                 }
+            )
+
+            print(endpoint.id)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            endpoint = client.endpoints.create(
+                model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                hardware="1x_nvidia_a100_80gb_sxm",
+                min_replicas=2,
+                max_replicas=5,
             )
 
             print(endpoint.id)
@@ -5169,22 +5169,9 @@ paths:
       description: Retrieves details about a specific endpoint, including its current state, configuration, and scaling settings.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            endpoint = client.endpoints.get("endpoint-id")
-
-            print(endpoint.id)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -5193,6 +5180,19 @@ paths:
             )
 
             endpoint = client.endpoints.retrieve("endpoint-id")
+
+            print(endpoint.id)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            endpoint = client.endpoints.get("endpoint-id")
 
             print(endpoint.id)
         - lang: TypeScript
@@ -5266,9 +5266,25 @@ paths:
       description: Updates an existing endpoint's configuration. You can modify the display name, autoscaling settings, or change the endpoint's state (start/stop).
       x-codeSamples:
         - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            # Docs for v1 can be found by changing the above selector ^
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            endpoint = client.endpoints.update(
+                "endpoint-id",
+                state="STOPPED"
+            )
+
+            print(endpoint)
+        - lang: Python
           label: Together AI SDK (v1)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -5386,9 +5402,22 @@ paths:
       description: Permanently deletes an endpoint. This action cannot be undone.
       x-codeSamples:
         - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            # Docs for v1 can be found by changing the above selector ^
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            endpoint = client.endpoints.delete("endpoint-id")
+
+            print(endpoint)
+        - lang: Python
           label: Together AI SDK (v1)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -5471,23 +5500,9 @@ paths:
         with that model, including their current availability status.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            response = client.endpoints.list_hardware()
-
-            for hardware in response:
-                print(hardware.id)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -5498,6 +5513,20 @@ paths:
             response = client.endpoints.list_hardware()
 
             for hardware in response.data:
+                print(hardware.id)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.endpoints.list_hardware()
+
+            for hardware in response:
                 print(hardware.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
@@ -5579,25 +5608,9 @@ paths:
         between calls to the same session.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            response = client.code_interpreter.run(
-                code="print('Hello world!')",
-                language="python",
-            )
-
-            print(response.data.outputs[0].data);
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -5606,6 +5619,22 @@ paths:
             )
 
             response = client.code_interpreter.execute(
+                code="print('Hello world!')",
+                language="python",
+            )
+
+            print(response.data.outputs[0].data);
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.code_interpreter.run(
                 code="print('Hello world!')",
                 language="python",
             )
@@ -5675,13 +5704,9 @@ paths:
         Lists all your currently active sessions.
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            # together v1 does not support this method
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -5693,6 +5718,10 @@ paths:
 
             for session in response.data.sessions:
                 print(session.id)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            # together v1 does not support this method
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -5743,23 +5772,9 @@ paths:
       description: List all batch jobs for the authenticated user
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            batches = client.batches.list_batches()
-
-            for batch in batches:
-                print(batch.id)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -5768,6 +5783,20 @@ paths:
             )
 
             batches = client.batches.list()
+
+            for batch in batches:
+                print(batch.id)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            batches = client.batches.list_batches()
 
             for batch in batches:
                 print(batch.id)
@@ -5830,22 +5859,9 @@ paths:
       description: Create a new batch job with the given input file and endpoint
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            batch = client.batches.create_batch("file_id", endpoint="/v1/chat/completions")
-
-            print(batch.id)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -5856,6 +5872,19 @@ paths:
             batch = client.batches.create(input_file_id="file_id", endpoint="/v1/chat/completions")
 
             print(batch.job)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            batch = client.batches.create_batch("file_id", endpoint="/v1/chat/completions")
+
+            print(batch.id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
           source: |
@@ -5943,22 +5972,9 @@ paths:
       description: Get details of a batch job by ID
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            batch = client.batches.get_batch("batch_id")
-
-            print(batch)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -5967,6 +5983,19 @@ paths:
             )
 
             batch = client.batches.retrieve("batch_id")
+
+            print(batch)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            batch = client.batches.get_batch("batch_id")
 
             print(batch)
         - lang: TypeScript
@@ -6053,9 +6082,9 @@ paths:
       description: Cancel a batch job by ID
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
+          label: Together AI SDK (v2)
           source: |
-            # Docs for v2 can be found by changing the above selector ^
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -6067,7 +6096,7 @@ paths:
 
             print(batch)
         - lang: Python
-          label: Together AI SDK (v2)
+          label: Together AI SDK (v1)
           source: |
             from together import Together
             import os
@@ -6164,30 +6193,9 @@ paths:
       operationId: createEvaluationJob
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            response = client.evaluation.create(
-                type="classify",
-                judge_model_name="meta-llama/Llama-3.1-70B-Instruct-Turbo",
-                judge_system_template="You are an expert evaluator...",
-                input_data_file_path="file-abc123",
-                labels=["good", "bad"],
-                pass_labels=["good"],
-                model_to_evaluate="meta-llama/Llama-3.1-8B-Instruct-Turbo"
-            )
-
-            print(response.workflow_id)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -6208,6 +6216,27 @@ paths:
                     pass_labels=["good"],
                     model_to_evaluate="meta-llama/Llama-3.1-8B-Instruct-Turbo"
                 )
+            )
+
+            print(response.workflow_id)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.evaluation.create(
+                type="classify",
+                judge_model_name="meta-llama/Llama-3.1-70B-Instruct-Turbo",
+                judge_system_template="You are an expert evaluator...",
+                input_data_file_path="file-abc123",
+                labels=["good", "bad"],
+                pass_labels=["good"],
+                model_to_evaluate="meta-llama/Llama-3.1-8B-Instruct-Turbo"
             )
 
             print(response.workflow_id)
@@ -6295,23 +6324,9 @@ paths:
       operationId: getAllEvaluationJobs
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            jobs = client.evaluation.list()
-
-            for job in jobs:
-                print(job.workflow_id)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -6322,6 +6337,20 @@ paths:
             response = client.evals.list()
 
             for job in response:
+                print(job.workflow_id)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            jobs = client.evaluation.list()
+
+            for job in jobs:
                 print(job.workflow_id)
         - lang: TypeScript
           label: Together AI SDK (TypeScript)
@@ -6433,22 +6462,9 @@ paths:
       operationId: getEvaluationJobDetails
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            response = client.evaluation.retrieve('eval_id')
-
-            print(response)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -6457,6 +6473,19 @@ paths:
             )
 
             response = client.evals.retrieve('eval_id')
+
+            print(response)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.evaluation.retrieve('eval_id')
 
             print(response)
         - lang: TypeScript
@@ -6518,23 +6547,9 @@ paths:
       operationId: getEvaluationJobStatusAndResults
       x-codeSamples:
         - lang: Python
-          label: Together AI SDK (v1)
-          source: |
-            # Docs for v2 can be found by changing the above selector ^
-            from together import Together
-            import os
-
-            client = Together(
-                api_key=os.environ.get("TOGETHER_API_KEY"),
-            )
-
-            response = client.evaluation.status('eval_id')
-
-            print(response.status)
-            print(response.results)
-        - lang: Python
           label: Together AI SDK (v2)
           source: |
+            # Docs for v1 can be found by changing the above selector ^
             from together import Together
             import os
 
@@ -6543,6 +6558,20 @@ paths:
             )
 
             response = client.evals.status('eval_id')
+
+            print(response.status)
+            print(response.results)
+        - lang: Python
+          label: Together AI SDK (v1)
+          source: |
+            from together import Together
+            import os
+
+            client = Together(
+                api_key=os.environ.get("TOGETHER_API_KEY"),
+            )
+
+            response = client.evaluation.status('eval_id')
 
             print(response.status)
             print(response.results)
