@@ -12191,12 +12191,13 @@ components:
             type: string
           type: array
         autoscaling:
-          additionalProperties:
-            type: string
-          description: 'Autoscaling configuration as key-value pairs. Example: {"metric":
-            "QueueBacklogPerWorker", "target": "10"} to scale based on queue
-            backlog'
-          type: object
+          description: 'Autoscaling configuration. Example: {"metric": "QueueBacklogPerWorker",
+            "target": 1.01} to scale based on queue backlog. Omit or set to null to
+            disable autoscaling'
+          oneOf:
+          - $ref: '#/components/schemas/HTTPAutoscalingConfig'
+          - $ref: '#/components/schemas/QueueAutoscalingConfig'
+          - $ref: '#/components/schemas/CustomMetricAutoscalingConfig'
         command:
           description: Command overrides the container's ENTRYPOINT. Provide as an array
             (e.g., ["/bin/sh", "-c"])
@@ -12351,11 +12352,12 @@ components:
             type: string
           type: array
         autoscaling:
-          additionalProperties:
-            type: string
-          description: Autoscaling contains autoscaling configuration parameters for this
-            deployment
-          type: object
+          description: Autoscaling contains autoscaling configuration parameters for
+            this deployment. Omitted when autoscaling is disabled (nil)
+          oneOf:
+          - $ref: '#/components/schemas/HTTPAutoscalingConfig'
+          - $ref: '#/components/schemas/QueueAutoscalingConfig'
+          - $ref: '#/components/schemas/CustomMetricAutoscalingConfig'
         command:
           description: Command is the entrypoint command run in the container
           items:
@@ -12490,6 +12492,65 @@ components:
       required:
         - name
       type: object
+    HTTPAutoscalingConfig:
+      description: Autoscaling config for HTTPTotalRequests and HTTPAvgRequestDuration
+        metrics
+      properties:
+        metric:
+          description: Metric must be HTTPTotalRequests or HTTPAvgRequestDuration
+          enum:
+          - HTTPTotalRequests
+          - HTTPAvgRequestDuration
+          example: HTTPTotalRequests
+          type: string
+        target:
+          description: 'Target is the threshold value. Default: 100 for HTTPTotalRequests,
+            500 (ms) for HTTPAvgRequestDuration'
+          example: 100
+          type: number
+        time_interval_minutes:
+          description: 'TimeIntervalMinutes is the rate window in minutes. Default:
+            10'
+          example: 10
+          type: integer
+      type: object
+    QueueAutoscalingConfig:
+      description: Autoscaling config for QueueBacklogPerWorker metric
+      properties:
+        metric:
+          description: Metric must be QueueBacklogPerWorker
+          enum:
+          - QueueBacklogPerWorker
+          example: QueueBacklogPerWorker
+          type: string
+        model:
+          description: Model overrides the model name for queue status lookup. Defaults
+            to the deployment app name
+          type: string
+        target:
+          description: 'Target is the threshold value. Default: 1.01'
+          example: 1.01
+          type: number
+      type: object
+    CustomMetricAutoscalingConfig:
+      description: Autoscaling config for CustomMetric metric
+      properties:
+        custom_metric_name:
+          description: CustomMetricName is the Prometheus metric name. Required. Must
+            match [a-zA-Z_:][a-zA-Z0-9_:]*
+          example: my_custom_metric
+          type: string
+        metric:
+          description: Metric must be CustomMetric
+          enum:
+          - CustomMetric
+          example: CustomMetric
+          type: string
+        target:
+          description: 'Target is the threshold value. Default: 500'
+          example: 500
+          type: number
+      type: object
     KubernetesEvent:
       properties:
         action:
@@ -12608,12 +12669,12 @@ components:
             type: string
           type: array
         autoscaling:
-          additionalProperties:
-            type: string
-          description: 'Autoscaling configuration as key-value pairs. Example: {"metric":
-            "QueueBacklogPerWorker", "target": "10"} to scale based on queue
-            backlog'
-          type: object
+          description: Autoscaling configuration for the deployment. Omit or set to
+            null to disable autoscaling
+          oneOf:
+          - $ref: '#/components/schemas/HTTPAutoscalingConfig'
+          - $ref: '#/components/schemas/QueueAutoscalingConfig'
+          - $ref: '#/components/schemas/CustomMetricAutoscalingConfig'
         command:
           description: Command overrides the container's ENTRYPOINT. Provide as an array
             (e.g., ["/bin/sh", "-c"])
