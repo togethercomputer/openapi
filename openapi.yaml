@@ -2599,6 +2599,9 @@ paths:
                 wandb_name:
                   type: string
                   description: The Weights & Biases name for your run.
+                wandb_entity:
+                  type: string
+                  description: The Weights & Biases entity for your run.
                 train_on_inputs:
                   oneOf:
                     - type: boolean
