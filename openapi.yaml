@@ -12311,7 +12311,7 @@ components:
       properties:
         content:
           allOf:
-            - $ref: "#/components/schemas/VolumeContent"
+            - $ref: "#/components/schemas/VolumeContentRequest"
           description: Content specifies the content configuration for this volume
         name:
           description: Name is the unique identifier for the volume within the project
@@ -12717,7 +12717,7 @@ components:
       properties:
         content:
           allOf:
-            - $ref: "#/components/schemas/VolumeContent"
+            - $ref: "#/components/schemas/VolumeContentRequest"
           description: Content specifies the new content that will be preloaded to this
             volume
         name:
@@ -12731,13 +12731,17 @@ components:
     VolumeMount:
       properties:
         mount_path:
-          description: MountPath is the path in the container where the volume will be
-            mounted (e.g., "/data")
+          description: MountPath is the path in the container where the volume will
+            be mounted (e.g., "/data")
           type: string
         name:
-          description: Name is the name of the volume to mount. Must reference an existing
-            volume by name or ID
+          description: Name is the name of the volume to mount. Must reference an
+            existing volume by name or ID
           type: string
+        version:
+          description: Version is the volume version to mount. On create, defaults
+            to the latest version. On update, defaults to the currently mounted version.
+          type: integer
       required:
         - mount_path
         - name
@@ -12745,31 +12749,80 @@ components:
     VolumeResponseItem:
       properties:
         content:
-          allOf:
-            - $ref: "#/components/schemas/VolumeContent"
-          description: Content specifies the content that will be preloaded to this volume
+          $ref: '#/components/schemas/VolumeContent'
         created_at:
           description: CreatedAt is the ISO8601 timestamp when this volume was created
           type: string
+        current_version:
+          description: CurrentVersion is the current version number of this volume
+          type: integer
         id:
           description: ID is the unique identifier for this volume
           type: string
+        mounted_by:
+          description: MountedBy is the list of deployment IDs currently mounting
+            current volume version
+          items:
+            type: string
+          type: array
+          uniqueItems: false
         name:
           description: Name is the name of the volume
           type: string
         object:
-          description: The object type, which is always `volume`.
-          const: volume
+          description: Object is the type identifier for this response (always "volume")
+          type: string
         type:
-          allOf:
-            - $ref: "#/components/schemas/VolumeType"
-          description: Type is the volume type (e.g., "readOnly")
+          $ref: '#/components/schemas/VolumeType'
         updated_at:
-          description: UpdatedAt is the ISO8601 timestamp when this volume was last updated
+          description: UpdatedAt is the ISO8601 timestamp when this volume was last
+            updated
+          type: string
+        version_history:
+          additionalProperties:
+            $ref: '#/components/schemas/VersionHistoryItem'
+          description: VersionHistory contains previous versions of this volume, keyed
+            by version number
+          type: object
+      type: object
+    VersionHistoryItem:
+      properties:
+        content:
+          $ref: '#/components/schemas/VolumeContentRequest'
+        mounted_by:
+          items:
+            type: string
+          type: array
+          uniqueItems: false
+        version:
+          type: integer
+      type: object
+    VolumeContentRequest:
+      description: Content specifies the new content that will be preloaded to this
+        volume
+      properties:
+        source_prefix:
+          description: SourcePrefix is the file path prefix for the content to be
+            preloaded into the volume
+          example: models/
+          type: string
+        type:
+          description: Type is the content type (currently only "files" is supported
+            which allows preloading files uploaded via Files API into the volume)
+          enum:
+          - files
+          example: files
           type: string
       type: object
     VolumeContent:
       properties:
+        files:
+          description: Files is the list of files that will be preloaded into the
+            volume, if the volume content type is "files"
+          items:
+            $ref: '#/components/schemas/FileInfo'
+          type: array
+          uniqueItems: false
         source_prefix:
           description: SourcePrefix is the file path prefix for the content to be
             preloaded into the volume
@@ -12782,6 +12835,18 @@ components:
             - files
           example: files
           type: string
+      type: object
+    FileInfo:
+      properties:
+        last_modified:
+          description: LastModified is the timestamp when the file was last modified
+          type: string
+        name:
+          description: Name is the filename including extension (e.g., "model_weights.bin")
+          type: string
+        size:
+          description: Size is the file size in bytes
+          type: integer
       type: object
     VolumeType:
       enum:
