@@ -3317,6 +3317,83 @@ paths:
           description: Invalid request parameters.
         '404':
           description: Fine-tune ID not found.
+  /fine-tunes/models/supported:
+    get:
+      tags: ['Fine-tuning']
+      summary: List supported models
+      description: List models supported for fine-tuning, or check if a specific model is supported.
+      x-codeSamples:
+        - lang: Shell
+          label: cURL (list all)
+          source: |
+            curl "https://api.together.xyz/v1/fine-tunes/models/supported" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY"
+        - lang: Shell
+          label: cURL (check specific model)
+          source: |
+            curl "https://api.together.xyz/v1/fine-tunes/models/supported?model_name=meta-llama/Meta-Llama-3.1-8B-Instruct-Reference" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY"
+      parameters:
+        - in: query
+          name: model_name
+          schema:
+            type: string
+          required: false
+          description: Optional model name to check support for. If omitted, returns all supported models.
+      responses:
+        '200':
+          description: Supported models or support status for a specific model.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      models:
+                        type: array
+                        items:
+                          type: string
+                        description: List of supported model names.
+                  - type: object
+                    properties:
+                      supported:
+                        type: boolean
+                        description: Whether the specified model is supported.
+  /fine-tunes/models/limits:
+    get:
+      tags: ['Fine-tuning']
+      summary: Get model limits
+      description: Get hyperparameter limits for a specific model.
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl "https://api.together.xyz/v1/fine-tunes/models/limits?model_name=meta-llama/Meta-Llama-3.1-8B-Instruct-Reference" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY"
+      parameters:
+        - in: query
+          name: model_name
+          schema:
+            type: string
+          required: true
+          description: The model name to get limits for.
+      responses:
+        '200':
+          description: Model hyperparameter limits.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HyperParameterLimits'
+        '404':
+          description: Model not found or not supported for fine-tuning.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message explaining the model is not available.
   /rerank:
     post:
       tags: ['Rerank']
@@ -10605,6 +10682,68 @@ components:
         message:
           type: string
           description: Message indicating the result of the deletion
+    HyperParameterLimits:
+      type: object
+      description: Hyperparameter limits for a fine-tuning model.
+      properties:
+        model_name:
+          type: string
+          description: The name of the model.
+        full_training:
+          type: object
+          description: Limits for full training.
+          properties:
+            max_batch_size:
+              type: integer
+              description: Maximum batch size for SFT full training.
+            max_batch_size_dpo:
+              type: integer
+              description: Maximum batch size for DPO full training.
+            min_batch_size:
+              type: integer
+              description: Minimum batch size for full training.
+        lora_training:
+          type: object
+          description: Limits for LoRA training.
+          properties:
+            max_batch_size:
+              type: integer
+              description: Maximum batch size for SFT LoRA training.
+            max_batch_size_dpo:
+              type: integer
+              description: Maximum batch size for DPO LoRA training.
+            min_batch_size:
+              type: integer
+              description: Minimum batch size for LoRA training.
+            max_rank:
+              type: integer
+              description: Maximum LoRA rank.
+            target_modules:
+              type: array
+              items:
+                type: string
+              description: Available target modules for LoRA.
+        max_num_epochs:
+          type: integer
+          description: Maximum number of training epochs.
+        max_num_evals:
+          type: integer
+          description: Maximum number of evaluations.
+        max_learning_rate:
+          type: number
+          description: Maximum learning rate.
+        min_learning_rate:
+          type: number
+          description: Minimum learning rate.
+        supports_vision:
+          type: boolean
+          description: Whether the model supports vision/multimodal inputs.
+        supports_tools:
+          type: boolean
+          description: Whether the model supports tool/function calling.
+        supports_reasoning:
+          type: boolean
+          description: Whether the model supports reasoning.
     FinetuneJobStatus:
       type: string
       enum:
