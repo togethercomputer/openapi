@@ -8486,6 +8486,12 @@ components:
         - tool_calls
         - function_call
 
+    TopLogprobs:
+      description: Top log probabilities for the tokens.
+      type: object
+      additionalProperties:
+        type: number
+
     LogprobsPart:
       type: object
       properties:
@@ -8504,6 +8510,8 @@ components:
           items:
             type: number
           description: List of token log probabilities
+        top_logprobs:
+          $ref: '#/components/schemas/TopLogprobs'
 
     PromptPart:
       type: array
@@ -8659,6 +8667,7 @@ components:
         choices:
           $ref: '#/components/schemas/CompletionChoicesData'
         prompt:
+          description: When `echo` is true, the prompt is included in the response. Additionally, when `logprobs` is also provided, log probability information is provided on the prompt.
           $ref: '#/components/schemas/PromptPart'
         usage:
           $ref: '#/components/schemas/UsageData'
@@ -8674,6 +8683,7 @@ components:
         - choices
         - usage
         - created
+        - prompt
         - model
         - object
 
@@ -8791,6 +8801,8 @@ components:
             allOf:
               - nullable: true
               - $ref: '#/components/schemas/LogprobsPart'
+          top_logprobs:
+            $ref: '#/components/schemas/TopLogprobs'
     ChatCompletionMessage:
       type: object
       required: [role, content]
@@ -9279,6 +9291,9 @@ components:
           type: integer
         model:
           type: string
+        prompt:
+          description: When `echo` is true, the prompt is included in the response. Additionally, when `logprobs` is also provided, log probability information is provided on the prompt.
+          $ref: '#/components/schemas/PromptPart'
         object:
           description: The object type, which is always `chat.completion`.
           const: chat.completion
@@ -9286,7 +9301,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InferenceWarning'
-      required: [choices, id, created, model, object]
+      required: [choices, id, created, model, object, prompt]
 
     ChatCompletionStream:
       oneOf:
@@ -9331,6 +9346,8 @@ components:
               logprobs:
                 type: number
                 nullable: true
+              top_logprobs:
+                $ref: '#/components/schemas/TopLogprobs'
               seed:
                 type: integer
                 nullable: true
