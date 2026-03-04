@@ -2621,7 +2621,8 @@ paths:
                 training_type:
                   type: object
                   default: null
-                  oneOf:
+                  nullable: true
+                  anyOf:
                     - $ref: '#/components/schemas/FullTrainingType'
                     - $ref: '#/components/schemas/LoRATrainingType'
                   description: The training type to use. If not provided, the job will default to LoRA training type.
@@ -2764,6 +2765,7 @@ paths:
                 training_type:
                   type: object
                   default: null
+                  nullable: true
                   oneOf:
                     - $ref: '#/components/schemas/FullTrainingType'
                     - $ref: '#/components/schemas/LoRATrainingType'
@@ -4599,7 +4601,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/GPUClustersSharedVolumes'
       x-codeSamples:
-        - lang: Python  
+        - lang: Python
           label: Together AI SDK (v2)
           source: |
             from together import Together
@@ -6975,7 +6977,7 @@ paths:
           schema:
             description: Request ID returned from the submit endpoint
             type: string
-        - name: model 
+        - name: model
           in: query
           required: true
           schema:
@@ -7124,7 +7126,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RpcStatus'
-        
+
   /rl/training-sessions/{session_id}:
     get:
       summary: Get training session
@@ -8989,7 +8991,7 @@ components:
         compliance:
           const: hipaa
         chat_template_kwargs:
-          description: Additional configuration to pass to model engine. 
+          description: Additional configuration to pass to model engine.
           type: object
           additional_properties: true
         safety_model:
