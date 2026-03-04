@@ -2763,9 +2763,11 @@ paths:
                   description: The training method to use. 'sft' for Supervised Fine-Tuning or 'dpo' for Direct Preference Optimization.
                 training_type:
                   type: object
+                  default: null
                   oneOf:
                     - $ref: '#/components/schemas/FullTrainingType'
                     - $ref: '#/components/schemas/LoRATrainingType'
+                  description: The training type to use. If not provided, the job will default to LoRA training type.
                 from_checkpoint:
                   type: string
                   description: The checkpoint identifier to continue training from a previous fine-tuning job. Format is `{$JOB_ID}` or `{$OUTPUT_MODEL_NAME}` or `{$JOB_ID}:{$STEP}` or `{$OUTPUT_MODEL_NAME}:{$STEP}`. The step value is optional; without it, the final checkpoint will be used.
