@@ -2618,10 +2618,10 @@ paths:
                 training_type:
                   type: object
                   default: null
-                  oneOf:
+                  nullable: 'true'
+                  anyOf:
                     - $ref: '#/components/schemas/FullTrainingType'
                     - $ref: '#/components/schemas/LoRATrainingType'
-                    - null
                   description: The training type to use. If not provided, the job will default to LoRA training type.
                 multimodal_params:
                   $ref: '#/components/schemas/MultimodalParams'
@@ -2762,10 +2762,10 @@ paths:
                 training_type:
                   type: object
                   default: null
+                  nullable: 'true'
                   oneOf:
                     - $ref: '#/components/schemas/FullTrainingType'
                     - $ref: '#/components/schemas/LoRATrainingType'
-                    - null
                   description: The training type to use. If not provided, the job will default to LoRA training type.
                 from_checkpoint:
                   type: string
