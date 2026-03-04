@@ -2617,9 +2617,11 @@ paths:
                   description: The training method to use. 'sft' for Supervised Fine-Tuning or 'dpo' for Direct Preference Optimization.
                 training_type:
                   type: object
+                  default: null
                   oneOf:
                     - $ref: '#/components/schemas/FullTrainingType'
                     - $ref: '#/components/schemas/LoRATrainingType'
+                  description: The training type to use. If not provided, the job will default to LoRA training type.
                 multimodal_params:
                   $ref: '#/components/schemas/MultimodalParams'
                 from_checkpoint:
