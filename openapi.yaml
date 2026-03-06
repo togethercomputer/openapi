@@ -3321,48 +3321,28 @@ paths:
     get:
       tags: ['Fine-tuning']
       summary: List supported models
-      description: List models supported for fine-tuning, or check if a specific model is supported.
+      description: List models supported for fine-tuning.
       x-codeSamples:
         - lang: Shell
           label: cURL (list all)
           source: |
             curl "https://api.together.xyz/v1/fine-tunes/models/supported" \
                  -H "Authorization: Bearer $TOGETHER_API_KEY"
-        - lang: Shell
-          label: cURL (check specific model)
-          source: |
-            curl "https://api.together.xyz/v1/fine-tunes/models/supported?model_name=meta-llama/Meta-Llama-3.1-8B-Instruct-Reference" \
-                 -H "Authorization: Bearer $TOGETHER_API_KEY"
-      parameters:
-        - in: query
-          name: model_name
-          schema:
-            type: string
-            description: Optional model name to check support for. If omitted, returns all supported models.
-          required: false
       responses:
         '200':
-          description: Supported models or support status for a specific model.
+          description: List of supported models.
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    required:
-                      - models
-                    properties:
-                      models:
-                        type: array
-                        items:
-                          type: string
-                        description: List of supported model names.
-                  - type: object
-                    required:
-                      - supported
-                    properties:
-                      supported:
-                        type: boolean
-                        description: Whether the specified model is supported.
+                type: object
+                required:
+                  - models
+                properties:
+                  models:
+                    type: array
+                    items:
+                      type: string
+                    description: List of supported model names.
   /fine-tunes/models/limits:
     get:
       tags: ['Fine-tuning']
