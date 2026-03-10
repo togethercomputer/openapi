@@ -1589,7 +1589,7 @@ paths:
     get:
       tags: ['Models']
       summary: List all models
-      description: Lists all of Together's open-source models
+      description: Lists all of Together's open-source models and metadata including pricing, chat template, and context.
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (v2)
