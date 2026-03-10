@@ -12198,6 +12198,9 @@ components:
           - $ref: '#/components/schemas/HTTPAutoscalingConfig'
           - $ref: '#/components/schemas/QueueAutoscalingConfig'
           - $ref: '#/components/schemas/CustomMetricAutoscalingConfig'
+          - type: 'null'
+          discriminator:
+            propertyName: metric
         command:
           description: Command overrides the container's ENTRYPOINT. Provide as an array
             (e.g., ["/bin/sh", "-c"])
@@ -12513,6 +12516,8 @@ components:
             10'
           example: 10
           type: integer
+      required:
+        - metric
       type: object
     QueueAutoscalingConfig:
       description: Autoscaling config for QueueBacklogPerWorker metric
@@ -12531,6 +12536,8 @@ components:
           description: 'Target is the threshold value. Default: 1.01'
           example: 1.01
           type: number
+      required:
+        - metric
       type: object
     CustomMetricAutoscalingConfig:
       description: Autoscaling config for CustomMetric metric
@@ -12550,6 +12557,9 @@ components:
           description: 'Target is the threshold value. Default: 500'
           example: 500
           type: number
+      required:
+        - metric
+        - custom_metric_name
       type: object
     KubernetesEvent:
       properties:
@@ -12675,6 +12685,9 @@ components:
           - $ref: '#/components/schemas/HTTPAutoscalingConfig'
           - $ref: '#/components/schemas/QueueAutoscalingConfig'
           - $ref: '#/components/schemas/CustomMetricAutoscalingConfig'
+          - type: 'null'
+          discriminator:
+            propertyName: metric
         command:
           description: Command overrides the container's ENTRYPOINT. Provide as an array
             (e.g., ["/bin/sh", "-c"])
