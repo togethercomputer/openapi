@@ -7139,7 +7139,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RpcStatus'
+                $ref: '#/components/schemas/ErrorData'
       parameters:
         - name: status
           in: query
@@ -7184,7 +7184,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RpcStatus'
+                $ref: '#/components/schemas/ErrorData'
   /rl/training-sessions/{session_id}:
     get:
       summary: Get training session
@@ -7203,7 +7203,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RpcStatus'
+                $ref: '#/components/schemas/ErrorData'
       parameters:
         - name: session_id
           in: path
@@ -7229,7 +7229,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RpcStatus'
+                $ref: '#/components/schemas/ErrorData'
       parameters:
         - name: session_id
           in: path
@@ -7255,7 +7255,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RpcStatus'
+                $ref: '#/components/schemas/ErrorData'
       parameters:
         - name: session_id
           in: path
@@ -7287,7 +7287,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RpcStatus'
+                $ref: '#/components/schemas/ErrorData'
       parameters:
         - name: session_id
           in: path
@@ -7319,7 +7319,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RpcStatus'
+                $ref: '#/components/schemas/ErrorData'
       parameters:
         - name: session_id
           in: path
@@ -7357,7 +7357,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RpcStatus'
+                $ref: '#/components/schemas/ErrorData'
       parameters:
         - name: session_id
           in: path
@@ -7389,7 +7389,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RpcStatus'
+                $ref: '#/components/schemas/ErrorData'
       parameters:
         - name: session_id
           in: path
@@ -7421,7 +7421,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RpcStatus'
+                $ref: '#/components/schemas/ErrorData'
       parameters:
         - name: session_id
           in: path
@@ -7447,7 +7447,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RpcStatus'
+                $ref: '#/components/schemas/ErrorData'
       parameters:
         - name: session_id
           in: path
@@ -7473,7 +7473,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RpcStatus'
+                $ref: '#/components/schemas/ErrorData'
       parameters:
         - name: session_id
           in: path
@@ -7505,7 +7505,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RpcStatus'
+                $ref: '#/components/schemas/ErrorData'
       parameters:
         - name: id
           in: path
@@ -8187,25 +8187,6 @@ components:
           type: integer
         message:
           type: string
-    ProtobufAny:
-      type: object
-      properties:
-        '@type':
-          type: string
-      additionalProperties: {}
-    RpcStatus:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-        details:
-          type: array
-          items:
-            type: object
-            $ref: '#/components/schemas/ProtobufAny'
     GPUClusterControlPlaneNode:
       type: object
       required:
