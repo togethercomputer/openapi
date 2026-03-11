@@ -7151,18 +7151,16 @@ paths:
           in: query
           required: false
           schema:
-            description: Maximum number of sessions to return (1-100), defaults to 20
+            description: Maximum number of sessions to return (1-100)
             type: integer
             format: int32
             default: "20"
-        - name: offset
+        - name: after
           in: query
           required: false
           schema:
-            description: Number of sessions to skip
-            type: integer
-            format: int32
-            default: "0"
+            description: Cursor for pagination (ID of the last session from the previous page)
+            type: string
     post:
       summary: Create training session
       description: Creates a training session and returns its details.
@@ -7187,12 +7185,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RpcStatus'
-
   /rl/training-sessions/{session_id}:
     get:
       summary: Get training session
       description: Gets a training session by its ID and returns its details.
       operationId: getTrainingSession
+      tags: [RL]
+      responses:
+        "200":
+          description: Training session details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RL.TrainingSession'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RpcStatus'
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            description: ID of the training session
+            type: string
+  /rl/training-sessions/{session_id}/stop:
+    post:
+      summary: Stop training session
+      description: Stops a training session.
+      operationId: stopTrainingSession
       tags: [RL]
       responses:
         "200":
@@ -7406,19 +7429,19 @@ paths:
           schema:
             description: Training session ID
             type: string
-  /rl/training-sessions/{session_id}/stop:
+  /rl/training-sessions/{session_id}/operations/inference-checkpoint:
     post:
-      summary: Stop training session
-      description: Stops a training session.
-      operationId: stopTrainingSession
+      summary: Create inference checkpoint
+      description: Submits an operation that will asynchronously save the current LoRA adapter as an inference checkpoint and upload it to object storage.
+      operationId: createInferenceCheckpoint
       tags: [RL]
       responses:
         "200":
-          description: Training session details
+          description: Inference checkpoint operation details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RL.TrainingSession'
+                $ref: '#/components/schemas/RL.InferenceCheckpointOperation'
         default:
           description: An unexpected error response.
           content:
@@ -7430,8 +7453,72 @@ paths:
           in: path
           required: true
           schema:
-            description: ID of the training session
+            description: Training session ID
             type: string
+  /rl/training-sessions/{session_id}/operations/inference-checkpoint/{operation_id}:
+    get:
+      summary: Get inference checkpoint operation
+      description: Retrieves the current status and result of an inference checkpoint operation.
+      operationId: getInferenceCheckpointOperation
+      tags: [RL]
+      responses:
+        "200":
+          description: Inference checkpoint operation details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RL.InferenceCheckpointOperation'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RpcStatus'
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            description: Training session ID
+            type: string
+        - name: operation_id
+          in: path
+          required: true
+          schema:
+            description: Operation ID
+            type: string
+  /rl/checkpoints/{id}/download:
+    get:
+      summary: Download checkpoint
+      description: Returns presigned URLs for downloading a checkpoint's model files. Only inference checkpoints support downloading.
+      operationId: downloadCheckpoint
+      tags: [RL]
+      responses:
+        "200":
+          description: Checkpoint download URLs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RL.CheckpointDownloadResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RpcStatus'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: ID of the checkpoint
+            type: string
+        - name: variant
+          in: query
+          required: true
+          schema:
+            description: "Checkpoint variant to download: merged (full model) or adapter (LoRA weights only)"
+            $ref: '#/components/schemas/RL.CheckpointVariant'
 
 components:
   securitySchemes:
@@ -7544,21 +7631,15 @@ components:
     RL.ListMeta:
       type: object
       properties:
-        total:
-          type: string
-          format: int64
-          example: 42
-          description: Total number of items matching the filter
         limit:
           type: integer
           format: int32
           example: 20
           description: Maximum number of items returned per page
-        offset:
-          type: integer
-          format: int32
-          example: 0
-          description: Number of items skipped
+        has_more:
+          type: boolean
+          example: true
+          description: Whether more items exist beyond this page
     RL.EncodedText:
       type: object
       properties:
@@ -7622,7 +7703,7 @@ components:
       enum:
         - GRPO_LOSS_AGGREGATION_TYPE_UNSPECIFIED
         - GRPO_LOSS_AGGREGATION_TYPE_FIXED_HORIZON
-        - GRPO_LOSS_AGGREGATION_TYPE_PER_TOKEN
+        - GRPO_LOSS_AGGREGATION_TYPE_TOKEN_MEAN
       default: GRPO_LOSS_AGGREGATION_TYPE_UNSPECIFIED
     RL.LossConfig:
       type: object
@@ -7870,6 +7951,7 @@ components:
         - TRAINING_OPERATION_ERROR_CODE_TIMEOUT
         - TRAINING_OPERATION_ERROR_CODE_INTERNAL_ERROR
         - TRAINING_OPERATION_ERROR_CODE_SESSION_NOT_ACTIVE
+        - TRAINING_OPERATION_ERROR_CODE_INVALID_INPUT
       default: TRAINING_OPERATION_ERROR_CODE_UNSPECIFIED
     RL.TrainingOperationStatus:
       type: string
@@ -7910,30 +7992,39 @@ components:
     RL.TrainingSession:
       type: object
       properties:
-        session_id:
+        id:
           type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
           description: ID of the training session
         status:
           $ref: '#/components/schemas/RL.TrainingSessionStatus'
+          example: TRAINING_SESSION_STATUS_RUNNING
+          description: Status of the training session
         base_model:
           type: string
           example: meta-llama/Meta-Llama-3-8B-Instruct
           description: Base model used for the training session
-        checkpoint_id:
-          description: Checkpoint ID to use for the training session
-          type: string
+        inference_checkpoints:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/RL.InferenceCheckpoint'
+          description: List of saved inference checkpoints for this session
         step:
           description: Current training step
           type: string
           format: uint64
+          example: 100
           default: "0"
         created_at:
           type: string
           format: date-time
+          example: "2026-01-02T00:00:00Z"
           description: Timestamp when the training session was created
         updated_at:
           type: string
           format: date-time
+          example: "2026-01-02T00:00:05Z"
           description: Timestamp when the training session was last updated
         lora_config:
           $ref: '#/components/schemas/RL.LoraConfig'
@@ -7999,6 +8090,96 @@ components:
           format: float
           example: 0.1
           default: "0.1"
+    RL.InferenceCheckpointOperation:
+      type: object
+      properties:
+        operation_id:
+          type: string
+          example: 550e8400-e29b-41d4-a716-446655440000
+          description: Operation ID
+        status:
+          $ref: '#/components/schemas/RL.TrainingOperationStatus'
+          example: TRAINING_OPERATION_STATUS_PENDING
+          description: Operation status
+        output:
+          $ref: '#/components/schemas/RL.InferenceCheckpointResult'
+        error:
+          $ref: '#/components/schemas/RL.TrainingOperationError'
+    RL.InferenceCheckpointResult:
+      type: object
+      properties:
+        model_name:
+          type: string
+          example: username/Meta-Llama-3-8B-rl-step-42-20260216
+          description: Registered model name for downloading the checkpoint
+    RL.InferenceCheckpoint:
+      type: object
+      description: Saved inference checkpoint
+      properties:
+        id:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
+          description: Unique identifier for the checkpoint
+        step:
+          type: string
+          format: uint64
+          example: 42
+          description: Training step at time of save
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-01-02T00:00:00Z"
+          description: Timestamp when the checkpoint was created
+        registration:
+          $ref: '#/components/schemas/RL.InferenceCheckpointRegistration'
+          description: Model registration details
+    RL.InferenceCheckpointRegistration:
+      type: object
+      description: Model registration details for an inference checkpoint
+      properties:
+        model_name:
+          type: string
+          example: username/Meta-Llama-3-8B-rl-step-42-20260216
+          description: Registered model name for downloading the checkpoint
+        registered_at:
+          type: string
+          format: date-time
+          example: "2026-01-02T00:00:00Z"
+          description: Timestamp when the model was registered
+    RL.CheckpointVariant:
+      type: string
+      enum:
+        - CHECKPOINT_VARIANT_UNSPECIFIED
+        - CHECKPOINT_VARIANT_MERGED
+        - CHECKPOINT_VARIANT_ADAPTER
+      default: CHECKPOINT_VARIANT_UNSPECIFIED
+      description: "Checkpoint variant: merged (full model) or adapter (LoRA weights only)"
+    RL.CheckpointFile:
+      type: object
+      description: A downloadable file within a checkpoint
+      properties:
+        filename:
+          type: string
+          example: model-00001-of-00002.safetensors
+          description: Name of the file
+        url:
+          type: string
+          example: "https://..."
+          description: Presigned URL for downloading the file
+        size:
+          type: string
+          format: int64
+          example: 123456789
+          description: File size in bytes
+    RL.CheckpointDownloadResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/RL.CheckpointFile'
+          description: List of files with presigned download URLs
     ErrorResponse:
       type: object
       properties:
