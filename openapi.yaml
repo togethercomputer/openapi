@@ -6282,7 +6282,7 @@ paths:
                 type="classify",
                 parameters=ParametersEvaluationClassifyParameters(
                     judge=ParametersEvaluationClassifyParametersJudge(
-                        model="meta-llama/Llama-3.1-70B-Instruct-Turbo",
+                        model="openai/gpt-oss-120b",
                         model_source="serverless",
                         system_template="You are an expert evaluator...",
                     ),
@@ -6306,7 +6306,7 @@ paths:
 
             response = client.evaluation.create(
                 type="classify",
-                judge_model_name="meta-llama/Llama-3.1-70B-Instruct-Turbo",
+                judge_model_name="openai/gpt-oss-120b",
                 judge_system_template="You are an expert evaluator...",
                 input_data_file_path="file-abc123",
                 labels=["good", "bad"],
@@ -6328,7 +6328,7 @@ paths:
               type: 'classify',
               parameters: {
                 judge: {
-                  model: 'meta-llama/Llama-3.1-70B-Instruct-Turbo',
+                  model: 'openai/gpt-oss-120b',
                   model_source: 'serverless',
                   system_template: 'You are an expert evaluator...',
                 },
@@ -6353,7 +6353,7 @@ paths:
               type: 'classify',
               parameters: {
                 judge: {
-                  model: 'meta-llama/Llama-3.1-70B-Instruct-Turbo',
+                  model: 'openai/gpt-oss-120b',
                   model_source: 'serverless',
                   system_template: 'You are an expert evaluator...',
                 },
