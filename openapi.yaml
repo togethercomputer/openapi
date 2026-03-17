@@ -5643,7 +5643,8 @@ paths:
             description: |
               Filter hardware configurations by model compatibility. When provided,
               the response includes availability status for each compatible configuration.
-            example: meta-llama/Llama-3-70b-chat-hf
+              [See all of Together AI's dedicated models](https://docs.together.ai/docs/dedicated-models)
+            example: deepseek-ai/DeepSeek-R1
       responses:
         '200':
           description: 'List of available hardware configurations'
@@ -9097,20 +9098,11 @@ components:
           items:
             $ref: '#/components/schemas/ChatCompletionMessageParam'
         model:
+          type: string
           description: >
             The name of the model to query.<br>
             <br>
             [See all of Together AI's chat models](https://docs.together.ai/docs/serverless-models#chat-models)
-          example: Qwen/Qwen3.5-9B
-          anyOf:
-            - type: string
-              enum:
-                - Qwen/Qwen2.5-72B-Instruct-Turbo
-                - Qwen/Qwen2.5-7B-Instruct-Turbo
-                - Qwen/Qwen3.5-9B
-                - meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo
-                - meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
-            - type: string
         max_tokens:
           type: integer
           description: The maximum number of tokens to generate.
@@ -11313,18 +11305,15 @@ components:
         display_name:
           type: string
           description: A human-readable name for the endpoint
-          examples:
-            - My Llama3 70b endpoint
+          example: My Llama3 70b endpoint
         model:
           type: string
           description: The model to deploy on this endpoint
-          examples:
-            - meta-llama/Llama-3-8b-chat-hf
+          example: deepseek-ai/DeepSeek-R1
         hardware:
           type: string
           description: The hardware configuration to use for this endpoint
-          examples:
-            - 1x_nvidia_a100_80gb_sxm
+          example: 1x_nvidia_a100_80gb_sxm
         autoscaling:
           $ref: '#/components/schemas/Autoscaling'
           description: Configuration for automatic scaling of the endpoint
@@ -11380,19 +11369,19 @@ components:
         name:
           type: string
           description: System name for the endpoint
-          example: devuser/meta-llama/Llama-3-8b-chat-hf-a32b82a1
+          example: devuser/deepseek-ai/DeepSeek-R1-a32b82a1
         display_name:
           type: string
           description: Human-readable name for the endpoint
-          example: My Llama3 70b endpoint
+          example: My DeepSeek R1 endpoint
         model:
           type: string
           description: The model deployed on this endpoint
-          example: meta-llama/Llama-3-8b-chat-hf
+          example: deepseek-ai/DeepSeek-R1
         hardware:
           type: string
           description: The hardware configuration used for this endpoint
-          example: 1x_nvidia_a100_80gb_sxm
+          example: 8x_nvidia_h200_140gb_sxm
         type:
           type: string
           enum:
@@ -12069,7 +12058,7 @@ components:
         model:
           type: string
           description: Name of the judge model
-          example: 'meta-llama/Llama-3-70B-Instruct-Turbo'
+          example: 'Qwen/Qwen3.5-9B'
         system_template:
           type: string
           description: System prompt template for the judge
@@ -12104,7 +12093,7 @@ components:
         model:
           type: string
           description: Name of the model to evaluate
-          example: 'meta-llama/Llama-3-70B-Instruct-Turbo'
+          example: 'Qwen/Qwen3.5-9B'
         max_tokens:
           type: integer
           minimum: 1
