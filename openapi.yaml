@@ -2590,8 +2590,8 @@ paths:
                   default: 0.0
                   description: Weight decay. Regularization parameter for the optimizer.
                 random_seed:
-                  type: string
-                  description: Random seed for reproducible training. When set, the same seed produces the same run (e.g. data shuffle, init). If not provided, a default seed is used. Pass a numeric string (e.g. "42").
+                  type: integer
+                  description: Random seed for reproducible training. When set, the same seed produces the same run (e.g. data shuffle, init). If not provided, the server uses its default seed (e.g. 42).
                 suffix:
                   type: string
                   description: Suffix that will be added to your fine-tuned model name
@@ -10813,9 +10813,9 @@ components:
           format: float
           description: Weight decay value used
         random_seed:
-          type: string
+          type: integer
           nullable: true
-          description: Random seed used for reproducible training (e.g. "42"), if set
+          description: Random seed used for reproducible training, if set
         wandb_project_name:
           type: string
           description: Weights & Biases project name
