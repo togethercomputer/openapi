@@ -2591,6 +2591,7 @@ paths:
                   description: Weight decay. Regularization parameter for the optimizer.
                 random_seed:
                   type: integer
+                  default: none
                   description: Random seed for reproducible training. When set, the same seed produces the same run (e.g. data shuffle, init). If not provided, the server uses its default seed (e.g. 42).
                 suffix:
                   type: string
