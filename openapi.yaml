@@ -7495,7 +7495,7 @@ paths:
   /rl/training-sessions/{session_id}/operations/training-checkpoint:
     post:
       summary: Save training checkpoint
-      description: Submits an operation that will asynchronously save the full training state (adapter + optimizer + step) to object storage.
+      description: Submits an operation that will asynchronously save the full training state (adapter + optimizer + step).
       operationId: createTrainingCheckpoint
       tags: [RL]
       responses:
