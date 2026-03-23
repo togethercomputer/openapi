@@ -12642,12 +12642,12 @@ components:
             "target": 1.01} to scale based on queue backlog. Omit or set to null to
             disable autoscaling'
           oneOf:
-          - $ref: '#/components/schemas/HTTPAutoscalingConfig'
-          - $ref: '#/components/schemas/QueueAutoscalingConfig'
-          - $ref: '#/components/schemas/CustomMetricAutoscalingConfig'
+          - $ref: "#/components/schemas/HTTPAutoscalingConfig"
+          - $ref: "#/components/schemas/QueueAutoscalingConfig"
+          - $ref: "#/components/schemas/CustomMetricAutoscalingConfig"
         command:
-          description: Command overrides the container's ENTRYPOINT. Provide as an array
-            (e.g., ["/bin/sh", "-c"])
+          description: Command overrides the container's ENTRYPOINT. Provide as an
+            array (e.g., ["/bin/sh", "-c"])
           items:
             type: string
           type: array
@@ -12661,9 +12661,8 @@ components:
             deployment
           type: string
         environment_variables:
-          description: EnvironmentVariables is a list of environment variables to set in
-            the container. Each must have a name and either a value or
-            value_from_secret
+          description: EnvironmentVariables is a list of environment variables to
+            set in the container. Each must have a name and either a value or value_from_secret
           items:
             $ref: "#/components/schemas/EnvironmentVariable"
           type: array
@@ -12674,52 +12673,52 @@ components:
         gpu_type:
           description: GPUType specifies the GPU hardware to use (e.g., "h100-80gb").
           enum:
-            - h100-80gb
-            - a100-80gb
+          - h100-80gb
           type: string
         health_check_path:
-          description: HealthCheckPath is the HTTP path for health checks (e.g.,
-            "/health"). If set, the platform will check this endpoint to
-            determine container health
+          description: HealthCheckPath is the HTTP path for health checks (e.g., "/health").
+            If set, the platform will check this endpoint to determine container health
           type: string
         image:
           description: Image is the container image to deploy from registry.together.ai.
           type: string
         max_replicas:
-          description: MaxReplicas is the maximum number of container instances that can
-            be scaled up to. If not set, will be set to MinReplicas
+          description: MaxReplicas is the maximum number of container instances that
+            can be scaled up to. If not set, will be set to MinReplicas
           type: integer
         memory:
-          description: Memory is the amount of RAM to allocate per container instance in
-            GiB (e.g., 0.5 = 512MiB)
-          minimum: 0.1
+          description: Memory is the amount of RAM to allocate per container instance
+            in GiB (e.g., 0.5 = 512MiB)
+          maximum: 1000
           type: number
         min_replicas:
-          description: MinReplicas is the minimum number of container instances to run.
-            Defaults to 1 if not specified
+          description: MinReplicas is the minimum number of container instances to
+            run. Defaults to 1 if not specified
           type: integer
         name:
           description: Name is the unique identifier for your deployment. Must contain
-            only alphanumeric characters, underscores, or hyphens (1-100
-            characters)
+            only alphanumeric characters, underscores, or hyphens (1-100 characters)
           maxLength: 100
           minLength: 1
           type: string
         port:
-          description: Port is the container port your application listens on (e.g., 8080
-            for web servers). Required if your application serves traffic
+          description: Port is the container port your application listens on (e.g.,
+            8080 for web servers). Required if your application serves traffic
+          maximum: 65535
+          minimum: 1
           type: integer
         storage:
-          description: Storage is the amount of ephemeral disk storage to allocate per
-            container instance (e.g., 10 = 10GiB)
+          description: Storage is the amount of ephemeral disk storage to allocate
+            per container instance (e.g., 10 = 10GiB)
+          maximum: 400
           type: integer
         termination_grace_period_seconds:
-          description: TerminationGracePeriodSeconds is the time in seconds to wait for
-            graceful shutdown before forcefully terminating the replica
+          description: TerminationGracePeriodSeconds is the time in seconds to wait
+            for graceful shutdown before forcefully terminating the replica
           type: integer
         volumes:
-          description: Volumes is a list of volume mounts to attach to the container. Each
-            mount must reference an existing volume by name
+          description: Volumes is a list of volume mounts to attach to the container.
+            Each mount must reference an existing volume by name
           items:
             $ref: "#/components/schemas/VolumeMount"
           type: array
@@ -12817,6 +12816,7 @@ components:
         created_at:
           description: CreatedAt is the ISO8601 timestamp when this deployment was created
           type: string
+          format: date-time
         description:
           description: Description provides a human-readable explanation of the
             deployment's purpose or content
@@ -12901,6 +12901,7 @@ components:
           description: UpdatedAt is the ISO8601 timestamp when this deployment was last
             updated
           type: string
+          format: date-time
         volumes:
           description: Volumes is a list of volume mounts for this deployment
           items:
@@ -13116,15 +13117,15 @@ components:
             type: string
           type: array
         autoscaling:
-          description: Autoscaling configuration for the deployment. Omit or set to
-            null to disable autoscaling
+          description: Autoscaling configuration for the deployment. Set to {} to
+            disable autoscaling
           oneOf:
-          - $ref: '#/components/schemas/HTTPAutoscalingConfig'
-          - $ref: '#/components/schemas/QueueAutoscalingConfig'
-          - $ref: '#/components/schemas/CustomMetricAutoscalingConfig'
+          - $ref: "#/components/schemas/HTTPAutoscalingConfig"
+          - $ref: "#/components/schemas/QueueAutoscalingConfig"
+          - $ref: "#/components/schemas/CustomMetricAutoscalingConfig"
         command:
-          description: Command overrides the container's ENTRYPOINT. Provide as an array
-            (e.g., ["/bin/sh", "-c"])
+          description: Command overrides the container's ENTRYPOINT. Provide as an
+            array (e.g., ["/bin/sh", "-c"])
           items:
             type: string
           type: array
@@ -13138,8 +13139,8 @@ components:
             deployment
           type: string
         environment_variables:
-          description: EnvironmentVariables is a list of environment variables to set in
-            the container. This will replace all existing environment variables
+          description: EnvironmentVariables is a list of environment variables to
+            set in the container. This will replace all existing environment variables
           items:
             $ref: "#/components/schemas/EnvironmentVariable"
           type: array
@@ -13149,50 +13150,51 @@ components:
         gpu_type:
           description: GPUType specifies the GPU hardware to use (e.g., "h100-80gb")
           enum:
-            - h100-80gb
-            - " a100-80gb"
+          - h100-80gb
           type: string
         health_check_path:
-          description: HealthCheckPath is the HTTP path for health checks (e.g.,
-            "/health"). Set to empty string to disable health checks
+          description: HealthCheckPath is the HTTP path for health checks (e.g., "/health").
+            Set to empty string to disable health checks
           type: string
         image:
           description: Image is the container image to deploy from registry.together.ai.
           type: string
         max_replicas:
-          description: MaxReplicas is the maximum number of replicas that can be scaled up
-            to.
+          description: MaxReplicas is the maximum number of replicas that can be scaled
+            up to.
           type: integer
         memory:
-          description: Memory is the amount of RAM to allocate per container instance in
-            GiB (e.g., 0.5 = 512MiB)
-          minimum: 0.1
+          description: Memory is the amount of RAM to allocate per container instance
+            in GiB (e.g., 0.5 = 512MiB)
+          maximum: 1000
           type: number
         min_replicas:
           description: MinReplicas is the minimum number of replicas to run
           type: integer
         name:
-          description: Name is the new unique identifier for your deployment. Must contain
-            only alphanumeric characters, underscores, or hyphens (1-100
-            characters)
+          description: Name is the new unique identifier for your deployment. Must
+            contain only alphanumeric characters, underscores, or hyphens (1-100 characters)
           maxLength: 100
           minLength: 1
           type: string
         port:
-          description: Port is the container port your application listens on (e.g., 8080
-            for web servers)
+          description: Port is the container port your application listens on (e.g.,
+            8080 for web servers)
+          maximum: 65535
+          minimum: 1
           type: integer
         storage:
-          description: Storage is the amount of ephemeral disk storage to allocate per
-            container instance (e.g., 10 = 10GiB)
+          description: Storage is the amount of ephemeral disk storage to allocate
+            per container instance (e.g., 10 = 10GiB)
+          maximum: 400
           type: integer
         termination_grace_period_seconds:
-          description: TerminationGracePeriodSeconds is the time in seconds to wait for
-            graceful shutdown before forcefully terminating the replica
+          description: TerminationGracePeriodSeconds is the time in seconds to wait
+            for graceful shutdown before forcefully terminating the replica
           type: integer
         volumes:
-          description: Volumes is a list of volume mounts to attach to the container. This
-            will replace all existing volumes
+          description: Volumes is a list of volume mounts to attach to the container.
+            This will replace all existing volumes
           items:
             $ref: "#/components/schemas/VolumeMount"
           type: array
