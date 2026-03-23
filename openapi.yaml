@@ -2541,6 +2541,10 @@ paths:
                 validation_file:
                   type: string
                   description: File-ID of a validation file uploaded to the Together API
+                packing:
+                  type: boolean
+                  default: true
+                  description: Whether to use packing for training.
                 model:
                   type: string
                   description: Name of the base model to run fine-tune job on
