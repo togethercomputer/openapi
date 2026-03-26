@@ -2544,7 +2544,7 @@ paths:
                 packing:
                   type: boolean
                   default: true
-                  description: Whether to use packing for training.
+                  description: Whether to use sequence packing for training.
                 model:
                   type: string
                   description: Name of the base model to run fine-tune job on
@@ -10870,6 +10870,9 @@ components:
         validation_file:
           type: string
           description: File-ID of the validation file
+        packing:
+          type: boolean
+          description: Whether sequence packing is being used for training.
         model:
           type: string
           description: Base model used for fine-tuning
