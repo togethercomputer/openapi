@@ -7617,11 +7617,14 @@ components:
     RL.SampleBody:
       type: object
       required:
-        - prompt
+        - prompts
       properties:
-        prompt:
-          $ref: '#/components/schemas/RL.ModelInput'
-          description: Input prompt as tokenized chunks
+        prompts:
+          description: Input prompts as tokenized chunks
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/RL.ModelInput'
         sampling_params:
           $ref: '#/components/schemas/RL.SamplingParams'
           description: Optional sampling parameters
@@ -7630,7 +7633,7 @@ components:
           format: int64
           example: 1
           default: "1"
-          description: Number of completions to generate for this prompt
+          description: Number of completions to generate per prompt
     RL.ForwardBackwardBody:
       type: object
       required:
@@ -7714,6 +7717,10 @@ components:
           type: boolean
           example: true
           description: Whether more items exist beyond this page
+        next_cursor:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
+          description: Cursor to use as the 'after' parameter for the next page. Empty when has_more is false.
     RL.EncodedText:
       type: object
       properties:
@@ -7945,12 +7952,21 @@ components:
     RL.SampleResult:
       type: object
       properties:
+        rollouts:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/RL.SampleRollout'
+          description: Completions grouped by prompt
+    RL.SampleRollout:
+      type: object
+      properties:
         sequences:
           type: array
           items:
             type: object
             $ref: '#/components/schemas/RL.SampleSequence'
-          description: Generated completions
+          description: Completions generated for one prompt
     RL.SampleSequence:
       type: object
       properties:
@@ -7998,11 +8014,15 @@ components:
       properties:
         loss:
           type: number
+          format: double
           example: 2.345
           description: Loss value
         metrics:
           type: object
           description: Loss-specific metrics (e.g., KL divergence, clip fraction for GRPO)
+          example:
+            loss/clip/high_fraction: 0.1
+            loss/kl_ref/mean: 0.05
           additionalProperties:
             type: number
             format: double
