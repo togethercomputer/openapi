@@ -7723,6 +7723,8 @@ components:
           description: Cursor to use as the 'after' parameter for the next page. Empty when has_more is false.
     RL.EncodedText:
       type: object
+      required:
+        - tokens
       properties:
         tokens:
           description: Pre-tokenized text input
@@ -7732,8 +7734,9 @@ components:
             - 456
             - 789
           items:
-            type: string
-            format: int64
+            oneOf:
+              - type: string
+              - type: integer
     RL.DType:
       type: string
       enum:
@@ -7812,8 +7815,9 @@ components:
             - 456
             - 789
           items:
-            type: string
-            format: int64
+            oneOf:
+              - type: string
+              - type: integer
         dtype:
           description: Data type of the integer array
           $ref: '#/components/schemas/RL.DType'
@@ -7832,8 +7836,9 @@ components:
             - 0
             - 1
           items:
-            type: string
-            format: int64
+            oneOf:
+              - type: string
+              - type: integer
         dtype:
           description: Data type of the integer array (must be D_TYPE_INT64)
           $ref: '#/components/schemas/RL.DType'
@@ -7914,6 +7919,9 @@ components:
           $ref: '#/components/schemas/RL.LossInputs'
     RL.OptimStepOperation:
       type: object
+      required:
+        - id
+        - status
       properties:
         id:
           type: string
@@ -7928,6 +7936,9 @@ components:
           $ref: '#/components/schemas/RL.TrainingOperationError'
     RL.SampleOperation:
       type: object
+      required:
+        - id
+        - status
       properties:
         id:
           type: string
@@ -7943,6 +7954,8 @@ components:
           $ref: '#/components/schemas/RL.TrainingOperationError'
     RL.OptimStepResult:
       type: object
+      required:
+        - step
       properties:
         step:
           description: Step number
@@ -7951,6 +7964,8 @@ components:
           example: 100
     RL.SampleResult:
       type: object
+      required:
+        - rollouts
       properties:
         rollouts:
           type: array
@@ -7960,6 +7975,8 @@ components:
           description: Completions grouped by prompt
     RL.SampleRollout:
       type: object
+      required:
+        - sequences
       properties:
         sequences:
           type: array
@@ -7969,6 +7986,8 @@ components:
           description: Completions generated for one prompt
     RL.SampleSequence:
       type: object
+      required:
+        - tokens
       properties:
         tokens:
           type: array
@@ -7996,6 +8015,9 @@ components:
           description: Reason for stopping generation
     RL.ForwardBackwardOperation:
       type: object
+      required:
+        - id
+        - status
       properties:
         id:
           type: string
@@ -8011,6 +8033,8 @@ components:
           $ref: '#/components/schemas/RL.TrainingOperationError'
     RL.ForwardBackwardResult:
       type: object
+      required:
+        - loss
       properties:
         loss:
           type: number
@@ -8085,6 +8109,15 @@ components:
         - TRAINING_SESSION_STATUS_EXPIRED
     RL.TrainingSession:
       type: object
+      required:
+        - id
+        - status
+        - base_model
+        - inference_checkpoints
+        - training_checkpoints
+        - step
+        - created_at
+        - updated_at
       properties:
         id:
           type: string
@@ -8196,6 +8229,9 @@ components:
           default: "0.1"
     RL.InferenceCheckpointOperation:
       type: object
+      required:
+        - id
+        - status
       properties:
         id:
           type: string
@@ -8211,6 +8247,8 @@ components:
           $ref: '#/components/schemas/RL.TrainingOperationError'
     RL.InferenceCheckpointResult:
       type: object
+      required:
+        - model_name
       properties:
         model_name:
           type: string
@@ -8219,6 +8257,10 @@ components:
     RL.InferenceCheckpoint:
       type: object
       description: Saved inference checkpoint
+      required:
+        - id
+        - step
+        - created_at
       properties:
         id:
           type: string
@@ -8240,6 +8282,9 @@ components:
     RL.InferenceCheckpointRegistration:
       type: object
       description: Model registration details for an inference checkpoint
+      required:
+        - model_name
+        - registered_at
       properties:
         model_name:
           type: string
@@ -8253,6 +8298,10 @@ components:
     RL.TrainingCheckpoint:
       type: object
       description: Saved training checkpoint
+      required:
+        - id
+        - step
+        - created_at
       properties:
         id:
           type: string
@@ -8270,6 +8319,8 @@ components:
           description: Timestamp when the checkpoint was created
     RL.TrainingCheckpointResult:
       type: object
+      required:
+        - checkpoint_id
       properties:
         checkpoint_id:
           type: string
@@ -8277,6 +8328,9 @@ components:
           description: ID of the saved training checkpoint (use for resume via Start)
     RL.TrainingCheckpointOperation:
       type: object
+      required:
+        - id
+        - status
       properties:
         id:
           type: string
@@ -8301,6 +8355,10 @@ components:
     RL.CheckpointFile:
       type: object
       description: A downloadable file within a checkpoint
+      required:
+        - filename
+        - url
+        - size
       properties:
         filename:
           type: string
@@ -8317,6 +8375,8 @@ components:
           description: File size in bytes
     RL.CheckpointDownloadResponse:
       type: object
+      required:
+        - data
       properties:
         data:
           type: array
