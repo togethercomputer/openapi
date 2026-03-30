@@ -7900,12 +7900,14 @@ components:
       properties:
         target_tokens:
           $ref: '#/components/schemas/RL.LossTargetTokens'
-          description: Target tokens for loss computation (optional, defaults to shifted input_ids)
+          description: Target tokens for loss computation
         loss_mask:
           $ref: '#/components/schemas/RL.LossMask'
           description: Per-token loss mask (1=compute loss, 0=ignore)
         grpo_inputs:
           $ref: '#/components/schemas/RL.GRPOLossInputs'
+      required:
+        - target_tokens
     RL.TrainingSample:
       type: object
       required:
