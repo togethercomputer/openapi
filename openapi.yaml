@@ -8135,6 +8135,7 @@ components:
         - step
         - created_at
         - updated_at
+        - lora_config
       properties:
         id:
           type: string
