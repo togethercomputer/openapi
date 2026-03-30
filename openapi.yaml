@@ -7707,6 +7707,7 @@ components:
           $ref: '#/components/schemas/RL.EncodedText'
     RL.ListMeta:
       type: object
+      description: Pagination metadata for list responses
       properties:
         limit:
           type: integer
@@ -7919,6 +7920,7 @@ components:
           $ref: '#/components/schemas/RL.LossInputs'
     RL.OptimStepOperation:
       type: object
+      description: Async optimizer step operation
       required:
         - id
         - status
@@ -7932,10 +7934,13 @@ components:
           description: Operation status
         output:
           $ref: '#/components/schemas/RL.OptimStepResult'
+          description: Result on success
         error:
           $ref: '#/components/schemas/RL.TrainingOperationError'
+          description: Error details on failure
     RL.SampleOperation:
       type: object
+      description: Async sample operation
       required:
         - id
         - status
@@ -7950,10 +7955,13 @@ components:
           description: Operation status
         output:
           $ref: '#/components/schemas/RL.SampleResult'
+          description: Result on success
         error:
           $ref: '#/components/schemas/RL.TrainingOperationError'
+          description: Error details on failure
     RL.OptimStepResult:
       type: object
+      description: Result of an optimizer step operation
       required:
         - step
       properties:
@@ -7964,6 +7972,7 @@ components:
           example: 100
     RL.SampleResult:
       type: object
+      description: Result of a sample operation
       required:
         - rollouts
       properties:
@@ -7975,6 +7984,7 @@ components:
           description: Completions grouped by prompt
     RL.SampleRollout:
       type: object
+      description: Completions generated for a single prompt
       required:
         - sequences
       properties:
@@ -7986,6 +7996,7 @@ components:
           description: Completions generated for one prompt
     RL.SampleSequence:
       type: object
+      description: A single generated completion sequence with tokens and logprobs
       required:
         - tokens
       properties:
@@ -8015,6 +8026,7 @@ components:
           description: Reason for stopping generation
     RL.ForwardBackwardOperation:
       type: object
+      description: Async forward-backward pass operation
       required:
         - id
         - status
@@ -8029,10 +8041,13 @@ components:
           description: Operation status
         output:
           $ref: '#/components/schemas/RL.ForwardBackwardResult'
+          description: Result on success
         error:
           $ref: '#/components/schemas/RL.TrainingOperationError'
+          description: Error details on failure
     RL.ForwardBackwardResult:
       type: object
+      description: Result of a forward-backward pass operation
       required:
         - loss
       properties:
@@ -8052,6 +8067,7 @@ components:
             format: double
     RL.TrainingOperationError:
       type: object
+      description: Error details for a failed training operation
       properties:
         code:
           description: Application error code
@@ -8109,6 +8125,7 @@ components:
         - TRAINING_SESSION_STATUS_EXPIRED
     RL.TrainingSession:
       type: object
+      description: A training session and its current state
       required:
         - id
         - status
@@ -8167,6 +8184,7 @@ components:
           $ref: '#/components/schemas/RL.LoraConfig'
     RL.TrainingSessionsListResponse:
       type: object
+      description: Paginated list of training sessions
       properties:
         data:
           type: array
@@ -8229,6 +8247,7 @@ components:
           default: "0.1"
     RL.InferenceCheckpointOperation:
       type: object
+      description: Async inference checkpoint operation
       required:
         - id
         - status
@@ -8243,10 +8262,13 @@ components:
           description: Operation status
         output:
           $ref: '#/components/schemas/RL.InferenceCheckpointResult'
+          description: Result on success
         error:
           $ref: '#/components/schemas/RL.TrainingOperationError'
+          description: Error details on failure
     RL.InferenceCheckpointResult:
       type: object
+      description: Result of an inference checkpoint operation
       required:
         - model_name
       properties:
@@ -8319,6 +8341,7 @@ components:
           description: Timestamp when the checkpoint was created
     RL.TrainingCheckpointResult:
       type: object
+      description: Result of a save training checkpoint operation
       required:
         - checkpoint_id
       properties:
@@ -8328,6 +8351,7 @@ components:
           description: ID of the saved training checkpoint (use for resume via Start)
     RL.TrainingCheckpointOperation:
       type: object
+      description: Async save training checkpoint operation
       required:
         - id
         - status
@@ -8342,8 +8366,10 @@ components:
           description: Operation status
         output:
           $ref: '#/components/schemas/RL.TrainingCheckpointResult'
+          description: Result on success
         error:
           $ref: '#/components/schemas/RL.TrainingOperationError'
+          description: Error details on failure
     RL.CheckpointVariant:
       type: string
       enum:
@@ -8375,6 +8401,7 @@ components:
           description: File size in bytes
     RL.CheckpointDownloadResponse:
       type: object
+      description: Presigned download URLs for a checkpoint's files
       required:
         - data
       properties:
