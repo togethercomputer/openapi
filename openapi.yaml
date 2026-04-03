@@ -12588,6 +12588,12 @@ components:
           type: integer
         width:
           type: integer
+        resolution:
+          type: string
+          description: Video resolution.
+        ratio:
+          type: string
+          description: Aspect ratio of the video.
         seconds:
           type: string
           description: Clip duration in seconds.
