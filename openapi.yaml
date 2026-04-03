@@ -12614,8 +12614,15 @@ components:
         negative_prompt:
           type: string
           description: Similar to prompt, but specifies what to avoid instead of what to include
+        generate_audio:
+          type: boolean
+          description: Whether to generate audio for the video.
+        media:
+          $ref: '#/components/schemas/VideoMedia'
+          description: Media inputs for video generation. The accepted fields depend on the model type (e.g. i2v, r2v, t2v, videoedit).
         frame_images:
-          description: Array of images to guide video generation, similar to keyframes.
+          deprecated: true
+          description: "Deprecated: use media.frame_images instead. Array of images to guide video generation, similar to keyframes."
           example:
             - [
               {
@@ -12635,7 +12642,8 @@ components:
           items:
             $ref: '#/components/schemas/VideoFrameImageInput'
         reference_images:
-          description: Unlike frame_images which constrain specific timeline positions, reference images guide the general appearance that should appear consistently across the video.
+          deprecated: true
+          description: "Deprecated: use media.reference_images instead. Unlike frame_images which constrain specific timeline positions, reference images guide the general appearance that should appear consistently across the video."
           type: array
           items:
             type: string
@@ -12666,6 +12674,55 @@ components:
               enum:
                 - first
                 - last
+
+    VideoMedia:
+      type: object
+      description: Contains all media inputs for video generation. Accepted fields depend on the model type.
+      properties:
+        frame_images:
+          description: Array of images to guide video generation at specific timeline positions.
+          type: array
+          items:
+            $ref: '#/components/schemas/VideoFrameImageInput'
+        frame_videos:
+          description: Array of video clips to use as starting clips.
+          type: array
+          items:
+            $ref: '#/components/schemas/VideoRef'
+        reference_images:
+          description: Array of image URLs that guide the general appearance across the video.
+          type: array
+          items:
+            type: string
+        reference_videos:
+          description: Array of reference videos.
+          type: array
+          items:
+            $ref: '#/components/schemas/VideoRef'
+        source_video:
+          $ref: '#/components/schemas/VideoRef'
+          description: Source video to edit.
+        audio_inputs:
+          description: Array of audio inputs.
+          type: array
+          items:
+            $ref: '#/components/schemas/AudioRef'
+
+    VideoRef:
+      type: object
+      required: ['video']
+      properties:
+        video:
+          type: string
+          description: URL of the video.
+
+    AudioRef:
+      type: object
+      required: ['audio']
+      properties:
+        audio:
+          type: string
+          description: URL of the audio.
 
     VideoOutputFormat:
       type: string
