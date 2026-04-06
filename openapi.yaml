@@ -8454,7 +8454,8 @@ components:
         - gpu_type
         - num_gpus
         - cluster_name
-        - driver_version
+        - cuda_version
+        - nvidia_driver_version
         - billing_type
       type: object
       properties:
@@ -8485,14 +8486,6 @@ components:
             x-stainless-terraform-configurability: computed
             description: Duration in days to keep the cluster running.
             type: integer
-          driver_version:
-            description: NVIDIA driver version to use in the cluster.
-            type: string
-            enum:
-              - CUDA_12_5_555
-              - CUDA_12_6_560
-              - CUDA_12_6_565
-              - CUDA_12_8_570
           shared_volume:
             x-stainless-terraform-configurability: computed
             $ref: '#/components/schemas/GPUClustersSharedVolumeCreateRequest'
@@ -8509,6 +8502,45 @@ components:
             enum:
               - RESERVED
               - ON_DEMAND
+              - SCHEDULED_CAPACITY
+          gpu_node_failover_enabled:
+              type: boolean
+              default: false
+              description: Whether automated GPU node failover should be enabled for this cluster. By default, it is disabled.
+          auto_scaled:
+              type: boolean
+              default: false
+              description: Whether GPU cluster should be auto-scaled based on the workload. By default, it is not auto-scaled.
+          auto_scale_max_gpus:
+              type: integer
+              description: Maximum number of GPUs to which the cluster can be auto-scaled up. This field is required if auto_scaled is true.
+          slurm_shm_size_gib:
+              type: integer
+              description: Shared memory size in GiB for Slurm cluster. This field is required if cluster_type is SLURM.
+          capacity_pool_id:
+              type: string
+              description: ID of the capacity pool to use for the cluster. This field is optional and only applicable if the cluster is created from a capacity pool.
+          reservation_start_time:
+              type: string
+              description: Reservation start time of the cluster. This field is required for SCHEDULED billing to specify the reservation start time for the cluster. If not provided, the cluster will be provisioned immediately.
+              format: date-time
+          reservation_end_time:
+              type: string
+              description: Reservation end time of the cluster. This field is required for SCHEDULED billing to specify the reservation end time for the cluster.
+              format: date-time
+          install_traefik:
+              type: boolean
+              default: false
+              description: Whether to install Traefik ingress controller in the cluster. This field is only applicable for Kubernetes clusters and is false by default.
+          cuda_version:
+              type: string
+              description: CUDA version for this cluster. For example, 12.5
+          nvidia_driver_version:
+              type: string
+              description: Nvidia driver version for this cluster. For example, 550. Only some combination of cuda_version and nvidia_driver_version are supported.
+          slurm_image:
+              type: string
+              description: Custom Slurm image for Slurm clusters.
     GPUClusterGPUWorkerNode:
       type: object
       required:
@@ -8539,6 +8571,8 @@ components:
           type: array
           items:
             type: string
+        instance_id:
+          type: string
     GPUClusterInfo:
       type: object
       required:
@@ -8547,8 +8581,8 @@ components:
         - region
         - gpu_type
         - cluster_name
-        - duration_hours
-        - driver_version
+        - cuda_version
+        - nvidia_driver_version
         - volumes
         - status
         - control_plane_nodes
@@ -8575,12 +8609,6 @@ components:
           type: string
         duration_hours:
           type: integer
-        driver_version:
-          enum:
-            - CUDA_12_5_555
-            - CUDA_12_6_560
-            - CUDA_12_6_565
-            - CUDA_12_8_570
         volumes:
           type: array
           items:
@@ -8611,6 +8639,25 @@ components:
           type: string
         num_gpus:
           type: integer
+        slurm_shm_size_gib:
+            type: integer
+        capacity_pool_id:
+            type: string
+        reservation_start_time:
+            type: string
+            format: date-time
+        reservation_end_time:
+            type: string
+            format: date-time
+        install_traefik:
+            type: boolean
+        cuda_version:
+            type: string
+        nvidia_driver_version:
+            type: string
+        created_at:
+            type: string
+            format: date-time
     GPUClusterUpdateRequest:
         type: object
         properties:
@@ -8620,6 +8667,10 @@ components:
           num_gpus:
             description: Number of GPUs to allocate in the cluster. This must be multiple of 8. For example, 8, 16 or 24
             type: integer
+          reservation_end_time:
+            type: string
+            description: Timestamp at which the cluster should be decommissioned. Only accepted for prepaid clusters.
+            format: date-time
     GPUClusterVolume:
       type: object
       required:
