@@ -8669,22 +8669,35 @@ components:
             type: object
             required:
               - name
-              - availability_zones
+              - supported_instance_types
               - driver_versions
             properties:
               name:
                 description: Identifiable name of the region.
                 type: string
               driver_versions:
-                description: List of supported identifiable driver versions available in the region.
+                description: List of supported identifiable cuda/nvidia driver versions pairs available in the region.
                 type: array
                 items:
-                  type: string
+                  $ref: '#/components/schemas/ClusterDriverVersionInfo'
               supported_instance_types:
                 description: List of supported identifiable gpus available in the region.
                 type: array
                 items:
                   type: string
+    ClusterDriverVersionInfo:
+      type: object
+      description: CUDA/NVIDIA driver versions pair available in the region to use in the create cluster request.
+      required:
+        - cuda_driver_version
+        - nvidia_driver_version
+      properties:
+        cuda_driver_version:
+          description: CUDA driver version.
+          type: string
+        nvidia_driver_version:
+          description: NVIDIA driver version.
+          type: string
     GPUClustersSharedVolumeCreateRequest:
       type: object
       required:
