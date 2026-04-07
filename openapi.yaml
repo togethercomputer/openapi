@@ -12719,13 +12719,13 @@ components:
           items:
             $ref: '#/components/schemas/VideoRef'
         source_video:
-          $ref: '#/components/schemas/VideoRef'
-          description: Source video to edit.
+          type: string
+          description: URL of the source video to edit.
         audio_inputs:
-          description: Array of audio inputs.
+          description: Array of audio input URLs.
           type: array
           items:
-            $ref: '#/components/schemas/AudioRef'
+            type: string
 
     VideoRef:
       type: object
@@ -12735,13 +12735,6 @@ components:
           type: string
           description: URL of the video.
 
-    AudioRef:
-      type: object
-      required: ['audio']
-      properties:
-        audio:
-          type: string
-          description: URL of the audio.
 
     VideoOutputFormat:
       type: string
