@@ -12333,6 +12333,11 @@ components:
         external_base_url:
           type: string
           description: "Base URL for external judge models. Must be OpenAI-compatible base URL."
+        num_workers:
+          type: integer
+          minimum: 1
+          description: "Number of concurrent workers for inference requests. Overrides the default concurrency for this model. Useful for tuning throughput when using proxy endpoints (e.g. OpenRouter) or rate-limited external APIs."
+          example: 9
 
     EvaluationModelOrString:
       oneOf:
@@ -12384,6 +12389,11 @@ components:
         external_base_url:
           type: string
           description: "Base URL for external models. Must be OpenAI-compatible base URL"
+        num_workers:
+          type: integer
+          minimum: 1
+          description: "Number of concurrent workers for inference requests. Overrides the default concurrency for this model. Useful for tuning throughput when using proxy endpoints (e.g. OpenRouter) or rate-limited external APIs."
+          example: 7
 
     EvaluationResponse:
       type: object
