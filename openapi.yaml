@@ -2545,6 +2545,9 @@ paths:
                   type: boolean
                   default: true
                   description: Whether to use sequence packing for training.
+                max_seq_length:
+                  type: integer
+                  description: Maximum sequence length to use for training.
                 model:
                   type: string
                   description: Name of the base model to run fine-tune job on
@@ -11007,6 +11010,9 @@ components:
         packing:
           type: boolean
           description: Whether sequence packing is being used for training.
+        max_seq_length:
+          type: integer
+          description: Maximum sequence length to use for training.
         model:
           type: string
           description: Base model used for fine-tuning
