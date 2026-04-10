@@ -12337,7 +12337,7 @@ components:
           type: integer
           minimum: 1
           description: "Number of concurrent workers for inference requests. Overrides the default concurrency for this model. Useful for tuning throughput when using proxy endpoints (e.g. OpenRouter) or rate-limited external APIs."
-          example: 9
+          example: 5
 
     EvaluationModelOrString:
       oneOf:
@@ -12393,7 +12393,7 @@ components:
           type: integer
           minimum: 1
           description: "Number of concurrent workers for inference requests. Overrides the default concurrency for this model. Useful for tuning throughput when using proxy endpoints (e.g. OpenRouter) or rate-limited external APIs."
-          example: 7
+          example: 5
 
     EvaluationResponse:
       type: object
