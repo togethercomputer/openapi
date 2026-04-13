@@ -8740,10 +8740,10 @@ components:
       type: object
       description: CUDA/NVIDIA driver versions pair available in the region to use in the create cluster request.
       required:
-        - cuda_driver_version
+        - cuda_version
         - nvidia_driver_version
       properties:
-        cuda_driver_version:
+        cuda_version:
           description: CUDA driver version.
           type: string
         nvidia_driver_version:
