@@ -9091,6 +9091,45 @@ components:
       additionalProperties:
         type: number
 
+    LogprobsTokenTopLogprob:
+      type: object
+      description: A candidate token and its log probability at a given position.
+      properties:
+        token:
+          type: string
+          description: The token string
+        bytes:
+          type: array
+          items:
+            type: integer
+          description: UTF-8 byte representation of the token
+          nullable: true
+        logprob:
+          type: number
+          description: The log probability of this token
+
+    LogprobsToken:
+      type: object
+      description: Log probability information for a single token in the completion.
+      properties:
+        token:
+          type: string
+          description: The token string
+        bytes:
+          type: array
+          items:
+            type: integer
+          description: UTF-8 byte representation of the token
+          nullable: true
+        logprob:
+          type: number
+          description: The log probability of this token
+        top_logprobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/LogprobsTokenTopLogprob'
+          description: List of the most likely tokens and their log probabilities at this position
+
     LogprobsPart:
       type: object
       properties:
@@ -9111,6 +9150,12 @@ components:
           description: List of token log probabilities
         top_logprobs:
           $ref: '#/components/schemas/TopLogprobs'
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/LogprobsToken'
+          description: Per-token log probability information including top alternative tokens
+          nullable: true
 
     PromptPart:
       type: array
