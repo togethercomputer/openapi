@@ -1,0 +1,28 @@
+name: Lint OpenAPI spec
+
+on:
+  pull_request:
+    paths:
+      - 'openapi.yaml'
+      - '.yamlfmt'
+  push:
+    branches:
+      - main
+    paths:
+      - 'openapi.yaml'
+      - '.yamlfmt'
+
+jobs:
+  yamlfmt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install yamlfmt
+        run: |
+          go install github.com/google/yamlfmt/cmd/yamlfmt@latest
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+
+      - name: Check YAML formatting
+        run: yamlfmt -dry -conf .yamlfmt openapi.yaml
