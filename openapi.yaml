@@ -1931,9 +1931,7 @@ paths:
                 model:
                   type: string
                   description: >
-                    The model to use for image generation.<br>
-                    <br>
-                    [See all of Together AI's image models](https://docs.together.ai/docs/serverless-models#image-models)
+                    The model to use for image generation.<br> <br> [See all of Together AI's image models](https://docs.together.ai/docs/serverless-models#image-models)
                   example: black-forest-labs/FLUX.1-schnell
                   anyOf:
                     - type: string
@@ -2600,8 +2598,7 @@ paths:
                   type: integer
                   nullable: true
                   description: >
-                    Random seed for reproducible training. When set, the same seed produces the same run (e.g. data shuffle, init).
-                    If omitted or null, the server applies its default seed (e.g. 42).
+                    Random seed for reproducible training. When set, the same seed produces the same run (e.g. data shuffle, init). If omitted or null, the server applies its default seed (e.g. 42).
                 suffix:
                   type: string
                   description: Suffix that will be added to your fine-tuned model name
@@ -4530,45 +4527,45 @@ paths:
               schema:
                 $ref: '#/components/schemas/GPUClusterInfo'
       x-codeSamples:
-          - lang: Python
-            label: Together AI SDK (v2)
-            source: |
-              from together import Together
-              client = Together()
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
 
-              cluster = client.beta.clusters.update("cluster_id", cluster_type="KUBERNETES", num_gpus=24)
-              print(cluster)
-          - lang: TypeScript
-            label: Together AI SDK (TypeScript)
-            source: |
-              import Together from "together-ai";
-              const client = new Together();
+            cluster = client.beta.clusters.update("cluster_id", cluster_type="KUBERNETES", num_gpus=24)
+            print(cluster)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
 
-              const cluster = await client.beta.clusters.update({
-                cluster_id: "cluster_id",
-                cluster_type: "kubernetes",
-                num_gpus: 24,
-              })
-              console.log(cluster)
-          - lang: JavaScript
-            label: Together AI SDK (JavaScript)
-            source: |
-              import Together from "together-ai";
-              const client = new Together();
+            const cluster = await client.beta.clusters.update({
+              cluster_id: "cluster_id",
+              cluster_type: "kubernetes",
+              num_gpus: 24,
+            })
+            console.log(cluster)
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
 
-              const cluster = await client.beta.clusters.update({
-                cluster_id: "cluster_id",
-                cluster_type: "kubernetes",
-                num_gpus: 24,
-              })
-              console.log(cluster)
-          - lang: Shell
-            label: cURL
-            source: |
-              curl -X PUT \
-                    -H "Authorization Bearer $TOGETHER_API_KEY" \
-                    --data '{ "cluster_id": "cluster id", "cluster_type": "kubernetes", "num_gpus": 24 }' \
-                    https://api.together.ai/v1/compute/clusters
+            const cluster = await client.beta.clusters.update({
+              cluster_id: "cluster_id",
+              cluster_type: "kubernetes",
+              num_gpus: 24,
+            })
+            console.log(cluster)
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X PUT \
+                  -H "Authorization Bearer $TOGETHER_API_KEY" \
+                  --data '{ "cluster_id": "cluster id", "cluster_type": "kubernetes", "num_gpus": 24 }' \
+                  https://api.together.ai/v1/compute/clusters
     delete:
       tags: ['GPUClusterService']
       summary: Delete GPU cluster by cluster ID
@@ -4730,46 +4727,46 @@ paths:
               schema:
                 $ref: '#/components/schemas/GPUClustersSharedVolume'
       x-codeSamples:
-          - lang: Python
-            label: Together AI SDK (v2)
-            source: |
-              from together import Together
-              client = Together()
+        - lang: Python
+          label: Together AI SDK (v2)
+          source: |
+            from together import Together
+            client = Together()
 
-              volume = client.beta.clusters.storage.update(
-                volume_id="12345-67890-12345-67890",
-                size_tib=3
-              )
-              print(volume)
-          - lang: TypeScript
-            label: Together AI SDK (TypeScript)
-            source: |
-              import Together from "together-ai";
-              const client = new Together();
+            volume = client.beta.clusters.storage.update(
+              volume_id="12345-67890-12345-67890",
+              size_tib=3
+            )
+            print(volume)
+        - lang: TypeScript
+          label: Together AI SDK (TypeScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
 
-              const volume = await client.beta.clusters.storage.update({
-                volume_id: "12345-67890-12345-67890",
-                size_tib: 3
-              });
-              console.log(volume);
-          - lang: JavaScript
-            label: Together AI SDK (JavaScript)
-            source: |
-              import Together from "together-ai";
-              const client = new Together();
+            const volume = await client.beta.clusters.storage.update({
+              volume_id: "12345-67890-12345-67890",
+              size_tib: 3
+            });
+            console.log(volume);
+        - lang: JavaScript
+          label: Together AI SDK (JavaScript)
+          source: |
+            import Together from "together-ai";
+            const client = new Together();
 
-              const volume = await client.beta.clusters.storage.update({
-                volume_id: "12345-67890-12345-67890",
-                size_tib: 3
-              });
-              console.log(volume);
-          - lang: Shell
-            label: cURL
-            source: |
-              curl -X PUT \
-                    -H "Authorization: Bearer $TOGETHER_API_KEY" \
-                    --data '{ "volume_id": "12345-67890-12345-67890", "size_tib": 3}' \
-                    https://api.together.ai/v1/compute/clusters/storage/volumes
+            const volume = await client.beta.clusters.storage.update({
+              volume_id: "12345-67890-12345-67890",
+              size_tib: 3
+            });
+            console.log(volume);
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X PUT \
+                  -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                  --data '{ "volume_id": "12345-67890-12345-67890", "size_tib": 3}' \
+                  https://api.together.ai/v1/compute/clusters/storage/volumes
     post:
       tags: ['SharedVolumeService']
       summary: Create a shared volume.
@@ -4846,12 +4843,12 @@ paths:
             description: The ID of the volume to retrieve
             type: string
       responses:
-          "200":
-              description: OK
-              content:
-                  application/json:
-                      schema:
-                          $ref: '#/components/schemas/GPUClustersSharedVolume'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GPUClustersSharedVolume'
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (v2)
@@ -5583,9 +5580,7 @@ paths:
       tags: ['Hardware']
       summary: List available hardware configurations
       description: >
-        Returns a list of available hardware configurations for deploying models.
-        When a model parameter is provided, it returns only hardware configurations compatible
-        with that model, including their current availability status.
+        Returns a list of available hardware configurations for deploying models. When a model parameter is provided, it returns only hardware configurations compatible with that model, including their current availability status.
       x-codeSamples:
         - lang: Python
           label: Together AI SDK (v2)
@@ -8526,89 +8521,89 @@ components:
         - billing_type
       type: object
       properties:
-          cluster_type:
-            description: Type of cluster to create.
-            type: string
-            enum: [KUBERNETES, SLURM]
-          region:
-            description: Region to create the GPU cluster in. Usable regions can be found from `client.clusters.list_regions()`
-            type: string
-          gpu_type:
-            description: Type of GPU to use in the cluster
-            type: string
-            enum:
-              - H100_SXM
-              - H200_SXM
-              - RTX_6000_PCI
-              - L40_PCIE
-              - B200_SXM
-              - H100_SXM_INF
-          num_gpus:
-            description: Number of GPUs to allocate in the cluster. This must be multiple of 8. For example, 8, 16 or 24
-            type: integer
-          cluster_name:
-            description: Name of the GPU cluster.
-            type: string
-          duration_days:
-            x-stainless-terraform-configurability: computed
-            description: Duration in days to keep the cluster running.
-            type: integer
-          shared_volume:
-            x-stainless-terraform-configurability: computed
-            $ref: '#/components/schemas/GPUClustersSharedVolumeCreateRequest'
-            description: Inline configuration to create a shared volume with the cluster creation.
-          volume_id:
-            description: ID of an existing volume to use with the cluster creation.
-            type: string
-          billing_type:
-            description: |
-              RESERVED billing types allow you to specify the duration of the cluster reservation via the duration_days field.
-              ON_DEMAND billing types will give you ownership of the cluster until you delete it.
-              SCHEDULED_CAPACITY billing types allow you to reserve capacity for a scheduled time window. You must specify the reservation_start_time and reservation_end_time with this request.
-            x-stainless-terraform-configurability: computed
-            type: string
-            enum:
-              - RESERVED
-              - ON_DEMAND
-              - SCHEDULED_CAPACITY
-          gpu_node_failover_enabled:
-              type: boolean
-              default: false
-              description: Whether automated GPU node failover should be enabled for this cluster. By default, it is disabled.
-          auto_scaled:
-              type: boolean
-              default: false
-              description: Whether GPU cluster should be auto-scaled based on the workload. By default, it is not auto-scaled.
-          auto_scale_max_gpus:
-              type: integer
-              description: Maximum number of GPUs to which the cluster can be auto-scaled up. This field is required if auto_scaled is true.
-          slurm_shm_size_gib:
-              type: integer
-              description: Shared memory size in GiB for Slurm cluster. This field is required if cluster_type is SLURM.
-          capacity_pool_id:
-              type: string
-              description: ID of the capacity pool to use for the cluster. This field is optional and only applicable if the cluster is created from a capacity pool.
-          reservation_start_time:
-              type: string
-              description: Reservation start time of the cluster. This field is required for SCHEDULED billing to specify the reservation start time for the cluster. If not provided, the cluster will be provisioned immediately.
-              format: date-time
-          reservation_end_time:
-              type: string
-              description: Reservation end time of the cluster. This field is required for SCHEDULED billing to specify the reservation end time for the cluster.
-              format: date-time
-          install_traefik:
-              type: boolean
-              default: false
-              description: Whether to install Traefik ingress controller in the cluster. This field is only applicable for Kubernetes clusters and is false by default.
-          cuda_version:
-              type: string
-              description: CUDA version for this cluster. For example, 12.5
-          nvidia_driver_version:
-              type: string
-              description: Nvidia driver version for this cluster. For example, 550. Only some combination of cuda_version and nvidia_driver_version are supported.
-          slurm_image:
-              type: string
-              description: Custom Slurm image for Slurm clusters.
+        cluster_type:
+          description: Type of cluster to create.
+          type: string
+          enum: [KUBERNETES, SLURM]
+        region:
+          description: Region to create the GPU cluster in. Usable regions can be found from `client.clusters.list_regions()`
+          type: string
+        gpu_type:
+          description: Type of GPU to use in the cluster
+          type: string
+          enum:
+            - H100_SXM
+            - H200_SXM
+            - RTX_6000_PCI
+            - L40_PCIE
+            - B200_SXM
+            - H100_SXM_INF
+        num_gpus:
+          description: Number of GPUs to allocate in the cluster. This must be multiple of 8. For example, 8, 16 or 24
+          type: integer
+        cluster_name:
+          description: Name of the GPU cluster.
+          type: string
+        duration_days:
+          x-stainless-terraform-configurability: computed
+          description: Duration in days to keep the cluster running.
+          type: integer
+        shared_volume:
+          x-stainless-terraform-configurability: computed
+          $ref: '#/components/schemas/GPUClustersSharedVolumeCreateRequest'
+          description: Inline configuration to create a shared volume with the cluster creation.
+        volume_id:
+          description: ID of an existing volume to use with the cluster creation.
+          type: string
+        billing_type:
+          description: |
+            RESERVED billing types allow you to specify the duration of the cluster reservation via the duration_days field.
+            ON_DEMAND billing types will give you ownership of the cluster until you delete it.
+            SCHEDULED_CAPACITY billing types allow you to reserve capacity for a scheduled time window. You must specify the reservation_start_time and reservation_end_time with this request.
+          x-stainless-terraform-configurability: computed
+          type: string
+          enum:
+            - RESERVED
+            - ON_DEMAND
+            - SCHEDULED_CAPACITY
+        gpu_node_failover_enabled:
+          type: boolean
+          default: false
+          description: Whether automated GPU node failover should be enabled for this cluster. By default, it is disabled.
+        auto_scaled:
+          type: boolean
+          default: false
+          description: Whether GPU cluster should be auto-scaled based on the workload. By default, it is not auto-scaled.
+        auto_scale_max_gpus:
+          type: integer
+          description: Maximum number of GPUs to which the cluster can be auto-scaled up. This field is required if auto_scaled is true.
+        slurm_shm_size_gib:
+          type: integer
+          description: Shared memory size in GiB for Slurm cluster. This field is required if cluster_type is SLURM.
+        capacity_pool_id:
+          type: string
+          description: ID of the capacity pool to use for the cluster. This field is optional and only applicable if the cluster is created from a capacity pool.
+        reservation_start_time:
+          type: string
+          description: Reservation start time of the cluster. This field is required for SCHEDULED billing to specify the reservation start time for the cluster. If not provided, the cluster will be provisioned immediately.
+          format: date-time
+        reservation_end_time:
+          type: string
+          description: Reservation end time of the cluster. This field is required for SCHEDULED billing to specify the reservation end time for the cluster.
+          format: date-time
+        install_traefik:
+          type: boolean
+          default: false
+          description: Whether to install Traefik ingress controller in the cluster. This field is only applicable for Kubernetes clusters and is false by default.
+        cuda_version:
+          type: string
+          description: CUDA version for this cluster. For example, 12.5
+        nvidia_driver_version:
+          type: string
+          description: Nvidia driver version for this cluster. For example, 550. Only some combination of cuda_version and nvidia_driver_version are supported.
+        slurm_image:
+          type: string
+          description: Custom Slurm image for Slurm clusters.
     GPUClusterGPUWorkerNode:
       type: object
       required:
@@ -8708,37 +8703,37 @@ components:
         num_gpus:
           type: integer
         slurm_shm_size_gib:
-            type: integer
+          type: integer
         capacity_pool_id:
-            type: string
+          type: string
         reservation_start_time:
-            type: string
-            format: date-time
+          type: string
+          format: date-time
         reservation_end_time:
-            type: string
-            format: date-time
+          type: string
+          format: date-time
         install_traefik:
-            type: boolean
+          type: boolean
         cuda_version:
-            type: string
+          type: string
         nvidia_driver_version:
-            type: string
+          type: string
         created_at:
-            type: string
-            format: date-time
+          type: string
+          format: date-time
     GPUClusterUpdateRequest:
-        type: object
-        properties:
-          cluster_type:
-            description: Type of cluster to update.
-            enum: [KUBERNETES, SLURM]
-          num_gpus:
-            description: Number of GPUs to allocate in the cluster. This must be multiple of 8. For example, 8, 16 or 24
-            type: integer
-          reservation_end_time:
-            type: string
-            description: Timestamp at which the cluster should be decommissioned. Only accepted for prepaid clusters.
-            format: date-time
+      type: object
+      properties:
+        cluster_type:
+          description: Type of cluster to update.
+          enum: [KUBERNETES, SLURM]
+        num_gpus:
+          description: Number of GPUs to allocate in the cluster. This must be multiple of 8. For example, 8, 16 or 24
+          type: integer
+        reservation_end_time:
+          type: string
+          description: Timestamp at which the cluster should be decommissioned. Only accepted for prepaid clusters.
+          format: date-time
     GPUClusterVolume:
       type: object
       required:
@@ -8760,9 +8755,9 @@ components:
       required: [clusters]
       properties:
         clusters:
-            type: array
-            items:
-                $ref: '#/components/schemas/GPUClusterInfo'
+          type: array
+          items:
+            $ref: '#/components/schemas/GPUClusterInfo'
     InstanceTypesResponse:
       type: object
       properties:
@@ -8928,9 +8923,7 @@ components:
         model:
           type: string
           description: >
-            The model to be used for the rerank request.<br>
-            <br>
-            [See all of Together AI's rerank models](https://docs.together.ai/docs/serverless-models#rerank-models)
+            The model to be used for the rerank request.<br> <br> [See all of Together AI's rerank models](https://docs.together.ai/docs/serverless-models#rerank-models)
           example: Salesforce/Llama-Rank-V1
           anyOf:
             - type: string
@@ -8954,22 +8947,10 @@ components:
                 type: string
                 example: Our solar system orbits the Milky Way galaxy at about 515,000 mph
           example:
-            - {
-                'title': 'Llama',
-                'text': 'The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era.',
-              }
-            - {
-                'title': 'Panda',
-                'text': 'The giant panda (Ailuropoda melanoleuca), also known as the panda bear or simply panda, is a bear species endemic to China.',
-              }
-            - {
-                'title': 'Guanaco',
-                'text': 'The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations.',
-              }
-            - {
-                'title': 'Wild Bactrian camel',
-                'text': 'The wild Bactrian camel (Camelus ferus) is an endangered species of camel endemic to Northwest China and southwestern Mongolia.',
-              }
+            - {'title': 'Llama', 'text': 'The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era.'}
+            - {'title': 'Panda', 'text': 'The giant panda (Ailuropoda melanoleuca), also known as the panda bear or simply panda, is a bear species endemic to China.'}
+            - {'title': 'Guanaco', 'text': 'The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations.'}
+            - {'title': 'Wild Bactrian camel', 'text': 'The wild Bactrian camel (Camelus ferus) is an endangered species of camel endemic to Northwest China and southwestern Mongolia.'}
         top_n:
           type: integer
           description: The number of top results to return.
@@ -9025,30 +9006,11 @@ components:
                     type: string
                     nullable: true
           example:
-            - {
-                'index': 0,
-                'relevance_score': 0.29980177813003117,
-                'document':
-                  {
-                    'text': '{"title":"Llama","text":"The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era."}',
-                  },
-              }
-            - {
-                'index': 2,
-                'relevance_score': 0.2752447527354349,
-                'document':
-                  {
-                    'text': '{"title":"Guanaco","text":"The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations."}',
-                  },
-              }
+            - {'index': 0, 'relevance_score': 0.29980177813003117, 'document': {'text': '{"title":"Llama","text":"The llama is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the pre-Columbian era."}'}}
+            - {'index': 2, 'relevance_score': 0.2752447527354349, 'document': {'text': '{"title":"Guanaco","text":"The guanaco is a camelid native to South America, closely related to the llama. Guanacos are one of two wild South American camelids; the other species is the vicuña, which lives at higher elevations."}'}}
         usage:
           $ref: '#/components/schemas/UsageData'
-          example:
-            {
-              'prompt_tokens': 1837,
-              'completion_tokens': 0,
-              'total_tokens': 1837,
-            }
+          example: {'prompt_tokens': 1837, 'completion_tokens': 0, 'total_tokens': 1837}
 
     ErrorData:
       type: object
@@ -9174,9 +9136,7 @@ components:
         model:
           type: string
           description: >
-            The name of the model to query.<br>
-            <br>
-            [See all of Together AI's chat models](https://docs.together.ai/docs/serverless-models#chat-models)
+            The name of the model to query.<br> <br> [See all of Together AI's chat models](https://docs.together.ai/docs/serverless-models#chat-models)
           example: mistralai/Mixtral-8x7B-Instruct-v0.1
           anyOf:
             - type: string
@@ -9253,7 +9213,7 @@ components:
             type: number
             format: float
           description: Adjusts the likelihood of specific tokens appearing in the generated output.
-          example: { '1024': -10.5, '105': 21.4 }
+          example: {'1024': -10.5, '105': 21.4}
         seed:
           type: integer
           description: Seed value for reproducibility.
@@ -9461,9 +9421,7 @@ components:
         model:
           type: string
           description: >
-            The name of the model to query.<br>
-            <br>
-            [See all of Together AI's chat models](https://docs.together.ai/docs/serverless-models#chat-models)
+            The name of the model to query.<br> <br> [See all of Together AI's chat models](https://docs.together.ai/docs/serverless-models#chat-models)
         max_tokens:
           type: integer
           description: The maximum number of tokens to generate.
@@ -9526,7 +9484,7 @@ components:
             type: number
             format: float
           description: Adjusts the likelihood of specific tokens appearing in the generated output.
-          example: { '1024': -10.5, '105': 21.4 }
+          example: {'1024': -10.5, '105': 21.4}
         seed:
           type: integer
           description: Seed value for reproducibility.
@@ -9553,7 +9511,7 @@ components:
             ensures the message the model generates is valid JSON. Using `json_schema`
             is preferred for models that support it.
           discriminator:
-                  propertyName: type
+            propertyName: type
           anyOf:
             - $ref: '#/components/schemas/ResponseFormatText'
             - $ref: '#/components/schemas/ResponseFormatJsonSchema'
@@ -9990,13 +9948,7 @@ components:
       properties:
         model:
           description: >
-            The name of the model to query.<br>
-            <br>
-            [See all of Together AI's chat models](https://docs.together.ai/docs/serverless-models#audio-models)
-            The current supported tts models are:
-            - cartesia/sonic
-            - hexgrad/Kokoro-82M
-            - canopylabs/orpheus-3b-0.1-ft
+            The name of the model to query.<br> <br> [See all of Together AI's chat models](https://docs.together.ai/docs/serverless-models#audio-models) The current supported tts models are: - cartesia/sonic - hexgrad/Kokoro-82M - canopylabs/orpheus-3b-0.1-ft
           example: canopylabs/orpheus-3b-0.1-ft
           anyOf:
             - type: string
@@ -10010,12 +9962,7 @@ components:
           description: Input text to generate the audio for
         voice:
           description: >
-            The voice to use for generating the audio.
-            The voices supported are different for each model. For eg - for canopylabs/orpheus-3b-0.1-ft, one of the voices supported is tara, for hexgrad/Kokoro-82M, one of the voices supported is af_alloy and for cartesia/sonic, one of the voices supported is "friendly sidekick".
-            <br>
-            <br>
-            You can view the voices supported for each model using the /v1/voices endpoint sending the model name as the query parameter.
-            [View all supported voices here](https://docs.together.ai/docs/text-to-speech#supported-voices).
+            The voice to use for generating the audio. The voices supported are different for each model. For eg - for canopylabs/orpheus-3b-0.1-ft, one of the voices supported is tara, for hexgrad/Kokoro-82M, one of the voices supported is af_alloy and for cartesia/sonic, one of the voices supported is "friendly sidekick". <br> <br> You can view the voices supported for each model using the /v1/voices endpoint sending the model name as the query parameter. [View all supported voices here](https://docs.together.ai/docs/text-to-speech#supported-voices).
           type: string
         response_format:
           type: string
@@ -10132,14 +10079,7 @@ components:
         diarize:
           type: boolean
           description: >
-            Whether to enable speaker diarization. When enabled, you will get the speaker id for each word in the transcription.
-            In the response, in the words array, you will get the speaker id for each word.
-            In addition, we also return the speaker_segments array which contains the speaker id for each speaker segment along with the start and end time of the segment along with all the words in the segment.
-            <br>
-            <br>
-            For eg -
-            ...
-            "speaker_segments": [
+            Whether to enable speaker diarization. When enabled, you will get the speaker id for each word in the transcription. In the response, in the words array, you will get the speaker id for each word. In addition, we also return the speaker_segments array which contains the speaker id for each speaker segment along with the start and end time of the segment along with all the words in the segment. <br> <br> For eg - ... "speaker_segments": [
               "speaker_id": "SPEAKER_00",
               "start": 0,
               "end": 30.02,
@@ -10528,9 +10468,7 @@ components:
         model:
           type: string
           description: >
-            The name of the embedding model to use.<br>
-            <br>
-            [See all of Together AI's embedding models](https://docs.together.ai/docs/serverless-models#embedding-models)
+            The name of the embedding model to use.<br> <br> [See all of Together AI's embedding models](https://docs.together.ai/docs/serverless-models#embedding-models)
           example: togethercomputer/m2-bert-80M-8k-retrieval
           anyOf:
             - type: string
@@ -12775,20 +12713,7 @@ components:
           deprecated: true
           description: "Deprecated: use media.frame_images instead. Array of images to guide video generation, similar to keyframes."
           example:
-            - [
-              {
-                "input_image": "aac49721-1964-481a-ae78-8a4e29b91402",
-                "frame": 0
-              },
-              {
-                "input_image": "c00abf5f-6cdb-4642-a01d-1bfff7bc3cf7",
-                "frame": 48
-              },
-              {
-                "input_image": "3ad204c3-a9de-4963-8a1a-c3911e3afafe",
-                "frame": "last"
-              }
-            ]
+            - [{"input_image": "aac49721-1964-481a-ae78-8a4e29b91402", "frame": 0}, {"input_image": "c00abf5f-6cdb-4642-a01d-1bfff7bc3cf7", "frame": 48}, {"input_image": "3ad204c3-a9de-4963-8a1a-c3911e3afafe", "frame": "last"}]
           type: array
           items:
             $ref: '#/components/schemas/VideoFrameImageInput'
@@ -12947,120 +12872,99 @@ components:
     ContainerStatus:
       properties:
         finishedAt:
-          description: FinishedAt is the timestamp when the container finished execution
-            (if terminated)
+          description: FinishedAt is the timestamp when the container finished execution (if terminated)
           type: string
         message:
-          description: Message provides a human-readable message with details about the
-            container's status
+          description: Message provides a human-readable message with details about the container's status
           type: string
         name:
           description: Name is the name of the container
           type: string
         reason:
-          description: Reason provides a brief machine-readable reason for the container's
-            current status
+          description: Reason provides a brief machine-readable reason for the container's current status
           type: string
         startedAt:
           description: StartedAt is the timestamp when the container started execution
           type: string
         status:
-          description: Status is the current state of the container (e.g., "Running",
-            "Terminated", "Waiting")
+          description: Status is the current state of the container (e.g., "Running", "Terminated", "Waiting")
           type: string
       type: object
     CreateDeploymentRequest:
       properties:
         args:
-          description: Args overrides the container's CMD. Provide as an array of
-            arguments (e.g., ["python", "app.py"])
+          description: Args overrides the container's CMD. Provide as an array of arguments (e.g., ["python", "app.py"])
           items:
             type: string
           type: array
         autoscaling:
-          description: 'Autoscaling configuration. Example: {"metric": "QueueBacklogPerWorker",
-            "target": 1.01} to scale based on queue backlog. Omit or set to null to
-            disable autoscaling'
+          description: 'Autoscaling configuration. Example: {"metric": "QueueBacklogPerWorker", "target": 1.01} to scale based on queue backlog. Omit or set to null to disable autoscaling'
           oneOf:
-          - $ref: "#/components/schemas/HTTPAutoscalingConfig"
-          - $ref: "#/components/schemas/QueueAutoscalingConfig"
-          - $ref: "#/components/schemas/CustomMetricAutoscalingConfig"
+            - $ref: "#/components/schemas/HTTPAutoscalingConfig"
+            - $ref: "#/components/schemas/QueueAutoscalingConfig"
+            - $ref: "#/components/schemas/CustomMetricAutoscalingConfig"
         command:
-          description: Command overrides the container's ENTRYPOINT. Provide as an
-            array (e.g., ["/bin/sh", "-c"])
+          description: Command overrides the container's ENTRYPOINT. Provide as an array (e.g., ["/bin/sh", "-c"])
           items:
             type: string
           type: array
         cpu:
-          description: CPU is the number of CPU cores to allocate per container instance
-            (e.g., 0.1 = 100 milli cores)
+          description: CPU is the number of CPU cores to allocate per container instance (e.g., 0.1 = 100 milli cores)
           minimum: 0.1
           type: number
         description:
-          description: Description is an optional human-readable description of your
-            deployment
+          description: Description is an optional human-readable description of your deployment
           type: string
         environment_variables:
-          description: EnvironmentVariables is a list of environment variables to
-            set in the container. Each must have a name and either a value or value_from_secret
+          description: EnvironmentVariables is a list of environment variables to set in the container. Each must have a name and either a value or value_from_secret
           items:
             $ref: "#/components/schemas/EnvironmentVariable"
           type: array
         gpu_count:
-          description: GPUCount is the number of GPUs to allocate per container instance.
-            Defaults to 0 if not specified
+          description: GPUCount is the number of GPUs to allocate per container instance. Defaults to 0 if not specified
           type: integer
         gpu_type:
           description: GPUType specifies the GPU hardware to use (e.g., "h100-80gb").
           enum:
-          - h100-80gb
-          - h100-40gb-mig
-          - b200-192gb
+            - h100-80gb
+            - h100-40gb-mig
+            - b200-192gb
           type: string
         health_check_path:
-          description: HealthCheckPath is the HTTP path for health checks (e.g., "/health").
-            If set, the platform will check this endpoint to determine container health
+          description: HealthCheckPath is the HTTP path for health checks (e.g., "/health"). If set, the platform will check this endpoint to determine container health
           type: string
         image:
           description: Image is the container image to deploy from registry.together.ai.
           type: string
         max_replicas:
-          description: MaxReplicas is the maximum number of container instances that
-            can be scaled up to. If not set, will be set to MinReplicas
+          description: MaxReplicas is the maximum number of container instances that can be scaled up to. If not set, will be set to MinReplicas
           type: integer
         memory:
-          description: Memory is the amount of RAM to allocate per container instance
-            in GiB (e.g., 0.5 = 512MiB)
+          description: Memory is the amount of RAM to allocate per container instance in GiB (e.g., 0.5 = 512MiB)
           maximum: 1000
           type: number
         min_replicas:
-          description: MinReplicas is the minimum number of container instances to
-            run. Defaults to 1 if not specified
+          description: MinReplicas is the minimum number of container instances to run. Defaults to 1 if not specified
           type: integer
         name:
-          description: Name is the unique identifier for your deployment. Must contain
-            only alphanumeric characters, underscores, or hyphens (1-100 characters)
+          description: Name is the unique identifier for your deployment. Must contain only alphanumeric characters, underscores, or hyphens (1-100 characters)
           maxLength: 100
           minLength: 1
           type: string
         port:
-          description: Port is the container port your application listens on (e.g.,
-            8080 for web servers). Required if your application serves traffic
+          description: Port is the container port your application listens on (e.g., 8080 for web servers). Required if your application serves traffic
           maximum: 65535
           minimum: 1
           type: integer
         storage:
-          description: Storage is the amount of ephemeral disk storage to allocate
-            per container instance (e.g., 10 = 10GiB)
+          description: Storage is the amount of ephemeral disk storage to allocate per container instance (e.g., 10 = 10GiB)
           maximum: 400
           type: integer
         termination_grace_period_seconds:
-          description: TerminationGracePeriodSeconds is the time in seconds to wait
-            for graceful shutdown before forcefully terminating the replica
+          description: TerminationGracePeriodSeconds is the time in seconds to wait for graceful shutdown before forcefully terminating the replica
           type: integer
         volumes:
-          description: Volumes is a list of volume mounts to attach to the container.
-            Each mount must reference an existing volume by name
+          description: Volumes is a list of volume mounts to attach to the container. Each mount must reference an existing volume by name
           items:
             $ref: "#/components/schemas/VolumeMount"
           type: array
@@ -13072,24 +12976,19 @@ components:
     CreateSecretRequest:
       properties:
         description:
-          description: Description is an optional human-readable description of the
-            secret's purpose (max 500 characters)
+          description: Description is an optional human-readable description of the secret's purpose (max 500 characters)
           maxLength: 500
           type: string
         name:
-          description: Name is the unique identifier for the secret. Can contain
-            alphanumeric characters, underscores, hyphens, forward slashes, and
-            periods (1-100 characters)
+          description: Name is the unique identifier for the secret. Can contain alphanumeric characters, underscores, hyphens, forward slashes, and periods (1-100 characters)
           maxLength: 100
           minLength: 1
           type: string
         project_id:
-          description: ProjectID is ignored - the project is automatically determined from
-            your authentication
+          description: ProjectID is ignored - the project is automatically determined from your authentication
           type: string
         value:
-          description: Value is the sensitive data to store securely (e.g., API keys,
-            passwords, tokens). This value will be encrypted at rest
+          description: Value is the sensitive data to store securely (e.g., API keys, passwords, tokens). This value will be encrypted at rest
           minLength: 1
           type: string
       required:
@@ -13140,54 +13039,46 @@ components:
             type: string
           type: array
         autoscaling:
-          description: Autoscaling contains autoscaling configuration parameters for
-            this deployment. Omitted when autoscaling is disabled (nil)
+          description: Autoscaling contains autoscaling configuration parameters for this deployment. Omitted when autoscaling is disabled (nil)
           oneOf:
-          - $ref: '#/components/schemas/HTTPAutoscalingConfig'
-          - $ref: '#/components/schemas/QueueAutoscalingConfig'
-          - $ref: '#/components/schemas/CustomMetricAutoscalingConfig'
+            - $ref: '#/components/schemas/HTTPAutoscalingConfig'
+            - $ref: '#/components/schemas/QueueAutoscalingConfig'
+            - $ref: '#/components/schemas/CustomMetricAutoscalingConfig'
         command:
           description: Command is the entrypoint command run in the container
           items:
             type: string
           type: array
         cpu:
-          description: CPU is the amount of CPU resource allocated to each replica in
-            cores (fractional value is allowed)
+          description: CPU is the amount of CPU resource allocated to each replica in cores (fractional value is allowed)
           type: number
         created_at:
           description: CreatedAt is the ISO8601 timestamp when this deployment was created
           type: string
           format: date-time
         description:
-          description: Description provides a human-readable explanation of the
-            deployment's purpose or content
+          description: Description provides a human-readable explanation of the deployment's purpose or content
           type: string
         desired_replicas:
-          description: DesiredReplicas is the number of replicas that the orchestrator is
-            targeting
+          description: DesiredReplicas is the number of replicas that the orchestrator is targeting
           type: integer
         environment_variables:
-          description: EnvironmentVariables is a list of environment variables set in the
-            container
+          description: EnvironmentVariables is a list of environment variables set in the container
           items:
             $ref: "#/components/schemas/EnvironmentVariable"
           type: array
         gpu_count:
-          description: GPUCount is the number of GPUs allocated to each replica in this
-            deployment
+          description: GPUCount is the number of GPUs allocated to each replica in this deployment
           type: integer
         gpu_type:
-          description: GPUType specifies the type of GPU requested (if any) for this
-            deployment
+          description: GPUType specifies the type of GPU requested (if any) for this deployment
           enum:
             - h100-80gb
             - h100-40gb-mig
             - b200-192gb
           type: string
         health_check_path:
-          description: HealthCheckPath is the HTTP path used for health checks of the
-            application
+          description: HealthCheckPath is the HTTP path used for health checks of the application
           type: string
         id:
           description: ID is the unique identifier of the deployment
@@ -13196,16 +13087,13 @@ components:
           description: Image specifies the container image used for this deployment
           type: string
         max_replicas:
-          description: MaxReplicas is the maximum number of replicas to run for this
-            deployment
+          description: MaxReplicas is the maximum number of replicas to run for this deployment
           type: integer
         memory:
-          description: Memory is the amount of memory allocated to each replica in GiB
-            (fractional value is allowed)
+          description: Memory is the amount of memory allocated to each replica in GiB (fractional value is allowed)
           type: number
         min_replicas:
-          description: MinReplicas is the minimum number of replicas to run for this
-            deployment
+          description: MinReplicas is the minimum number of replicas to run for this deployment
           type: integer
         name:
           description: Name is the name of the deployment
@@ -13217,32 +13105,27 @@ components:
           description: Port is the container port that the deployment exposes
           type: integer
         ready_replicas:
-          description: ReadyReplicas is the current number of replicas that are in the
-            Ready state
+          description: ReadyReplicas is the current number of replicas that are in the Ready state
           type: integer
         replica_events:
           additionalProperties:
             $ref: "#/components/schemas/ReplicaEvent"
-          description: ReplicaEvents is a mapping of replica names or IDs to their status
-            events
+          description: ReplicaEvents is a mapping of replica names or IDs to their status events
           type: object
         status:
           allOf:
             - $ref: "#/components/schemas/DeploymentStatus"
-          description: Status represents the overall status of the deployment (e.g.,
-            Updating, Scaling, Ready, Failed)
+          description: Status represents the overall status of the deployment (e.g., Updating, Scaling, Ready, Failed)
           enum:
             - Updating
             - Scaling
             - Ready
             - Failed
         storage:
-          description: Storage is the amount of storage (in MB or units as defined by the
-            platform) allocated to each replica
+          description: Storage is the amount of storage (in MB or units as defined by the platform) allocated to each replica
           type: integer
         updated_at:
-          description: UpdatedAt is the ISO8601 timestamp when this deployment was last
-            updated
+          description: UpdatedAt is the ISO8601 timestamp when this deployment was last updated
           type: string
           format: date-time
         volumes:
@@ -13266,42 +13149,33 @@ components:
     EnvironmentVariable:
       properties:
         name:
-          description: Name is the environment variable name (e.g., "DATABASE_URL"). Must
-            start with a letter or underscore, followed by letters, numbers, or
-            underscores
+          description: Name is the environment variable name (e.g., "DATABASE_URL"). Must start with a letter or underscore, followed by letters, numbers, or underscores
           type: string
         value:
-          description: Value is the plain text value for the environment variable. Use
-            this for non-sensitive values. Either Value or ValueFromSecret must
-            be set, but not both
+          description: Value is the plain text value for the environment variable. Use this for non-sensitive values. Either Value or ValueFromSecret must be set, but not both
           type: string
         value_from_secret:
-          description: ValueFromSecret references a secret by name or ID to use as the
-            value. Use this for sensitive values like API keys or passwords.
-            Either Value or ValueFromSecret must be set, but not both
+          description: ValueFromSecret references a secret by name or ID to use as the value. Use this for sensitive values like API keys or passwords. Either Value or ValueFromSecret must be set, but not both
           type: string
       required:
         - name
       type: object
     HTTPAutoscalingConfig:
-      description: Autoscaling config for HTTPTotalRequests and HTTPAvgRequestDuration
-        metrics
+      description: Autoscaling config for HTTPTotalRequests and HTTPAvgRequestDuration metrics
       properties:
         metric:
           description: Metric must be HTTPTotalRequests or HTTPAvgRequestDuration
           enum:
-          - HTTPTotalRequests
-          - HTTPAvgRequestDuration
+            - HTTPTotalRequests
+            - HTTPAvgRequestDuration
           example: HTTPTotalRequests
           type: string
         target:
-          description: 'Target is the threshold value. Default: 100 for HTTPTotalRequests,
-            500 (ms) for HTTPAvgRequestDuration'
+          description: 'Target is the threshold value. Default: 100 for HTTPTotalRequests, 500 (ms) for HTTPAvgRequestDuration'
           example: 100
           type: number
         time_interval_minutes:
-          description: 'TimeIntervalMinutes is the rate window in minutes. Default:
-            10'
+          description: 'TimeIntervalMinutes is the rate window in minutes. Default: 10'
           example: 10
           type: integer
       type: object
@@ -13311,12 +13185,11 @@ components:
         metric:
           description: Metric must be QueueBacklogPerWorker
           enum:
-          - QueueBacklogPerWorker
+            - QueueBacklogPerWorker
           example: QueueBacklogPerWorker
           type: string
         model:
-          description: Model overrides the model name for queue status lookup. Defaults
-            to the deployment app name
+          description: Model overrides the model name for queue status lookup. Defaults to the deployment app name
           type: string
         target:
           description: 'Target is the threshold value. Default: 1.01'
@@ -13327,14 +13200,13 @@ components:
       description: Autoscaling config for CustomMetric metric
       properties:
         custom_metric_name:
-          description: CustomMetricName is the Prometheus metric name. Required. Must
-            match [a-zA-Z_:][a-zA-Z0-9_:]*
+          description: CustomMetricName is the Prometheus metric name. Required. Must match [a-zA-Z_:][a-zA-Z0-9_:]*
           example: my_custom_metric
           type: string
         metric:
           description: Metric must be CustomMetric
           enum:
-          - CustomMetric
+            - CustomMetric
           example: CustomMetric
           type: string
         target:
@@ -13360,8 +13232,7 @@ components:
           description: Message is a human-readable description of the event
           type: string
         reason:
-          description: Reason is a brief machine-readable reason for this event (e.g.,
-            "Pulling", "Started", "Failed")
+          description: Reason is a brief machine-readable reason for this event (e.g., "Pulling", "Started", "Failed")
           type: string
       type: object
     ListSecretsResponse:
@@ -13392,35 +13263,28 @@ components:
           description: Image is the container image used for this replica
           type: string
         replica_ready_since:
-          description: ReplicaReadySince is the timestamp when the replica became ready to
-            serve traffic
+          description: ReplicaReadySince is the timestamp when the replica became ready to serve traffic
           type: string
         replica_status:
-          description: ReplicaStatus is the current status of the replica (e.g.,
-            "Running", "Waiting", "Terminated")
+          description: ReplicaStatus is the current status of the replica (e.g., "Running", "Waiting", "Terminated")
           type: string
         replica_status_message:
-          description: ReplicaStatusMessage provides a human-readable message explaining
-            the replica's status
+          description: ReplicaStatusMessage provides a human-readable message explaining the replica's status
           type: string
         replica_status_reason:
-          description: ReplicaStatusReason provides a brief machine-readable reason for
-            the replica's status
+          description: ReplicaStatusReason provides a brief machine-readable reason for the replica's status
           type: string
         revision_id:
           description: RevisionID is the deployment revision ID associated with this replica
           type: string
         volume_preload_completed_at:
-          description: VolumePreloadCompletedAt is the timestamp when the volume preload
-            completed
+          description: VolumePreloadCompletedAt is the timestamp when the volume preload completed
           type: string
         volume_preload_started_at:
-          description: VolumePreloadStartedAt is the timestamp when the volume preload
-            started
+          description: VolumePreloadStartedAt is the timestamp when the volume preload started
           type: string
         volume_preload_status:
-          description: VolumePreloadStatus is the status of the volume preload (e.g.,
-            "InProgress", "Completed", "Failed")
+          description: VolumePreloadStatus is the status of the volume preload (e.g., "InProgress", "Completed", "Failed")
           type: string
       type: object
     SecretResponseItem:
@@ -13438,8 +13302,7 @@ components:
           description: ID is the unique identifier for this secret
           type: string
         last_updated_by:
-          description: LastUpdatedBy is the identifier of the user who last updated this
-            secret
+          description: LastUpdatedBy is the identifier of the user who last updated this secret
           type: string
         name:
           description: Name is the name/key of the secret
@@ -13454,36 +13317,30 @@ components:
     UpdateDeploymentRequest:
       properties:
         args:
-          description: Args overrides the container's CMD. Provide as an array of
-            arguments (e.g., ["python", "app.py"])
+          description: Args overrides the container's CMD. Provide as an array of arguments (e.g., ["python", "app.py"])
           items:
             type: string
           type: array
         autoscaling:
-          description: Autoscaling configuration for the deployment. Set to {} to
-            disable autoscaling
+          description: Autoscaling configuration for the deployment. Set to {} to disable autoscaling
           oneOf:
-          - $ref: "#/components/schemas/HTTPAutoscalingConfig"
-          - $ref: "#/components/schemas/QueueAutoscalingConfig"
-          - $ref: "#/components/schemas/CustomMetricAutoscalingConfig"
+            - $ref: "#/components/schemas/HTTPAutoscalingConfig"
+            - $ref: "#/components/schemas/QueueAutoscalingConfig"
+            - $ref: "#/components/schemas/CustomMetricAutoscalingConfig"
         command:
-          description: Command overrides the container's ENTRYPOINT. Provide as an
-            array (e.g., ["/bin/sh", "-c"])
+          description: Command overrides the container's ENTRYPOINT. Provide as an array (e.g., ["/bin/sh", "-c"])
           items:
             type: string
           type: array
         cpu:
-          description: CPU is the number of CPU cores to allocate per container instance
-            (e.g., 0.1 = 100 milli cores)
+          description: CPU is the number of CPU cores to allocate per container instance (e.g., 0.1 = 100 milli cores)
           minimum: 0.1
           type: number
         description:
-          description: Description is an optional human-readable description of your
-            deployment
+          description: Description is an optional human-readable description of your deployment
           type: string
         environment_variables:
-          description: EnvironmentVariables is a list of environment variables to
-            set in the container. This will replace all existing environment variables
+          description: EnvironmentVariables is a list of environment variables to set in the container. This will replace all existing environment variables
           items:
             $ref: "#/components/schemas/EnvironmentVariable"
           type: array
@@ -13493,53 +13350,45 @@ components:
         gpu_type:
           description: GPUType specifies the GPU hardware to use (e.g., "h100-80gb")
           enum:
-          - h100-80gb
-          - h100-40gb-mig
-          - b200-192gb
+            - h100-80gb
+            - h100-40gb-mig
+            - b200-192gb
           type: string
         health_check_path:
-          description: HealthCheckPath is the HTTP path for health checks (e.g., "/health").
-            Set to empty string to disable health checks
+          description: HealthCheckPath is the HTTP path for health checks (e.g., "/health"). Set to empty string to disable health checks
           type: string
         image:
           description: Image is the container image to deploy from registry.together.ai.
           type: string
         max_replicas:
-          description: MaxReplicas is the maximum number of replicas that can be scaled
-            up to.
+          description: MaxReplicas is the maximum number of replicas that can be scaled up to.
           type: integer
         memory:
-          description: Memory is the amount of RAM to allocate per container instance
-            in GiB (e.g., 0.5 = 512MiB)
+          description: Memory is the amount of RAM to allocate per container instance in GiB (e.g., 0.5 = 512MiB)
           maximum: 1000
           type: number
         min_replicas:
           description: MinReplicas is the minimum number of replicas to run
           type: integer
         name:
-          description: Name is the new unique identifier for your deployment. Must
-            contain only alphanumeric characters, underscores, or hyphens (1-100 characters)
+          description: Name is the new unique identifier for your deployment. Must contain only alphanumeric characters, underscores, or hyphens (1-100 characters)
           maxLength: 100
           minLength: 1
           type: string
         port:
-          description: Port is the container port your application listens on (e.g.,
-            8080 for web servers)
+          description: Port is the container port your application listens on (e.g., 8080 for web servers)
           maximum: 65535
           minimum: 1
           type: integer
         storage:
-          description: Storage is the amount of ephemeral disk storage to allocate
-            per container instance (e.g., 10 = 10GiB)
+          description: Storage is the amount of ephemeral disk storage to allocate per container instance (e.g., 10 = 10GiB)
           maximum: 400
           type: integer
         termination_grace_period_seconds:
-          description: TerminationGracePeriodSeconds is the time in seconds to wait
-            for graceful shutdown before forcefully terminating the replica
+          description: TerminationGracePeriodSeconds is the time in seconds to wait for graceful shutdown before forcefully terminating the replica
           type: integer
         volumes:
-          description: Volumes is a list of volume mounts to attach to the container.
-            This will replace all existing volumes
+          description: Volumes is a list of volume mounts to attach to the container. This will replace all existing volumes
           items:
             $ref: "#/components/schemas/VolumeMount"
           type: array
@@ -13547,24 +13396,19 @@ components:
     UpdateSecretRequest:
       properties:
         description:
-          description: Description is an optional human-readable description of the
-            secret's purpose (max 500 characters)
+          description: Description is an optional human-readable description of the secret's purpose (max 500 characters)
           maxLength: 500
           type: string
         name:
-          description: Name is the new unique identifier for the secret. Can contain
-            alphanumeric characters, underscores, hyphens, forward slashes, and
-            periods (1-100 characters)
+          description: Name is the new unique identifier for the secret. Can contain alphanumeric characters, underscores, hyphens, forward slashes, and periods (1-100 characters)
           maxLength: 100
           minLength: 1
           type: string
         project_id:
-          description: ProjectID is ignored - the project is automatically determined from
-            your authentication
+          description: ProjectID is ignored - the project is automatically determined from your authentication
           type: string
         value:
-          description: Value is the new sensitive data to store securely. Updating this
-            will replace the existing secret value
+          description: Value is the new sensitive data to store securely. Updating this will replace the existing secret value
           minLength: 1
           type: string
       type: object
@@ -13573,8 +13417,7 @@ components:
         content:
           allOf:
             - $ref: "#/components/schemas/VolumeContentRequest"
-          description: Content specifies the new content that will be preloaded to this
-            volume
+          description: Content specifies the new content that will be preloaded to this volume
         name:
           description: Name is the new unique identifier for the volume within the project
           type: string
@@ -13586,16 +13429,13 @@ components:
     VolumeMount:
       properties:
         mount_path:
-          description: MountPath is the path in the container where the volume will
-            be mounted (e.g., "/data")
+          description: MountPath is the path in the container where the volume will be mounted (e.g., "/data")
           type: string
         name:
-          description: Name is the name of the volume to mount. Must reference an
-            existing volume by name or ID
+          description: Name is the name of the volume to mount. Must reference an existing volume by name or ID
           type: string
         version:
-          description: Version is the volume version to mount. On create, defaults
-            to the latest version. On update, defaults to the currently mounted version.
+          description: Version is the volume version to mount. On create, defaults to the latest version. On update, defaults to the currently mounted version.
           type: integer
       required:
         - mount_path
@@ -13615,8 +13455,7 @@ components:
           description: ID is the unique identifier for this volume
           type: string
         mounted_by:
-          description: MountedBy is the list of deployment IDs currently mounting
-            current volume version
+          description: MountedBy is the list of deployment IDs currently mounting current volume version
           items:
             type: string
           type: array
@@ -13630,14 +13469,12 @@ components:
         type:
           $ref: '#/components/schemas/VolumeType'
         updated_at:
-          description: UpdatedAt is the ISO8601 timestamp when this volume was last
-            updated
+          description: UpdatedAt is the ISO8601 timestamp when this volume was last updated
           type: string
         version_history:
           additionalProperties:
             $ref: '#/components/schemas/VersionHistoryItem'
-          description: VersionHistory contains previous versions of this volume, keyed
-            by version number
+          description: VersionHistory contains previous versions of this volume, keyed by version number
           type: object
       type: object
     VersionHistoryItem:
@@ -13653,39 +13490,33 @@ components:
           type: integer
       type: object
     VolumeContentRequest:
-      description: Content specifies the new content that will be preloaded to this
-        volume
+      description: Content specifies the new content that will be preloaded to this volume
       properties:
         source_prefix:
-          description: SourcePrefix is the file path prefix for the content to be
-            preloaded into the volume
+          description: SourcePrefix is the file path prefix for the content to be preloaded into the volume
           example: models/
           type: string
         type:
-          description: Type is the content type (currently only "files" is supported
-            which allows preloading files uploaded via Files API into the volume)
+          description: Type is the content type (currently only "files" is supported which allows preloading files uploaded via Files API into the volume)
           enum:
-          - files
+            - files
           example: files
           type: string
       type: object
     VolumeContent:
       properties:
         files:
-          description: Files is the list of files that will be preloaded into the
-            volume, if the volume content type is "files"
+          description: Files is the list of files that will be preloaded into the volume, if the volume content type is "files"
           items:
             $ref: '#/components/schemas/FileInfo'
           type: array
           uniqueItems: false
         source_prefix:
-          description: SourcePrefix is the file path prefix for the content to be
-            preloaded into the volume
+          description: SourcePrefix is the file path prefix for the content to be preloaded into the volume
           example: models/
           type: string
         type:
-          description: Type is the content type (currently only "files" is supported which
-            allows preloading files uploaded via Files API into the volume)
+          description: Type is the content type (currently only "files" is supported which allows preloading files uploaded via Files API into the volume)
           enum:
             - files
           example: files
