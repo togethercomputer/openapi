@@ -12,6 +12,9 @@ on:
       - 'openapi.yaml'
       - '.yamlfmt'
 
+permissions:
+  contents: read
+
 jobs:
   yamlfmt:
     runs-on: ubuntu-latest
