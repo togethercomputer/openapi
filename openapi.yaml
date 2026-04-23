@@ -8559,6 +8559,7 @@ components:
           description: |
             RESERVED billing types allow you to specify the duration of the cluster reservation via the duration_days field.
             ON_DEMAND billing types will give you ownership of the cluster until you delete it.
+            SCHEDULED_CAPACITY billing types allow you to reserve capacity for a scheduled time window. You must specify the reservation_start_time and reservation_end_time with this request.
           x-stainless-terraform-configurability: computed
           type: string
           enum:
@@ -12925,7 +12926,9 @@ components:
         gpu_type:
           description: GPUType specifies the GPU hardware to use (e.g., "h100-80gb").
           enum:
-            - h100-80gb
+          - h100-80gb
+          - h100-40gb-mig
+          - b200-192gb
           type: string
         health_check_path:
           description: HealthCheckPath is the HTTP path for health checks (e.g., "/health"). If set, the platform will check this endpoint to determine container health
@@ -13071,7 +13074,8 @@ components:
           description: GPUType specifies the type of GPU requested (if any) for this deployment
           enum:
             - h100-80gb
-            - " a100-80gb"
+            - h100-40gb-mig
+            - b200-192gb
           type: string
         health_check_path:
           description: HealthCheckPath is the HTTP path used for health checks of the application
@@ -13346,7 +13350,9 @@ components:
         gpu_type:
           description: GPUType specifies the GPU hardware to use (e.g., "h100-80gb")
           enum:
-            - h100-80gb
+          - h100-80gb
+          - h100-40gb-mig
+          - b200-192gb
           type: string
         health_check_path:
           description: HealthCheckPath is the HTTP path for health checks (e.g., "/health"). Set to empty string to disable health checks
