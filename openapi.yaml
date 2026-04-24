@@ -8174,8 +8174,21 @@ components:
           description: Checkpoint ID to resume from
           type: string
           example: 123e4567-e89b-12d3-a456-426614174000
+        type:
+          $ref: '#/components/schemas/RL.SessionType'
+          default: SESSION_TYPE_TRAINER_AND_GENERATOR
+          example: SESSION_TYPE_TRAINER_ONLY
+          description: Type of the training session. Defaults to TRAINER_AND_GENERATOR when unspecified. TRAINER_ONLY provisions only the trainer and rejects sample requests.
         lora_config:
           $ref: '#/components/schemas/RL.LoraConfig'
+    RL.SessionType:
+      description: Type of a training session. TRAINER_AND_GENERATOR provisions both trainer and generator; TRAINER_ONLY provisions only the trainer and rejects generator-dependent operations such as sample.
+      default: SESSION_TYPE_UNSPECIFIED
+      type: string
+      enum:
+        - SESSION_TYPE_UNSPECIFIED
+        - SESSION_TYPE_TRAINER_AND_GENERATOR
+        - SESSION_TYPE_TRAINER_ONLY
     RL.TrainingSessionStatus:
       description: Status of the training session
       default: TRAINING_SESSION_STATUS_UNSPECIFIED
@@ -8201,6 +8214,7 @@ components:
         - created_at
         - updated_at
         - lora_config
+        - type
       properties:
         id:
           type: string
@@ -8248,6 +8262,10 @@ components:
           description: Timestamp when the training session was last updated
         lora_config:
           $ref: '#/components/schemas/RL.LoraConfig'
+        type:
+          $ref: '#/components/schemas/RL.SessionType'
+          example: SESSION_TYPE_TRAINER_AND_GENERATOR
+          description: Type of the training session. TRAINER_AND_GENERATOR provisions both trainer and generator; TRAINER_ONLY provisions only the trainer and rejects generator-dependent operations such as sample.
     RL.TrainingSessionsListResponse:
       type: object
       description: Paginated list of training sessions
