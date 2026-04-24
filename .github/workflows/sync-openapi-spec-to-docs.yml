@@ -42,16 +42,22 @@ jobs:
             exit 0
           fi
 
-          BRANCH_NAME=sync-openapi-$(date +%s)
+          BRANCH_NAME=sync-openapi
 
           git checkout -b "$BRANCH_NAME"
           git add openapi.yaml
           git commit -m "Sync OpenAPI spec"
-          git push origin "$BRANCH_NAME"
+          git push --force origin "$BRANCH_NAME"
 
-          gh pr create \
-            --title "Sync OpenAPI spec" \
-            --body "This PR syncs the openapi.yaml from the togethercomputer/openapi repository." \
-            --base main \
-            --head "$BRANCH_NAME" \
-            --assignee ryanto,zainhas,Nutlope
+          EXISTING_PR=$(gh pr list --state open --head "$BRANCH_NAME" --json number --jq '.[0].number')
+
+          if [ -n "$EXISTING_PR" ]; then
+            echo "Updated existing PR #$EXISTING_PR"
+          else
+            gh pr create \
+              --title "Sync OpenAPI spec" \
+              --body "This PR syncs the openapi.yaml from the togethercomputer/openapi repository." \
+              --base main \
+              --head "$BRANCH_NAME" \
+              --assignee ryanto,zainhas,Nutlope,muhsinking
+          fi
