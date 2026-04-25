@@ -4,3 +4,13 @@ The OpenAPI specification offers a structured and clear format for API design. W
 Contact us: https://www.together.ai/contact
 
 Terms of Service: https://www.together.ai/terms-of-service
+
+## Development
+
+### YAML Formatting
+
+This repo uses [yamlfmt](https://github.com/google/yamlfmt) to keep `openapi.yaml` consistently formatted. CI will fail if the file is not formatted.
+
+```sh
+go run github.com/google/yamlfmt/cmd/yamlfmt@latest -conf .yamlfmt openapi.yaml
+```
