@@ -7842,8 +7842,9 @@ components:
             type: string
           description: Generation stops when any of these strings is produced
         seed:
-          type: string
-          format: int64
+          oneOf:
+            - type: string
+            - type: integer
           example: 42
           description: Random seed for reproducibility
     RL.InputChunk:
@@ -8116,8 +8117,9 @@ components:
       properties:
         step:
           description: Step number
-          type: string
-          format: uint64
+          oneOf:
+            - type: string
+            - type: integer
           example: 100
     RL.SampleResult:
       type: object
@@ -8156,8 +8158,9 @@ components:
             - 456
             - 789
           items:
-            type: string
-            format: int64
+            oneOf:
+              - type: string
+              - type: integer
           description: Generated token IDs
         logprobs:
           type: array
@@ -8330,8 +8333,9 @@ components:
           description: Checkpoint ID this session was resumed from
         step:
           description: Current training step
-          type: string
-          format: uint64
+          oneOf:
+            - type: string
+            - type: integer
           example: 100
           default: "0"
         created_at:
@@ -8457,8 +8461,9 @@ components:
           example: 123e4567-e89b-12d3-a456-426614174000
           description: Unique identifier for the checkpoint
         step:
-          type: string
-          format: uint64
+          oneOf:
+            - type: string
+            - type: integer
           example: 42
           description: Training step at time of save
         created_at:
@@ -8498,8 +8503,9 @@ components:
           example: 123e4567-e89b-12d3-a456-426614174000
           description: Unique identifier for the checkpoint
         step:
-          type: string
-          format: uint64
+          oneOf:
+            - type: string
+            - type: integer
           example: 42
           description: Training step at time of save
         created_at:
@@ -8563,8 +8569,9 @@ components:
           example: "https://..."
           description: Presigned URL for downloading the file
         size:
-          type: string
-          format: int64
+          oneOf:
+            - type: string
+            - type: integer
           example: 123456789
           description: File size in bytes
     RL.CheckpointDownloadResponse:
