@@ -3338,7 +3338,7 @@ paths:
       summary: Get metrics
       description: >
         Retrieves recorded training metrics for a fine-tuning job in chronological order.
-        All filter fields are optional — omit the body or send `{}` to retrieve all rows.
+        All filter fields are optional — omit the body or send `{}` to retrieve all metrics.
       x-codeSamples:
         - lang: Shell
           label: cURL
@@ -3367,22 +3367,22 @@ paths:
                 global_step_from:
                   type: integer
                   format: int64
-                  description: Return only rows with global_step >= this value.
+                  description: Return only metrics with global_step >= this value.
                   example: 0
                 global_step_to:
                   type: integer
                   format: int64
-                  description: Return only rows with global_step <= this value.
+                  description: Return only metrics with global_step <= this value.
                   example: 500
                 logged_at_from:
                   type: string
                   format: date-time
-                  description: Return only rows logged at or after this ISO-8601 timestamp.
+                  description: Return only metrics logged at or after this ISO-8601 timestamp.
                   example: "2024-01-01T00:00:00Z"
                 logged_at_to:
                   type: string
                   format: date-time
-                  description: Return only rows logged at or before this ISO-8601 timestamp.
+                  description: Return only metrics logged at or before this ISO-8601 timestamp.
                   example: "2024-01-01T12:00:00Z"
       responses:
         '200':
