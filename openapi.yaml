@@ -3947,9 +3947,9 @@ paths:
           - The `input_text_buffer.commit` event is received
 
         **Audio Format:**
-        - Format: WAV (PCM s16le)
+        - Format: Raw PCM (s16le, mono)
         - Sample Rate: 24000 Hz
-        - Encoding: Base64
+        - Encoding: Base64 (per delta event)
         - Delivered via `conversation.item.audio_output.delta` events
 
         **Error Codes:**
@@ -3971,7 +3971,7 @@ paths:
 
             async def generate_speech():
                 api_key = os.environ.get("TOGETHER_API_KEY")
-                url = "wss://api.together.ai/v1/audio/speech/websocket?model=hexgrad/Kokoro-82M&voice=tara"
+                url = "wss://api.together.ai/v1/audio/speech/websocket?model=hexgrad/Kokoro-82M&voice=af_heart"
 
                 headers = {
                     "Authorization": f"Bearer {api_key}"
@@ -3981,6 +3981,9 @@ paths:
                     # Wait for session created
                     session_msg = await ws.recv()
                     session_data = json.loads(session_msg)
+                    if session_data.get("type") != "session.created":
+                        print(f"Failed to start session: {session_data}")
+                        return
                     print(f"Session created: {session_data['session']['id']}")
 
                     # Send text for TTS
@@ -4022,10 +4025,10 @@ paths:
                                 print(f"Error: {error.get('message')}")
                                 break
 
-                        # Save the audio to a file
-                        with open("output.wav", "wb") as f:
+                        # Save the raw PCM samples to a file
+                        with open("output.pcm", "wb") as f:
                             f.write(audio_data)
-                        print("Audio saved to output.wav")
+                        print("Audio saved to output.pcm")
 
                     # Run send and receive concurrently
                     await asyncio.gather(send_text(), receive_audio())
@@ -4038,7 +4041,7 @@ paths:
             import fs from 'fs';
 
             const apiKey = process.env.TOGETHER_API_KEY;
-            const url = 'wss://api.together.ai/v1/audio/speech/websocket?model=hexgrad/Kokoro-82M&voice=tara';
+            const url = 'wss://api.together.ai/v1/audio/speech/websocket?model=hexgrad/Kokoro-82M&voice=af_heart';
 
             const ws = new WebSocket(url, {
               headers: {
@@ -4098,11 +4101,11 @@ paths:
             });
 
             ws.on('close', () => {
-              // Save the audio to a file
+              // Save the raw PCM samples to a file
               if (audioData.length > 0) {
                 const completeAudio = Buffer.concat(audioData);
-                fs.writeFileSync('output.wav', completeAudio);
-                console.log('Audio saved to output.wav');
+                fs.writeFileSync('output.pcm', completeAudio);
+                console.log('Audio saved to output.pcm');
               }
             });
 
