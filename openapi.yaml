@@ -3866,9 +3866,9 @@ paths:
           - The `input_text_buffer.commit` event is received
 
         **Audio Format:**
-        - Format: WAV (PCM s16le)
+        - Format: Raw PCM (s16le, mono)
         - Sample Rate: 24000 Hz
-        - Encoding: Base64
+        - Encoding: Base64 (per delta event)
         - Delivered via `conversation.item.audio_output.delta` events
 
         **Error Codes:**
@@ -3941,10 +3941,10 @@ paths:
                                 print(f"Error: {error.get('message')}")
                                 break
 
-                        # Save the audio to a file
-                        with open("output.wav", "wb") as f:
+                        # Save the raw PCM samples to a file
+                        with open("output.pcm", "wb") as f:
                             f.write(audio_data)
-                        print("Audio saved to output.wav")
+                        print("Audio saved to output.pcm")
 
                     # Run send and receive concurrently
                     await asyncio.gather(send_text(), receive_audio())
@@ -4017,11 +4017,11 @@ paths:
             });
 
             ws.on('close', () => {
-              // Save the audio to a file
+              // Save the raw PCM samples to a file
               if (audioData.length > 0) {
                 const completeAudio = Buffer.concat(audioData);
-                fs.writeFileSync('output.wav', completeAudio);
-                console.log('Audio saved to output.wav');
+                fs.writeFileSync('output.pcm', completeAudio);
+                console.log('Audio saved to output.pcm');
               }
             });
 
