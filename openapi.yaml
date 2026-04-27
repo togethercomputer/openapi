@@ -7707,6 +7707,32 @@ paths:
           schema:
             description: Operation ID
             type: string
+  /rl/training-sessions/{session_id}/payloads/upload-url:
+    post:
+      summary: Create payload upload URL
+      description: Returns a pre-signed URL for uploading a large operation payload to object storage.
+      operationId: createPayloadUploadURL
+      tags: [RL]
+      responses:
+        "200":
+          description: Pre-signed upload URL and payload ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RL.PayloadUploadURLResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorData'
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            description: ID of the training session
+            type: string
   /rl/checkpoints/{id}/download:
     get:
       summary: Download checkpoint
@@ -8574,6 +8600,21 @@ components:
             - type: integer
           example: 123456789
           description: File size in bytes
+    RL.PayloadUploadURLResponse:
+      type: object
+      description: Pre-signed upload URL and payload identifier for large operation payloads
+      required:
+        - upload_url
+        - payload_id
+      properties:
+        upload_url:
+          type: string
+          example: "https://r2.cloudflarestorage.com/..."
+          description: Pre-signed URL for uploading the payload via HTTP PUT
+        payload_id:
+          type: string
+          example: "550e8400-e29b-41d4-a716-446655440000"
+          description: Unique ID for this payload, to be referenced in subsequent operation request
     RL.CheckpointDownloadResponse:
       type: object
       description: Presigned download URLs for a checkpoint's files
