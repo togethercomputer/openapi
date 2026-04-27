@@ -8156,8 +8156,9 @@ components:
             - 456
             - 789
           items:
-            type: string
-            format: int64
+            oneOf:
+              - type: string
+              - type: integer
           description: Generated token IDs
         logprobs:
           type: array
