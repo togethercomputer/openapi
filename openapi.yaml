@@ -7845,7 +7845,7 @@ components:
           oneOf:
             - type: string
             - type: integer
-          example: 42
+          example: "42"
           description: Random seed for reproducibility
     RL.InputChunk:
       type: object
@@ -8120,7 +8120,7 @@ components:
           oneOf:
             - type: string
             - type: integer
-          example: 100
+          example: "100"
     RL.SampleResult:
       type: object
       description: Result of a sample operation
@@ -8154,9 +8154,9 @@ components:
         tokens:
           type: array
           example:
-            - 123
-            - 456
-            - 789
+            - "123"
+            - "456"
+            - "789"
           items:
             oneOf:
               - type: string
@@ -8336,7 +8336,7 @@ components:
           oneOf:
             - type: string
             - type: integer
-          example: 100
+          example: "100"
           default: "0"
         created_at:
           type: string
@@ -8464,7 +8464,7 @@ components:
           oneOf:
             - type: string
             - type: integer
-          example: 42
+          example: "42"
           description: Training step at time of save
         created_at:
           type: string
@@ -8506,7 +8506,7 @@ components:
           oneOf:
             - type: string
             - type: integer
-          example: 42
+          example: "42"
           description: Training step at time of save
         created_at:
           type: string
@@ -8572,7 +8572,7 @@ components:
           oneOf:
             - type: string
             - type: integer
-          example: 123456789
+          example: "123456789"
           description: File size in bytes
     RL.CheckpointDownloadResponse:
       type: object
