@@ -3396,38 +3396,17 @@ paths:
                     type: array
                     items:
                       type: object
-                      properties:
-                        job_id:
-                          type: string
-                          description: Fine-tune job ID.
-                          example: ft-abc123
-                        global_step:
-                          type: integer
-                          format: int64
-                          description: Training step at which this snapshot was recorded.
-                          example: 100
-                        is_eval:
-                          type: boolean
-                          description: Whether this was recorded during an evaluation step.
-                          example: false
-                        run_started_at:
-                          type: string
-                          format: date-time
-                          description: When the training run started.
-                          example: "2024-01-01T00:00:00Z"
-                        logged_at:
-                          type: string
-                          format: date-time
-                          description: When this row was logged.
-                          example: "2024-01-01T01:00:00Z"
-                        metrics:
-                          type: object
-                          additionalProperties:
-                            type: number
-                          description: Raw scalar metrics.
-                          example:
-                            train/loss: 0.42
-                            train/learning_rate: 0.00001
+                      additionalProperties:
+                        type: number
+                      description: A flat dictionary of scalar metric values.
+                example:
+                  metrics:
+                    - train/loss: 0.5
+                      train/learning_rate: 0.0001
+                      train/global_step: 7
+                    - train/loss: 0.45
+                      train/learning_rate: 0.00009
+                      train/global_step: 14
         '400':
           description: Invalid request — bad JSON body or missing job ID.
         '404':
