@@ -3430,6 +3430,8 @@ paths:
                             train/learning_rate: 0.00001
         '400':
           description: Invalid request — bad JSON body or missing job ID.
+        '404':
+          description: Fine-tune job not found.
         '500':
           description: Internal server error — failed to retrieve metrics.
   /fine-tunes/models/supported:
