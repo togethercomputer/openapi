@@ -3890,7 +3890,7 @@ paths:
 
             async def generate_speech():
                 api_key = os.environ.get("TOGETHER_API_KEY")
-                url = "wss://api.together.ai/v1/audio/speech/websocket?model=hexgrad/Kokoro-82M&voice=tara"
+                url = "wss://api.together.ai/v1/audio/speech/websocket?model=hexgrad/Kokoro-82M&voice=af_heart"
 
                 headers = {
                     "Authorization": f"Bearer {api_key}"
@@ -3900,6 +3900,9 @@ paths:
                     # Wait for session created
                     session_msg = await ws.recv()
                     session_data = json.loads(session_msg)
+                    if session_data.get("type") != "session.created":
+                        print(f"Failed to start session: {session_data}")
+                        return
                     print(f"Session created: {session_data['session']['id']}")
 
                     # Send text for TTS
@@ -3957,7 +3960,7 @@ paths:
             import fs from 'fs';
 
             const apiKey = process.env.TOGETHER_API_KEY;
-            const url = 'wss://api.together.ai/v1/audio/speech/websocket?model=hexgrad/Kokoro-82M&voice=tara';
+            const url = 'wss://api.together.ai/v1/audio/speech/websocket?model=hexgrad/Kokoro-82M&voice=af_heart';
 
             const ws = new WebSocket(url, {
               headers: {
