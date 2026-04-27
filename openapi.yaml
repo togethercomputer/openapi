@@ -3332,6 +3332,106 @@ paths:
           description: Invalid request parameters.
         '404':
           description: Fine-tune ID not found.
+  /fine-tunes/{id}/metrics:
+    get:
+      tags: ['Fine-tuning']
+      summary: Get metrics
+      description: >
+        Retrieves recorded training metrics for a fine-tuning job in chronological order.
+        All filter fields are optional — omit the body or send `{}` to retrieve all rows.
+      x-codeSamples:
+        - lang: Shell
+          label: cURL
+          source: |
+            curl -X GET "https://api.together.xyz/v1/fine-tunes/ft-id/metrics" \
+                 -H "Authorization: Bearer $TOGETHER_API_KEY" \
+                 -H "Content-Type: application/json" \
+                 -d '{
+                   "global_step_from": 0,
+                   "global_step_to": 500
+                 }'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: Fine-tune job ID. A string that starts with `ft-`.
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                global_step_from:
+                  type: integer
+                  format: int64
+                  description: Return only rows with global_step >= this value.
+                  example: 0
+                global_step_to:
+                  type: integer
+                  format: int64
+                  description: Return only rows with global_step <= this value.
+                  example: 500
+                logged_at_from:
+                  type: string
+                  format: date-time
+                  description: Return only rows logged at or after this ISO-8601 timestamp.
+                  example: "2024-01-01T00:00:00Z"
+                logged_at_to:
+                  type: string
+                  format: date-time
+                  description: Return only rows logged at or before this ISO-8601 timestamp.
+                  example: "2024-01-01T12:00:00Z"
+      responses:
+        '200':
+          description: List of metrics snapshots in chronological order.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metrics:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        job_id:
+                          type: string
+                          description: Fine-tune job ID.
+                          example: ft-abc123
+                        global_step:
+                          type: integer
+                          format: int64
+                          description: Training step at which this snapshot was recorded.
+                          example: 100
+                        is_eval:
+                          type: boolean
+                          description: Whether this was recorded during an evaluation step.
+                          example: false
+                        run_started_at:
+                          type: string
+                          format: date-time
+                          description: When the training run started.
+                          example: "2024-01-01T00:00:00Z"
+                        logged_at:
+                          type: string
+                          format: date-time
+                          description: When this row was logged.
+                          example: "2024-01-01T01:00:00Z"
+                        metrics:
+                          type: object
+                          additionalProperties:
+                            type: number
+                          description: Raw scalar metrics.
+                          example:
+                            train/loss: 0.42
+                            train/learning_rate: 0.00001
+        '400':
+          description: Invalid request — bad JSON body or missing job ID.
+        '500':
+          description: Internal server error — failed to retrieve metrics.
   /fine-tunes/models/supported:
     get:
       tags: ['Fine-tuning']
