@@ -51,12 +51,22 @@ jobs:
 
           EXISTING_PR=$(gh pr list --state open --head "$BRANCH_NAME" --json number --jq '.[0].number')
 
+          # Perpetual Linear tracker issue. The bare key (no Resolves/Closes/Fixes)
+          # auto-attaches each sync PR to the issue without closing it on merge.
+          # See https://linear.app/together-ai/issue/DX-548 — do not close it.
+          TRACKER_KEY="DX-548"
+          PR_TITLE="$TRACKER_KEY: Sync OpenAPI spec"
+          PR_BODY="This PR syncs the openapi.yaml from the togethercomputer/openapi repository.
+
+          Tracked in $TRACKER_KEY (auto-attached perpetual tracker — do not close)."
+
           if [ -n "$EXISTING_PR" ]; then
+            gh pr edit "$EXISTING_PR" --title "$PR_TITLE" --body "$PR_BODY"
             echo "Updated existing PR #$EXISTING_PR"
           else
             gh pr create \
-              --title "Sync OpenAPI spec" \
-              --body "This PR syncs the openapi.yaml from the togethercomputer/openapi repository." \
+              --title "$PR_TITLE" \
+              --body "$PR_BODY" \
               --base main \
               --head "$BRANCH_NAME" \
               --assignee ryanto,zainhas,Nutlope,muhsinking
